@@ -5,10 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,13 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
+
+    FirebaseAuth mAuth;
+    EditText editTextEmail, editTextPassword;
+    ProgressBar progressBar;
+
+    String Answer;
     private DatabaseReference databaseReference;
-    String Answer,x="bb";
-    int pl;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,62 +56,85 @@ public class LogInActivity extends AppCompatActivity {
         });
 
 
-       /* mDatabase = FirebaseDatabase.getInstance().getReference();
-        String username= "cc" ;
-        mDatabase.child("Names").equalTo(username).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot!=null && dataSnapshot.getChildren()!=null &&
-                        dataSnapshot.getChildren().iterator().hasNext()){
-                    Log.e("exists","exists");
-                    //Username exists
-                }
-                else {
-                    //Username does not exist
-                    Log.e("not exist","not exist");
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
 
 
-        });*/
 
-       /* String myString = "Aa1 90";
-        if(Pattern.matches("[A-Za-z0-9]+", myString))
-        {
-            Toast.makeText(this,"string has only alphabets",Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            Toast.makeText(this,"It has other characters",Toast.LENGTH_LONG).show();
-        }*/
 
-                /*Intent intent = new Intent (this, SignUpActivity.class);
-                 startActivity(intent);*/
+
+
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+
+        findViewById(R.id.textViewSignup).setOnClickListener(this);
+        findViewById(R.id.buttonLogin).setOnClickListener(this);
+
     }
 
-    public void AAAAAA(View view) {
-        //Toast.makeText(this,Answer,Toast.LENGTH_LONG).show();
+    private void userLogin() {
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
 
-        pl =Answer.indexOf("=, "+x);
-        if(pl==-1)
-        {
-            Toast.makeText(this,Answer+"Can be username"+pl,Toast.LENGTH_LONG).show();
-            Log.e("keys",Answer);
-        }
-        else
-        {
-            Toast.makeText(this,Answer+"Cant be username"+pl,Toast.LENGTH_LONG).show();
-            Log.e("keys",Answer);
-
+        if (email.isEmpty()) {
+            editTextEmail.setError("Email is required");
+            editTextEmail.requestFocus();
+            return;
         }
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            editTextEmail.setError("Please enter a valid email");
+            editTextEmail.requestFocus();
+            return;
+        }
 
+        if (password.isEmpty()) {
+            editTextPassword.setError("Password is required");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6) {
+            editTextPassword.setError("Minimum lenght of password should be 6");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    finish();
+                    Intent intent = new Intent(LogInActivity.this, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.textViewSignup:
+                finish();
+                startActivity(new Intent(this, SignUpActivity.class));
+                break;
+
+            case R.id.buttonLogin:
+                userLogin();
+                //Log.e("Keys",Answer);
+                break;
+        }
     }
 }

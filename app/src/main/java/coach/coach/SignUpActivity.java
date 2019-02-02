@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,19 +32,25 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     ProgressBar progressBar;
-    EditText editTextEmail, editTextPassword,editTextUser;
+    EditText editTextEmail, editTextPassword,editTextUser,etPhoneNo,etCode;
+    Button Codebtn,SMSbtn;
     DatabaseReference reference,reference2;
-    int pl;
+    int numflag1,numflag2;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     String Answer;
-
-
+    Random rn;
+    Intent a;
+    int codeInt;
+    String smsNum;
+    String codeString;
+    Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +61,29 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextUser = (EditText)findViewById(R.id.editTextUser);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
+
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        String[] SpinnerStrings = new String[3];
+        SpinnerStrings[0]="Select Type:";
+        SpinnerStrings[1]="User";
+        SpinnerStrings[2]="Coach";
+
+        ArrayAdapter<String>SpinnerAdapter = new ArrayAdapter<String>(SignUpActivity.this,android.R.layout.simple_list_item_1,SpinnerStrings);
+        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(SpinnerAdapter);
+
+        SMSbtn = (Button) findViewById(R.id.btnSendSMS);
+        etPhoneNo = (EditText) findViewById(R.id.etPhoneNo);
+        etCode = (EditText) findViewById(R.id.etCode);
+        rn = (Random) new Random();
+
+        a= new Intent(this,LogInActivity.class);
+
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
         findViewById(R.id.textViewLogin).setOnClickListener(this);
-        setContentView(R.layout.activity_log_in);
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -112,6 +141,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             editTextUser.requestFocus();
             return;
         }
+        if (password.length() > 16) {
+            editTextPassword.setError("Max lenght of password should be 16");
+            editTextPassword.requestFocus();
+            return;
+        }
         if(!Pattern.matches("[A-Za-z0-9]+", username))
         {
             editTextUser.setError("please use just letters and numbers");
@@ -119,13 +153,36 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        pl =Answer.indexOf("=, "+username);
-        if(pl!=-1)
+        numflag1 =Answer.indexOf(", "+username+"=");
+        if(numflag1==-1)
         {
+            numflag1 =Answer.indexOf("{"+username+"=");
+            if(numflag1!=-1)
+            {
+            editTextUser.setError("This name is taken, please choose other name");
+            editTextUser.requestFocus();
+            return;
+            }
+        }
+        else {
             editTextUser.setError("This name is taken, please choose other name");
             editTextUser.requestFocus();
             return;
         }
+
+        if (spinner.getSelectedItem().toString().equals("Select Type:"))
+        {
+            Toast.makeText(this,"Please choose type",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!codeString.equals(etCode.getText().toString())) {
+            etCode.setError("Wrong code");
+            etCode.requestFocus();
+            return;
+        }
+
+
 
 
 
@@ -139,27 +196,48 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     String userid = firebaseUser.getUid();
                     reference2 = FirebaseDatabase.getInstance().getReference("Names");
-                    HashMap<String, String> hashMap2 = new HashMap<>();
-                    hashMap2.put(username,"");
-                    reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                  //  HashMap<String, String> hashMap2 = new HashMap<>();
+                //    hashMap2.put(username,"");
+                    //reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             task.isComplete();
+                            startActivity(a);
+                            finish();
+
                         }
                     });
-                    /*reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("id",userid);
-                    hashMap.put("username",username);
-                    reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isComplete()){
-                                startActivity(new Intent(SignUpActivity.this, ProfileActivity.class));
-                            }
+                        if (spinner.getSelectedItem().toString().equals("User"))
+                        {
+                            reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("Type", spinner.getSelectedItem().toString());
+                            //   hashMap.put("username",username);
+                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isComplete()) {
+                                        startActivity(new Intent(SignUpActivity.this, LogInActivity.class));
+                                    }
+                                }
+                            });
                         }
-                    });*/
-                    finish();
+                        else
+                            {
+                                reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
+                                HashMap<String, String> hashMap = new HashMap<>();
+                                hashMap.put("Type", spinner.getSelectedItem().toString());
+                                //   hashMap.put("username",username);
+                                reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isComplete()) {
+                                            startActivity(new Intent(SignUpActivity.this, LogInActivity.class));
+                                        }
+                                    }
+                                });
+                            }
 
                 } else {
 
@@ -175,17 +253,73 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
+    private void sendSMS(String phoneNumber, String message)
+    {
+
+       SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
+    }
+
+    public void sendcode(View view) {
+        smsNum = etPhoneNo.getText().toString();
+        if (smsNum.length()>0)
+        {
+            numflag2 = Answer.indexOf("="+smsNum+",");
+            if (numflag2==-1)
+            {
+
+                numflag2 = Answer.indexOf("="+smsNum+"}");
+                if (numflag2==-1) {
+                    codeInt=rn.nextInt(90000)+10000;
+                    codeString="" + codeInt;
+                    sendSMS(smsNum, codeString);
+                    }
+                else {
+                    etPhoneNo.setError("This number is used");
+                    etPhoneNo.requestFocus();
+                }
+            }
+            else {
+                etPhoneNo.setError("This number is used");
+                etPhoneNo.requestFocus();
+            }
+
+
+        }
+        else{
+            Toast.makeText(getBaseContext(),
+                    "Please enter phone number.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
+
+
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonSignUp:
-                registerUser();
+                try {
+                    registerUser();
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(this, "Error",Toast.LENGTH_LONG).show();
+                }
+                //TODO לשנות את הסטרינג Error
+
+                //Log.e("keys",spinner.getSelectedItem().toString());
                 break;
 
             case R.id.textViewLogin:
-                finish();
+               // Log.e("keys",Answer);
                 startActivity(new Intent(this, LogInActivity.class));
+                finish();
                 break;
         }
     }
