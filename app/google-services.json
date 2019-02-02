@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1090093267074",
+    "firebase_url": "https://coach-8eb2a.firebaseio.com",
+    "project_id": "coach-8eb2a",
+    "storage_bucket": "coach-8eb2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090093267074:android:a5717f19e1079d95",
+        "android_client_info": {
+          "package_name": "coach.coach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090093267074-enpa8l71g1pcl2d2rqorjci0act4p8ae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "coach.coach",
+            "certificate_hash": "a3e7b40ad200cd53959eb30b04d89ddc252fb18a"
+          }
+        },
+        {
+          "client_id": "1090093267074-5urolo7l9fmac48ejjsvq2oe9m0em33q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBixNFlVL1l6kJaN53Xz9CN7Wci0yr6lc0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090093267074-5urolo7l9fmac48ejjsvq2oe9m0em33q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
