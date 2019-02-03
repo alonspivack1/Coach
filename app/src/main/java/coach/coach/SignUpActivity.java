@@ -39,12 +39,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     ProgressBar progressBar;
     EditText editTextEmail, editTextPassword,editTextUser,etPhoneNo,etCode;
-    Button Codebtn,SMSbtn;
+    Button SMSbtn;
     DatabaseReference reference,reference2;
-    int numflag1,numflag2;
+    int numflag1,numflag2,numflag3,numflag4;
     private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
-    String Answer;
+    private DatabaseReference databaseReference,databaseReference2;
+    String CoachAnswer,UserAnswer;
     Random rn;
     Intent a;
     int codeInt;
@@ -91,9 +91,22 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("Users").child(user.getUid()).child("username").getValue();
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("Names").getValue();
-                Answer = objectMap.toString();
+                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
+                CoachAnswer = objectMap.toString();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference2 = FirebaseDatabase.getInstance().getReference();
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
+                UserAnswer = objectMap.toString();
 
             }
 
@@ -115,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Please enter a valid email");
+            editTextEmail.setError("Enter a valid email");
             editTextEmail.requestFocus();
             return;
         }
@@ -148,31 +161,44 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         if(!Pattern.matches("[A-Za-z0-9]+", username))
         {
-            editTextUser.setError("please use just letters and numbers");
+            editTextUser.setError("Use just letters and numbers");
             editTextUser.requestFocus();
             return;
         }
 
-        numflag1 =Answer.indexOf(", "+username+"=");
+        numflag1 =CoachAnswer.indexOf(", "+username+"=");
         if(numflag1==-1)
         {
-            numflag1 =Answer.indexOf("{"+username+"=");
+            numflag1 =CoachAnswer.indexOf("{"+username+"=");
             if(numflag1!=-1)
             {
-            editTextUser.setError("This name is taken, please choose other name");
+            editTextUser.setError("This name is taken, choose other name");
             editTextUser.requestFocus();
             return;
             }
         }
+
+        numflag3 =UserAnswer.indexOf(", "+username+"=");
+        if(numflag3==-1)
+        {
+            numflag3 =UserAnswer.indexOf("{"+username+"=");
+            if(numflag3!=-1)
+            {
+                editTextUser.setError("This name is taken, choose other name");
+                editTextUser.requestFocus();
+                return;
+            }
+        }
+
         else {
-            editTextUser.setError("This name is taken, please choose other name");
+            editTextUser.setError("This name is taken, choose other name");
             editTextUser.requestFocus();
             return;
         }
 
         if (spinner.getSelectedItem().toString().equals("Select Type:"))
         {
-            Toast.makeText(this,"Please choose type",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Choose type",Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -195,7 +221,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     String userid = firebaseUser.getUid();
-                    reference2 = FirebaseDatabase.getInstance().getReference("Names");
+                    if (spinner.getSelectedItem().toString().equals("User"))
+                    {
+                        reference2 = FirebaseDatabase.getInstance().getReference("UserNames");
+
+                    }
+                    if (spinner.getSelectedItem().toString().equals("Coach"))
+                    {
+                        reference2 = FirebaseDatabase.getInstance().getReference("CoachNames");
+
+                    }
                   //  HashMap<String, String> hashMap2 = new HashMap<>();
                 //    hashMap2.put(username,"");
                     //reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -206,6 +241,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             startActivity(a);
                             finish();
 
+
                         }
                     });
                         if (spinner.getSelectedItem().toString().equals("User"))
@@ -213,12 +249,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("Type", spinner.getSelectedItem().toString());
+                            hashMap.put("Age","0" );
+                            hashMap.put("Weight","0" );
+                            hashMap.put("Height","0" );
+                            hashMap.put("PracticeTime", "0");
+                            hashMap.put("Goal", "0");
+                            hashMap.put("Equipment", "0");
+                            hashMap.put("Description", "0");
                             //   hashMap.put("username",username);
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isComplete()) {
-                                        startActivity(new Intent(SignUpActivity.this, LogInActivity.class));
+                                        startActivity(new Intent(SignUpActivity.this, UserProfileMaker.class));
                                     }
                                 }
                             });
@@ -228,12 +271,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
                                 HashMap<String, String> hashMap = new HashMap<>();
                                 hashMap.put("Type", spinner.getSelectedItem().toString());
+                                hashMap.put("Age","0" );
+                                hashMap.put("StudyPlace","0" );
+                                hashMap.put("Professionalization","0" );
+                                hashMap.put("Description", "0");
+
                                 //   hashMap.put("username",username);
                                 reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isComplete()) {
-                                            startActivity(new Intent(SignUpActivity.this, LogInActivity.class));
+                                            startActivity(new Intent(SignUpActivity.this, CoachProfileMaker.class));
                                         }
                                     }
                                 });
@@ -264,11 +312,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         smsNum = etPhoneNo.getText().toString();
         if (smsNum.length()>0)
         {
-            numflag2 = Answer.indexOf("="+smsNum+",");
+            numflag2 = UserAnswer.indexOf("="+smsNum+",");
             if (numflag2==-1)
             {
 
-                numflag2 = Answer.indexOf("="+smsNum+"}");
+                numflag2 = UserAnswer.indexOf("="+smsNum+"}");
                 if (numflag2==-1) {
                     codeInt=rn.nextInt(90000)+10000;
                     codeString="" + codeInt;
@@ -285,10 +333,30 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
 
 
+            numflag4 = CoachAnswer.indexOf("="+smsNum+",");
+            if (numflag2==-1)
+            {
+
+                numflag4 = CoachAnswer.indexOf("="+smsNum+"}");
+                if (numflag4==-1) {
+                    codeInt=rn.nextInt(90000)+10000;
+                    codeString="" + codeInt;
+                    sendSMS(smsNum, codeString);
+                }
+                else {
+                    etPhoneNo.setError("This number is used");
+                    etPhoneNo.requestFocus();
+                }
+            }
+            else {
+                etPhoneNo.setError("This number is used");
+                etPhoneNo.requestFocus();
+            }
+
         }
         else{
             Toast.makeText(getBaseContext(),
-                    "Please enter phone number.",
+                    "Enter phone number.",
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -309,10 +377,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(this, "Error",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Verify your phone number",Toast.LENGTH_LONG).show();
                 }
-                //TODO לשנות את הסטרינג Error
-
                 //Log.e("keys",spinner.getSelectedItem().toString());
                 break;
 

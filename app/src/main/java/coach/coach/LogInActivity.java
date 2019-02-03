@@ -30,7 +30,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     EditText editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
-    String Answer;
     private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +39,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("Users").child(user.getUid()).child("username").getValue();
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("Names").getValue();
-                Answer = objectMap.toString();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
 
@@ -133,7 +118,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.buttonLogin:
                 userLogin();
-                //Log.e("Keys",Answer);
                 break;
         }
     }
