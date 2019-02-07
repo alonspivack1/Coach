@@ -318,9 +318,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 numflag2 = UserAnswer.indexOf("="+smsNum+"}");
                 if (numflag2==-1) {
-                    codeInt=rn.nextInt(90000)+10000;
-                    codeString="" + codeInt;
-                    sendSMS(smsNum, codeString);
+
+
+                    numflag4 = CoachAnswer.indexOf("="+smsNum+",");
+                    if (numflag2==-1)
+                    {
+
+                        numflag4 = CoachAnswer.indexOf("="+smsNum+"}");
+                        if (numflag4==-1) {
+                            codeInt=rn.nextInt(90000)+10000;
+                            codeString="" + codeInt;
+                            sendSMS(smsNum, codeString);
+                        }
+                        else {
+                            etPhoneNo.setError("This number is used");
+                            etPhoneNo.requestFocus();
+                        }
+                    }
+                    else {
+                        etPhoneNo.setError("This number is used");
+                        etPhoneNo.requestFocus();
+                    }
                     }
                 else {
                     etPhoneNo.setError("This number is used");
@@ -332,26 +350,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 etPhoneNo.requestFocus();
             }
 
-
-            numflag4 = CoachAnswer.indexOf("="+smsNum+",");
-            if (numflag2==-1)
-            {
-
-                numflag4 = CoachAnswer.indexOf("="+smsNum+"}");
-                if (numflag4==-1) {
-                    codeInt=rn.nextInt(90000)+10000;
-                    codeString="" + codeInt;
-                    sendSMS(smsNum, codeString);
-                }
-                else {
-                    etPhoneNo.setError("This number is used");
-                    etPhoneNo.requestFocus();
-                }
-            }
-            else {
-                etPhoneNo.setError("This number is used");
-                etPhoneNo.requestFocus();
-            }
 
         }
         else{

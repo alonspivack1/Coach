@@ -17,6 +17,7 @@
             android:orientation="vertical" >
 
             <EditText
+                android:id="@+id/etuserage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -25,6 +26,7 @@
                 android:inputType="phone" />
 
             <EditText
+                android:id="@+id/etuserweight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -33,8 +35,8 @@
                 android:inputType="phone" />
 
 
-
             <EditText
+                android:id="@+id/etuserheight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -43,6 +45,7 @@
                 android:inputType="phone" />
 
             <EditText
+                android:id="@+id/etusertime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -51,6 +54,7 @@
                 android:inputType="textPersonName" />
 
             <EditText
+                android:id="@+id/etuseritem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -59,6 +63,7 @@
 
 
             <EditText
+                android:id="@+id/etuserdescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -66,74 +71,79 @@
                 android:hint="תיאור קצר" />
 
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:text="מטרה"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
-
-
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layoutDirection="rtl"
-                    android:layout_gravity="right"
-                    android:text="שריפת שומנים" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:layoutDirection="rtl"
-                    android:text="אימוני כוח בחדר כושר" />
-
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:layoutDirection="rtl"
-                    android:text="אימוני כוח בסטרייט" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layoutDirection="rtl"
-                    android:layout_gravity="right"
-                    android:text="אימונים  בבית" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:layoutDirection="rtl"
-                    android:text="שיפור מרחק בריצות" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:layoutDirection="rtl"
-                    android:text="שיפור מהירות בריצות" />
-
-
-
-            <Button
+            <TextView
+                android:id="@+id/tvusertitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="send"/>
+                android:layout_weight="1"
+                android:text="מטרה"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+
+
+            <CheckBox
+                android:id="@+id/cbuserburnfat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שריפת שומנים" />
+
+            <CheckBox
+                android:id="@+id/cbusergym"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימוני כוח בחדר כושר" />
+
+
+            <CheckBox
+                android:id="@+id/cbuserstreet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימוני כוח בסטרייט" />
+
+            <CheckBox
+                android:id="@+id/cbuserhome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימונים  בבית" />
+
+            <CheckBox
+                android:id="@+id/cbuserdistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שיפור מרחק בריצות" />
+
+            <CheckBox
+                android:id="@+id/cbuserspeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שיפור מהירות בריצות" />
+
+
+            <Button
+                android:id="@+id/btnusersend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="send" />
 
 
         </LinearLayout>

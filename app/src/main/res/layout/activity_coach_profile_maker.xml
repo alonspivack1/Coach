@@ -17,6 +17,7 @@ tools:context=".CoachProfileMaker">
         android:orientation="vertical" >
 
         <EditText
+            android:id="@+id/etcoachage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -26,6 +27,7 @@ tools:context=".CoachProfileMaker">
 
 
         <EditText
+            android:id="@+id/etcoachwhere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -34,6 +36,7 @@ tools:context=".CoachProfileMaker">
             android:inputType="textPersonName" />
 
         <EditText
+            android:id="@+id/etcoachtime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -43,6 +46,7 @@ tools:context=".CoachProfileMaker">
 
 
         <EditText
+            android:id="@+id/etcoachdescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -50,67 +54,71 @@ tools:context=".CoachProfileMaker">
             android:hint="תיאור קצר" />
 
 
+        <TextView
+            android:id="@+id/tvcoachtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="התמקצעות"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:text="המתקצעות"
-                android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold" />
+        <CheckBox
+            android:id="@+id/cbcoachburnfat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="שריפת שומנים" />
+
+        <CheckBox
+            android:id="@+id/cbcoachgym"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="אימוני כוח בחדר כושר" />
 
 
+        <CheckBox
+            android:id="@+id/cbcoachstreet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="אימוני כוח בסטרייט" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="שריפת שומנים" />
+        <CheckBox
+            android:id="@+id/cbcoachhome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="אימונים  בבית" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="אימוני כוח בחדר כושר" />
+        <CheckBox
+            android:id="@+id/cbcoachdistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="שיפור מרחק בריצות" />
 
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="אימוני כוח בסטרייט" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="אימונים  בבית" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="שיפור מרחק בריצות" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl"
-                android:layout_gravity="right"
-                android:text="שיפור מהירות בריצות" />
+        <CheckBox
+            android:id="@+id/cbcoachspeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layoutDirection="rtl"
+            android:text="שיפור מהירות בריצות" />
 
 
         <Button
