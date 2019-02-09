@@ -46,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private DatabaseReference databaseReference,databaseReference2;
     String CoachAnswer,UserAnswer;
     Random rn;
-    Intent a;
+    Intent LogInIntent,UserIntent,CoachIntent;
     int codeInt;
     String smsNum;
     String codeString;
@@ -61,6 +61,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextUser = (EditText)findViewById(R.id.editTextUser);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
+        UserIntent = new Intent(this,UserProfileMaker.class);
+        CoachIntent = new Intent(this,CoachProfileMaker.class);
 
 
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -78,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         etCode = (EditText) findViewById(R.id.etCode);
         rn = (Random) new Random();
 
-        a= new Intent(this,LogInActivity.class);
+        LogInIntent= new Intent(this,LogInActivity.class);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -107,6 +109,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
                 UserAnswer = objectMap.toString();
+               // Log.e("Coach:",CoachAnswer);
+             //   Log.e("User:",UserAnswer);
 
             }
 
@@ -166,6 +170,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+
         numflag1 =CoachAnswer.indexOf(", "+username+"=");
         if(numflag1==-1)
         {
@@ -189,7 +194,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 return;
             }
         }
-
         else {
             editTextUser.setError("This name is taken, choose other name");
             editTextUser.requestFocus();
@@ -203,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if (!codeString.equals(etCode.getText().toString())) {
-            etCode.setError("Wrong code");
+            etCode.setError("Wrong sms code");
             etCode.requestFocus();
             return;
         }
@@ -224,36 +228,38 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     if (spinner.getSelectedItem().toString().equals("User"))
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("UserNames");
+                        reference2.child(username).setValue(smsNum+","+userid+","+username+",");
 
                     }
                     if (spinner.getSelectedItem().toString().equals("Coach"))
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("CoachNames");
-
+                        reference2.child(username).setValue(smsNum+","+userid+","+username+",");
                     }
+
+                  //  reference2.child(username).setValue(smsNum);
                   //  HashMap<String, String> hashMap2 = new HashMap<>();
                 //    hashMap2.put(username,"");
                     //reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        /*reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             task.isComplete();
-                            startActivity(a);
+                            startActivity(LogInIntent);
                             finish();
 
 
                         }
-                    });
+                    });*/
                         if (spinner.getSelectedItem().toString().equals("User"))
                         {
                             reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("Type", spinner.getSelectedItem().toString());
                             hashMap.put("Age","0" );
                             hashMap.put("Weight","0" );
                             hashMap.put("Height","0" );
                             hashMap.put("PracticeTime", "0");
-                            hashMap.put("Goal", "0");
+                            hashMap.put("Goal", ",");
                             hashMap.put("Equipment", "0");
                             hashMap.put("Description", "0");
                             //   hashMap.put("username",username);
@@ -261,7 +267,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isComplete()) {
-                                        startActivity(new Intent(SignUpActivity.this, UserProfileMaker.class));
+                                        UserIntent.putExtra("username",username+"");
+                                        startActivity(UserIntent);
                                     }
                                 }
                             });
@@ -270,18 +277,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             {
                                 reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
                                 HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("Type", spinner.getSelectedItem().toString());
                                 hashMap.put("Age","0" );
                                 hashMap.put("StudyPlace","0" );
-                                hashMap.put("Professionalization","0" );
+                                hashMap.put("Professionalization","," );
                                 hashMap.put("Description", "0");
+                                hashMap.put("CoachTime", "0");
 
                                 //   hashMap.put("username",username);
                                 reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isComplete()) {
-                                            startActivity(new Intent(SignUpActivity.this, CoachProfileMaker.class));
+                                            CoachIntent.putExtra("username",username);
+                                            startActivity(CoachIntent);
                                         }
                                     }
                                 });
@@ -315,35 +323,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             numflag2 = UserAnswer.indexOf("="+smsNum+",");
             if (numflag2==-1)
             {
-
-                numflag2 = UserAnswer.indexOf("="+smsNum+"}");
-                if (numflag2==-1) {
-
-
                     numflag4 = CoachAnswer.indexOf("="+smsNum+",");
-                    if (numflag2==-1)
+                    if (numflag4==-1)
                     {
-
-                        numflag4 = CoachAnswer.indexOf("="+smsNum+"}");
-                        if (numflag4==-1) {
                             codeInt=rn.nextInt(90000)+10000;
                             codeString="" + codeInt;
                             sendSMS(smsNum, codeString);
-                        }
-                        else {
-                            etPhoneNo.setError("This number is used");
-                            etPhoneNo.requestFocus();
-                        }
                     }
                     else {
                         etPhoneNo.setError("This number is used");
                         etPhoneNo.requestFocus();
                     }
-                    }
-                else {
-                    etPhoneNo.setError("This number is used");
-                    etPhoneNo.requestFocus();
-                }
+
             }
             else {
                 etPhoneNo.setError("This number is used");
@@ -382,7 +373,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.textViewLogin:
                // Log.e("keys",Answer);
-                startActivity(new Intent(this, LogInActivity.class));
+                startActivity(LogInIntent);
                 finish();
                 break;
         }

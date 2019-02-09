@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,34 +28,72 @@ import java.util.Map;
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
 
     FirebaseAuth mAuth;
-    EditText editTextEmail, editTextPassword;
+    EditText editTextEmail, editTextPassword,editTextUserName;
     ProgressBar progressBar;
+    String UserNames="",CoachNames="",Type="";
+    DataSnapshot DataSnap;
+    Intent userIntent,coachIntent;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference,databaseReference2,databaseReference3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        userIntent = new Intent(this,UserProfileMaker.class);
+        coachIntent = new Intent(this,CoachProfileMaker.class);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
+                CoachNames = objectMap.toString();
+                Log.e("CoachNames",CoachNames);
 
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
 
+        databaseReference2 = FirebaseDatabase.getInstance().getReference();
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
+                UserNames = objectMap.toString();
+                Log.e("UserNames",UserNames);
 
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
 
+        databaseReference3 = FirebaseDatabase.getInstance().getReference();
+        databaseReference3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DataSnap = dataSnapshot;
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextUserName = findViewById(R.id.editTextUserName);
+        progressBar = findViewById(R.id.progressbar);
 
         findViewById(R.id.textViewSignup).setOnClickListener(this);
         findViewById(R.id.buttonLogin).setOnClickListener(this);
@@ -96,11 +135,53 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    finish();
-                    Intent intent = new Intent(LogInActivity.this, ProfileActivity.class);
+                    //finish();
+                    /*Intent intent = new Intent(LogInActivity.this, ProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
+                    startActivity(intent);*/
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    String userid = firebaseUser.getUid();
+                    String username = editTextUserName.getText().toString();
+                    if (UserNames.indexOf(userid+","+username)!=-1)
+                    {
+                        Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileUser").child(username).getValue();
+                        String UserData = objectMap.toString();
+                        if (UserData.indexOf(", Age=0}")==-1)
+                        {
+                            Log.e("WORK!","WORK!");
+
+                        }
+                        else
+                        {
+                            userIntent.putExtra("username",username);
+                            startActivity(userIntent);
+                        }
+                    }
+                    else {
+                        if (CoachNames.indexOf(userid+","+editTextUserName.getText().toString())!=-1)
+                            {
+                                Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileCoach").child(username).getValue();
+                                String CoachData = objectMap.toString();
+                                if (CoachData.indexOf(", Age=0}")==-1)
+                                {
+                                    Log.e("WORK!","WORK!");
+
+                                }
+                                else
+                                {
+                                    coachIntent.putExtra("username",username);
+                                    startActivity(coachIntent);
+                                }
+                            }
+                        else{
+                            //Toast.makeText(this,"Email or password or username, is wrong",Toast.LENGTH_LONG).show();
+                            Log.e("ERROR","Email or password or username, is wrong");
+                            }
+                        }
+
+
+                }
+                else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
