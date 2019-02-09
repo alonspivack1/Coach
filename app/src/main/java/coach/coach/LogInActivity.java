@@ -148,7 +148,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         String UserData = objectMap.toString();
                         if (UserData.indexOf(", Age=0}")==-1)
                         {
-                            Log.e("WORK!","WORK!");
+                            Log.e("WORK!","WORK!!");
 
                         }
                         else
@@ -164,7 +164,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 String CoachData = objectMap.toString();
                                 if (CoachData.indexOf(", Age=0}")==-1)
                                 {
-                                    Log.e("WORK!","WORK!");
+                                    Log.e("WORK!","WORK!!");
+
 
                                 }
                                 else
