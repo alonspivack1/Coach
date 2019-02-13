@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 
 public class UserProfileMaker extends AppCompatActivity {
 
@@ -26,7 +31,7 @@ public class UserProfileMaker extends AppCompatActivity {
     CheckBox cbuserburnfat,cbusergym,cbuserstreet,cbuserhome,cbuserdistance,cbuserspeed;
     DatabaseReference reference;
     private DatabaseReference databaseReference;
-    Intent intent;
+    Intent intent,MainActivityIntent;
     String username,Goal=",";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,8 @@ public class UserProfileMaker extends AppCompatActivity {
 
         intent = getIntent();
         username=intent.getStringExtra("username");
+
+        MainActivityIntent = new Intent(this,MainActivity.class);
 
         etuserage = findViewById(R.id.etuserage);
         etuserweight = findViewById(R.id.etuserweight);
@@ -114,6 +121,44 @@ public class UserProfileMaker extends AppCompatActivity {
         {
             Goal+=""+cbuserspeed.getText().toString()+",";
         }
+        if(!Pattern.matches("[0-9.]+", etuserage.getText().toString()))
+        {
+            etuserage.setError("Use just numbers");
+            etuserage.requestFocus();
+            return;
+        }
+        if(!Pattern.matches("[0-9.]+.", etuserweight.getText().toString()))
+        {
+            etuserage.setError("Use just numbers");
+            etuserage.requestFocus();
+            return;
+        }
+        if(!Pattern.matches("[0-9]+", etuserheight.getText().toString()))
+        {
+            etuserage.setError("Use just numbers");
+            etuserage.requestFocus();
+            return;
+        }
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etusertime.getText().toString()))
+        {
+            etusertime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etusertime.requestFocus();
+            return;
+        }
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etuseritem.getText().toString()))
+        {
+            etuseritem.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etuseritem.requestFocus();
+            return;
+        }
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etuserdescription.getText().toString()))
+        {
+            etuserdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etuserdescription.requestFocus();
+            return;
+        }
+
+
         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("Age",etuserage.getText().toString());
@@ -123,6 +168,16 @@ public class UserProfileMaker extends AppCompatActivity {
         hashMap.put("Goal",Goal);
         hashMap.put("Equipment",etuseritem.getText().toString());
         hashMap.put("Description",etuserdescription.getText().toString());
-        reference.setValue(hashMap);
+        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isComplete()) {
+                    MainActivityIntent.putExtra("username",username);
+                    MainActivityIntent.putExtra("type","User");
+                    startActivity(MainActivityIntent);
+                    finish();
+                }
+            }
+        });
     }
 }

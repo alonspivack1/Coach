@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -32,7 +35,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     ProgressBar progressBar;
     String UserNames="",CoachNames="",Type="";
     DataSnapshot DataSnap;
-    Intent userIntent,coachIntent;
+    Intent userIntent,coachIntent,MainActivityIntent;
 
     private DatabaseReference databaseReference,databaseReference2,databaseReference3;
     @Override
@@ -42,6 +45,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);
+        MainActivityIntent = new Intent(this,MainActivity.class);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -148,6 +152,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         String UserData = objectMap.toString();
                         if (UserData.indexOf(", Age=0}")==-1)
                         {
+                            MainActivityIntent.putExtra("username",username);
+                            MainActivityIntent.putExtra("type","User");
+                            startActivity(MainActivityIntent);
+                            finish();
                             Log.e("WORK!","WORK!!");
 
                         }
@@ -155,6 +163,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         {
                             userIntent.putExtra("username",username);
                             startActivity(userIntent);
+                            finish();
                         }
                     }
                     else {
@@ -164,6 +173,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 String CoachData = objectMap.toString();
                                 if (CoachData.indexOf(", Age=0}")==-1)
                                 {
+                                    MainActivityIntent.putExtra("username",username);
+                                    MainActivityIntent.putExtra("type","Coach");
+                                    startActivity(MainActivityIntent);
+                                    finish();
                                     Log.e("WORK!","WORK!!");
 
 
@@ -172,6 +185,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 {
                                     coachIntent.putExtra("username",username);
                                     startActivity(coachIntent);
+                                    finish();
                                 }
                             }
                         else{
@@ -196,6 +210,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             case R.id.textViewSignup:
                 finish();
                 startActivity(new Intent(this, SignUpActivity.class));
+                finish();
                 break;
 
             case R.id.buttonLogin:
@@ -203,4 +218,5 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
 }

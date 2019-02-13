@@ -22,10 +22,13 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ProfileActivity" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".FragmentChat"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".CoachProfileMaker" />
-        <activity android:name=".UserProfileMaker"></activity>
+        <activity android:name=".UserProfileMaker" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".FragmentProgram" />
+        <activity android:name=".FragmentSearch"></activity>
     </application>
 
 </manifest>

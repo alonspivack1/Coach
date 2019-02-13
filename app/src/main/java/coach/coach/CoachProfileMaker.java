@@ -1,6 +1,7 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,16 +9,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class CoachProfileMaker extends AppCompatActivity {
 
     EditText etcoachage,etcoachwhere,etcoachtime,etcoachdescription;
     CheckBox cbcoachburnfat,cbcoachgym,cbcoachstreet,cbcoachhome,cbcoachdistance,cbcoachspeed;
-    Intent intent;
+    Intent intent,MainActivityIntent;
     DatabaseReference reference;
     String username,Professionalization=",";
     @Override
@@ -27,6 +31,8 @@ public class CoachProfileMaker extends AppCompatActivity {
 
         intent = getIntent();
         username=intent.getStringExtra("username");
+
+        MainActivityIntent = new Intent(this,MainActivity.class);
 
         etcoachage = findViewById(R.id.etcoachage);
         etcoachwhere = findViewById(R.id.etcoachwhere);
@@ -93,6 +99,38 @@ public class CoachProfileMaker extends AppCompatActivity {
             Professionalization+=""+cbcoachspeed.getText().toString()+",";
         }
 
+        if(!Pattern.matches("[0-9.]+", etcoachage.getText().toString()))
+        {
+            etcoachage.setError("Use just numbers");
+            etcoachage.requestFocus();
+            return;
+        }
+
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachwhere.getText().toString()))
+        {
+            etcoachwhere.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etcoachwhere.requestFocus();
+            return;
+        }
+
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachtime.getText().toString()))
+        {
+            etcoachtime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etcoachtime.requestFocus();
+            return;
+        }
+
+
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachdescription.getText().toString()))
+        {
+            etcoachdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
+            etcoachdescription.requestFocus();
+            return;
+        }
+
+
+
+
         reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("Age",etcoachage.getText().toString());
@@ -100,6 +138,16 @@ public class CoachProfileMaker extends AppCompatActivity {
         hashMap.put("StudyPlace",etcoachwhere.getText().toString());
         hashMap.put("Description",etcoachdescription.getText().toString());
         hashMap.put("CoachTime",etcoachtime.getText().toString());
-        reference.setValue(hashMap);
+        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isComplete()) {
+                    MainActivityIntent.putExtra("username",username);
+                    MainActivityIntent.putExtra("type","Coach");
+                    startActivity(MainActivityIntent);
+                    finish();
+                }
+            }
+        });
     }
 }

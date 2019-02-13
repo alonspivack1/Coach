@@ -174,7 +174,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         numflag1 =CoachAnswer.indexOf(", "+username+"=");
         if(numflag1==-1)
         {
-            numflag1 =CoachAnswer.indexOf("{"+username+"=");
+            numflag1 =CoachAnswer.toLowerCase().indexOf("{"+username.toLowerCase()+"=");
             if(numflag1!=-1)
             {
             editTextUser.setError("This name is taken, choose other name");
@@ -186,7 +186,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         numflag3 =UserAnswer.indexOf(", "+username+"=");
         if(numflag3==-1)
         {
-            numflag3 =UserAnswer.indexOf("{"+username+"=");
+            numflag3 =UserAnswer.toLowerCase().indexOf("{"+username.toLowerCase()+"=");
             if(numflag3!=-1)
             {
                 editTextUser.setError("This name is taken, choose other name");
