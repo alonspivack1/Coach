@@ -255,13 +255,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         {
                             reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("Age","0" );
-                            hashMap.put("Weight","0" );
-                            hashMap.put("Height","0" );
-                            hashMap.put("PracticeTime", "0");
-                            hashMap.put("Goal", ",");
-                            hashMap.put("Equipment", "0");
-                            hashMap.put("Description", "0");
+                            hashMap.put("{Age}","0" );
+                            hashMap.put("{Weight}","0" );
+                            hashMap.put("{Height}","0" );
+                            hashMap.put("{PracticeTime}", "0");
+                            hashMap.put("{Goal}", ",");
+                            hashMap.put("{Equipment}", "0");
+                            hashMap.put("{Gender}","Male" );
+                            hashMap.put("{Description}", "0");
                             //   hashMap.put("username",username);
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -269,6 +270,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     if (task.isComplete()) {
                                         UserIntent.putExtra("username",username+"");
                                         startActivity(UserIntent);
+                                        finish();
                                     }
                                 }
                             });
@@ -277,11 +279,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             {
                                 reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
                                 HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("Age","0" );
-                                hashMap.put("StudyPlace","0" );
-                                hashMap.put("Professionalization","," );
-                                hashMap.put("Description", "0");
-                                hashMap.put("CoachTime", "0");
+                                hashMap.put("{Age}","0" );
+                                hashMap.put("{StudyPlace}","0" );
+                                hashMap.put("{Professionalization}","," );
+                                hashMap.put("{Description}", "0");
+                                hashMap.put("{Gender}","Male" );
+                                hashMap.put("{CoachTime}", "0");
 
                                 //   hashMap.put("username",username);
                                 reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -290,6 +293,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         if (task.isComplete()) {
                                             CoachIntent.putExtra("username",username);
                                             startActivity(CoachIntent);
+                                            finish();
                                         }
                                     }
                                 });

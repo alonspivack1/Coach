@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Switch;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,8 @@ public class CoachProfileMaker extends AppCompatActivity {
     CheckBox cbcoachburnfat,cbcoachgym,cbcoachstreet,cbcoachhome,cbcoachdistance,cbcoachspeed;
     Intent intent,MainActivityIntent;
     DatabaseReference reference;
-    String username,Professionalization=",";
+    String username,Professionalization=",",Gender;
+    Switch switchcoachgender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,8 @@ public class CoachProfileMaker extends AppCompatActivity {
         cbcoachhome = findViewById(R.id.cbcoachhome);
         cbcoachdistance = findViewById(R.id.cbcoachdistance);
         cbcoachspeed = findViewById(R.id.cbcoachspeed);
+
+        switchcoachgender = findViewById(R.id.switchcoachgender);
     }
 
     public void CoachSend(View view) {
@@ -106,14 +110,14 @@ public class CoachProfileMaker extends AppCompatActivity {
             return;
         }
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachwhere.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachwhere.getText().toString()))
         {
             etcoachwhere.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachwhere.requestFocus();
             return;
         }
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachtime.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachtime.getText().toString()))
         {
             etcoachtime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachtime.requestFocus();
@@ -121,23 +125,32 @@ public class CoachProfileMaker extends AppCompatActivity {
         }
 
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etcoachdescription.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachdescription.getText().toString()))
         {
             etcoachdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachdescription.requestFocus();
             return;
         }
 
+        if (switchcoachgender.isChecked())
+        {
+            Gender = "Male";
+
+        }
+        else {
+            Gender ="Female";
+        }
 
 
 
         reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("Age",etcoachage.getText().toString());
-        hashMap.put("Professionalization",Professionalization);
-        hashMap.put("StudyPlace",etcoachwhere.getText().toString());
-        hashMap.put("Description",etcoachdescription.getText().toString());
-        hashMap.put("CoachTime",etcoachtime.getText().toString());
+        hashMap.put("{Age}",etcoachage.getText().toString());
+        hashMap.put("{Gender}",Gender );
+        hashMap.put("{Professionalization}",Professionalization);
+        hashMap.put("{StudyPlace}",etcoachwhere.getText().toString());
+        hashMap.put("{Description}",etcoachdescription.getText().toString());
+        hashMap.put("{CoachTime}",etcoachtime.getText().toString());
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

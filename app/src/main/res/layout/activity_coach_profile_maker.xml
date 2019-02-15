@@ -26,6 +26,27 @@ tools:context=".CoachProfileMaker">
             android:inputType="phone" />
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"/>
+            <Switch
+                android:id="@+id/switchcoachgender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:theme="@style/SCBSwitch" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"/>
+        </LinearLayout>
+
         <EditText
             android:id="@+id/etcoachwhere"
             android:layout_width="match_parent"

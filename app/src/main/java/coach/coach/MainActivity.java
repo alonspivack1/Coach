@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     String username,type,CoachProfiles="";
     TextView fragchat,fragtv;
     int i;
-    Fragment myfragment;
+    public Fragment myfragment;
     private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         username=intent.getStringExtra("username");
         type=intent.getStringExtra("type");
-        if (type.equals("Coach")){
+       /* if (type.equals("Coach")){
 
             databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        }
+        }*/
         //if (type.equals("User")) {}
         fragchat = (TextView) findViewById(R.id.fragchat);
 
@@ -126,13 +126,41 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_switch, myfragment);
         fragmentTransaction.commit();
     }
-    public void abc(View view) {
-        i++;
-        fragchat.setText(i+"");
-    }
+  /*
     public void ABC(View view) {
        // Toast.makeText(this,"Answer: "+CoachProfiles,Toast.LENGTH_LONG).show();
         fragtv.setText(CoachProfiles);
     }
+*/
+   /* @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnfragchat:
+                myfragment = new FragmentChat();
 
+                fm = getFragmentManager();
+                fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+
+                break;
+
+            case R.id.btnfragprogram:
+                myfragment = new FragmentProgram();
+
+                fm = getFragmentManager();
+                fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+                break;
+            case R.id.btnfragsearch:
+                myfragment = new FragmentSearch();
+
+                fm = getFragmentManager();
+                fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+                break;
+        }
+    }*/
 }

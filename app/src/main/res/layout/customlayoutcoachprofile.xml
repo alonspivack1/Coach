@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvlistname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="שם"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvlistage"
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:text="גיל" />
+    <TextView
+        android:id="@+id/tvlistgender"
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:text="מין" />
+
+    <TextView
+        android:id="@+id/tvlisttime"
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:text="זמן מאמן" />
+
+
+    <TextView
+        android:id="@+id/tvlistwhere"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:text="איפה למד" />
+
+    <TextView
+        android:id="@+id/tvlistprofessionalization"
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:text="התמקצעות" />
+
+    <TextView
+        android:id="@+id/tvlistdescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:text="תיאור קצר" />
+
+</LinearLayout>

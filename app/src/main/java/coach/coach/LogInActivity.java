@@ -33,7 +33,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     FirebaseAuth mAuth;
     EditText editTextEmail, editTextPassword,editTextUserName;
     ProgressBar progressBar;
-    String UserNames="",CoachNames="",Type="";
+    String UserNames="",CoachNames="";
     DataSnapshot DataSnap;
     Intent userIntent,coachIntent,MainActivityIntent;
 
@@ -140,7 +140,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     //finish();
-                    /*Intent intent = new Intent(LogInActivity.this, ProfileActivity.class);
+                    /*
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);*/
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -150,7 +150,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     {
                         Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileUser").child(username).getValue();
                         String UserData = objectMap.toString();
-                        if (UserData.indexOf(", Age=0}")==-1)
+                        if (UserData.indexOf(", {Age}=0")==-1)
                         {
                             MainActivityIntent.putExtra("username",username);
                             MainActivityIntent.putExtra("type","User");
@@ -171,7 +171,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                             {
                                 Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileCoach").child(username).getValue();
                                 String CoachData = objectMap.toString();
-                                if (CoachData.indexOf(", Age=0}")==-1)
+                                if (CoachData.indexOf(", {Age}=0")==-1)
                                 {
                                     MainActivityIntent.putExtra("username",username);
                                     MainActivityIntent.putExtra("type","Coach");
@@ -183,9 +183,23 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 }
                                 else
                                 {
+                                    /*
+                                    Coach coach = new Coach("pp",DataSnap.child("ProfileCoach").child(username).getValue().toString());
+                                    Log.e("Age",DataSnap.child("ProfileCoach").child(username).getValue().toString());
+                                    Log.e("Age",coach.getAge());*/
+
+
+                                    for (int index = DataSnap.child("ProfileCoach").child(username).getValue().toString().indexOf("=");
+                                         index >= 0;
+                                         index = DataSnap.child("ProfileCoach").child(username).getValue().toString().indexOf("=", index + 1))
+                                    {
+                                        Log.e("Answers",index+"");
+                                    }
+
+                                    /*
                                     coachIntent.putExtra("username",username);
                                     startActivity(coachIntent);
-                                    finish();
+                                    finish();*/
                                 }
                             }
                         else{

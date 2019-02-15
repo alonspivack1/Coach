@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +33,8 @@ public class UserProfileMaker extends AppCompatActivity {
     DatabaseReference reference;
     private DatabaseReference databaseReference;
     Intent intent,MainActivityIntent;
-    String username,Goal=",";
+    String username,Goal=",",Gender;
+    Switch switchusergender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class UserProfileMaker extends AppCompatActivity {
         cbuserhome = findViewById(R.id.cbuserhome);
         cbuserdistance = findViewById(R.id.cbuserdistance);
         cbuserspeed = findViewById(R.id.cbuserspeed);
+
+        switchusergender = findViewById(R.id.switchusergender);
         }
 
     public void UserSend(View view) {
@@ -139,35 +143,44 @@ public class UserProfileMaker extends AppCompatActivity {
             etuserage.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etusertime.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etusertime.getText().toString()))
         {
             etusertime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etusertime.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etuseritem.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etuseritem.getText().toString()))
         {
             etuseritem.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etuseritem.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),.]+", etuserdescription.getText().toString()))
+        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etuserdescription.getText().toString()))
         {
             etuserdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etuserdescription.requestFocus();
             return;
         }
 
+        if (switchusergender.isChecked())
+        {
+            Gender = "Male";
+
+        }
+        else {
+            Gender ="Female";
+        }
 
         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("Age",etuserage.getText().toString());
-        hashMap.put("Weight",etuserweight.getText().toString());
-        hashMap.put("Height",etuserheight.getText().toString());
-        hashMap.put("PracticeTime",etusertime.getText().toString());
-        hashMap.put("Goal",Goal);
-        hashMap.put("Equipment",etuseritem.getText().toString());
-        hashMap.put("Description",etuserdescription.getText().toString());
+        hashMap.put("{Age}",etuserage.getText().toString());
+        hashMap.put("{Gender}",Gender );
+        hashMap.put("{Weight}",etuserweight.getText().toString());
+        hashMap.put("{Height}",etuserheight.getText().toString());
+        hashMap.put("{PracticeTime}",etusertime.getText().toString());
+        hashMap.put("{Goal}",Goal);
+        hashMap.put("{Equipment}",etuseritem.getText().toString());
+        hashMap.put("{Description}",etuserdescription.getText().toString());
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
