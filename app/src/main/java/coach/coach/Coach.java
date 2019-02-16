@@ -40,7 +40,7 @@ public class Coach {
         this.age = details.substring(answer[2]+1,details.indexOf(", {Coa"));
         this.time = details.substring(answer[3]+1,details.indexOf(", {Gen"));
         this.gender = details.substring(answer[4]+1,details.indexOf(", {Des"));
-        this.description = "1";
+        this.description = details.substring(answer[5]+1,details.length()-1);
         //this.description = details.substring(answer[5]+1,details.indexOf(details.length()-2));
         //this.description = details.substring(answer[5]+1,details.indexOf("}"));
     }

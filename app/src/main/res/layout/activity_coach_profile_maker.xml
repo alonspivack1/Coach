@@ -121,7 +121,7 @@ tools:context=".CoachProfileMaker">
             android:layout_gravity="right"
             android:layout_weight="1"
             android:layoutDirection="rtl"
-            android:text="אימונים  בבית" />
+            android:text="אימונים בבית" />
 
         <CheckBox
             android:id="@+id/cbcoachdistance"

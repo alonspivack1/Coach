@@ -1,9 +1,11 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,11 +14,17 @@ import android.widget.Switch;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import static java.lang.Thread.sleep;
 
 public class CoachProfileMaker extends AppCompatActivity {
 
@@ -25,7 +33,10 @@ public class CoachProfileMaker extends AppCompatActivity {
     Intent intent,MainActivityIntent;
     DatabaseReference reference;
     String username,Professionalization=",",Gender;
+    DataSnapshot dataSnap;
     Switch switchcoachgender;
+    String TRY;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +60,72 @@ public class CoachProfileMaker extends AppCompatActivity {
         cbcoachspeed = findViewById(R.id.cbcoachspeed);
 
         switchcoachgender = findViewById(R.id.switchcoachgender);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               dataSnap = dataSnapshot;
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Coach coach;
+                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username).getValue().toString());
+                TRY=dataSnap.child("ProfileCoach").child(username).getValue().toString();
+                Log.e("TRY",TRY);
+                if (!coach.getAge().equals("0"))
+                {
+
+                    etcoachage.setText(coach.getAge());
+                    etcoachwhere.setText(coach.getWhere());
+                    etcoachtime.setText(coach.getTime());
+                    etcoachdescription.setText(coach.getDescription());
+                    if (coach.getGender().equals("Female"))
+                    {
+                        switchcoachgender.setChecked(false);
+                    }
+                    if (coach.getProfessionalization().indexOf("שריפת שומנים")!=-1)
+                    {
+                        cbcoachburnfat.setChecked(true);
+                    }
+                    if (coach.getProfessionalization().indexOf("אימוני כוח בחדר כושר")!=-1)
+                    {
+                        cbcoachgym.setChecked(true);
+                    }
+                    if (coach.getProfessionalization().indexOf("אימוני כוח בסטרייט")!=-1)
+                    {
+                        cbcoachstreet.setChecked(true);
+                    }
+                    if (coach.getProfessionalization().indexOf("אימונים בבית")!=-1)
+                    {
+                        cbcoachhome.setChecked(true);
+                    }
+                    if (coach.getProfessionalization().indexOf("שיפור מרחק בריצות")!=-1)
+                    {
+                        cbcoachdistance.setChecked(true);
+                    }
+                    if (coach.getProfessionalization().indexOf("שיפור מהירות בריצות")!=-1)
+                    {
+                        cbcoachspeed.setChecked(true);
+                    }
+
+                }
+
+
+
+            }
+        }, 1000);
     }
 
     public void CoachSend(View view) {
@@ -110,14 +187,14 @@ public class CoachProfileMaker extends AppCompatActivity {
             return;
         }
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachwhere.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etcoachwhere.getText().toString()))
         {
             etcoachwhere.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachwhere.requestFocus();
             return;
         }
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachtime.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etcoachtime.getText().toString()))
         {
             etcoachtime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachtime.requestFocus();
@@ -125,7 +202,7 @@ public class CoachProfileMaker extends AppCompatActivity {
         }
 
 
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etcoachdescription.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etcoachdescription.getText().toString()))
         {
             etcoachdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etcoachdescription.requestFocus();

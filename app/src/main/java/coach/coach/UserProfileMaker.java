@@ -1,10 +1,12 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -34,7 +36,9 @@ public class UserProfileMaker extends AppCompatActivity {
     private DatabaseReference databaseReference;
     Intent intent,MainActivityIntent;
     String username,Goal=",",Gender;
+    DataSnapshot dataSnap;
     Switch switchusergender;
+    String TRY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +64,77 @@ public class UserProfileMaker extends AppCompatActivity {
         cbuserspeed = findViewById(R.id.cbuserspeed);
 
         switchusergender = findViewById(R.id.switchusergender);
-        }
+
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dataSnap = dataSnapshot;
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                User user;
+                user = new User(username,dataSnap.child("ProfileUser").child(username).getValue().toString());
+                TRY=dataSnap.child("ProfileUser").child(username).getValue().toString();
+                Log.e("TRY",TRY);
+                if (!user.getAge().equals("0"))
+                {
+
+                    etuserage.setText(user.getAge());
+                    etuserweight.setText(user.getWeight());
+                    etuserheight.setText(user.getHeight());
+                    etusertime.setText(user.getTime());
+                    etuseritem.setText(user.getItem());
+                    etuserdescription.setText(user.getDescription());
+                    if (user.getGender().equals("Female"))
+                    {
+                        switchusergender.setChecked(false);
+                    }
+                    if (user.getGoal().indexOf("שריפת שומנים")!=-1)
+                    {
+                        cbuserburnfat.setChecked(true);
+                    }
+                    if (user.getGoal().indexOf("אימוני כוח בחדר כושר")!=-1)
+                    {
+                        cbusergym.setChecked(true);
+                    }
+                    if (user.getGoal().indexOf("אימוני כוח בסטרייט")!=-1)
+                    {
+                        cbuserstreet.setChecked(true);
+                    }
+                    if (user.getGoal().indexOf("אימונים בבית")!=-1)
+                    {
+                        cbuserhome.setChecked(true);
+                    }
+                    if (user.getGoal().indexOf("שיפור מרחק בריצות")!=-1)
+                    {
+                        cbuserdistance.setChecked(true);
+                    }
+                    if (user.getGoal().indexOf("שיפור מהירות בריצות")!=-1)
+                    {
+                        cbuserspeed.setChecked(true);
+                    }
+
+                }
+
+
+
+            }
+        }, 1000);
+    }
+
 
     public void UserSend(View view) {
         if (etuserage.getText().toString().length()==0||etuserage.getText().toString().equals("0"))
@@ -143,19 +217,19 @@ public class UserProfileMaker extends AppCompatActivity {
             etuserage.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etusertime.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etusertime.getText().toString()))
         {
             etusertime.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etusertime.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etuseritem.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etuseritem.getText().toString()))
         {
             etuseritem.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etuseritem.requestFocus();
             return;
         }
-        if(!Pattern.matches("[A-Za-z0-9!@#$%*(),. ]+", etuserdescription.getText().toString()))
+        if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etuserdescription.getText().toString()))
         {
             etuserdescription.setError("Just letters, numbers and !@#$%*(),. symbols accepted");
             etuserdescription.requestFocus();

@@ -161,6 +161,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         }
                         else
                         {
+/*                            User user = new User (username,(DataSnap.child("ProfileUser").child(username).getValue().toString()));
+                            Log.e("Full",user.getDetails());*/
+
                             userIntent.putExtra("username",username);
                             startActivity(userIntent);
                             finish();
@@ -189,17 +192,17 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                     Log.e("Age",coach.getAge());*/
 
 
-                                    for (int index = DataSnap.child("ProfileCoach").child(username).getValue().toString().indexOf("=");
+                                    /*for (int index = DataSnap.child("ProfileCoach").child(username).getValue().toString().indexOf("=");
                                          index >= 0;
                                          index = DataSnap.child("ProfileCoach").child(username).getValue().toString().indexOf("=", index + 1))
                                     {
                                         Log.e("Answers",index+"");
-                                    }
+                                    }*/
 
-                                    /*
+
                                     coachIntent.putExtra("username",username);
                                     startActivity(coachIntent);
-                                    finish();*/
+                                    finish();
                                 }
                             }
                         else{

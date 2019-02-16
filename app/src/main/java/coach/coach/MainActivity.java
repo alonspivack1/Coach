@@ -120,11 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void FragmentThirdClick(View view) {
         myfragment = new FragmentSearch();
-
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_switch, myfragment);
         fragmentTransaction.commit();
+    }
+    public String getMyData() {
+        return username;
     }
   /*
     public void ABC(View view) {
