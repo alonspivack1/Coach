@@ -101,24 +101,19 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     public void FragmentOneClick(View view) throws InterruptedException {
-        if (FlagInt==3) {
-            Thread.sleep(100);
-            FlagInt=1;
+        try {
+        if (FlagInt != 1) {
+            Thread.sleep(200);
+            FlagInt = 1;
             myfragment = new FragmentChat();
             FragmentManager fm = getFragmentManager();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_switch, myfragment);
             fragmentTransaction.commit();
         }
-            else
-        {
-            FlagInt=1;
-            myfragment = new FragmentChat();
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-            fragmentTransaction.commit();
-        }
+    }catch (Exception e) {
+        System.out.println("An exception!");
+    }
 
 
 
@@ -126,35 +121,29 @@ public class MainActivity extends AppCompatActivity {
     }
     public void FragmentTwoClick(View view) throws InterruptedException {
 
-
-            if (FlagInt==3) {
-                Thread.sleep(100);
-                FlagInt = 2;
-                myfragment = new FragmentProgram();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-            }
-            else
-            {
-                FlagInt = 2;
-                myfragment = new FragmentProgram();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-            }
+        try{
+        if (FlagInt != 2) {
+            Thread.sleep(200);
+            FlagInt = 2;
+            myfragment = new FragmentProgram();
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+            fragmentTransaction.commit();
+        }
+    }catch (Exception e) {
+        System.out.println("An exception!");
+    }
 
 
     }
 
-    public void FragmentThirdClick(View view) {
-        if(FlagInt!=3)
-        {
-            if (type.equals("User"))
-            {
-                FlagInt=3;
+    public void FragmentThirdClick(View view) throws InterruptedException {
+        try{
+            if (FlagInt != 3) {
+            if (type.equals("User")) {
+                Thread.sleep(200);
+                FlagInt = 3;
                 myfragment = new FragmentSearch();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -162,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         }
+    }catch (Exception e) {
+        System.out.println("An exception!");
+    }
 
     }
     public String getUsername() {

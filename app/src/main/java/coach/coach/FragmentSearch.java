@@ -53,7 +53,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -73,7 +73,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
             }
         });
-        View v = inflater.inflate(R.layout.fragment_search, container, false);
         fragtv = (TextView) v.findViewById(R.id.fragtv);
         Button b = (Button) v.findViewById(R.id.button);
         b.setOnClickListener(this);
@@ -109,7 +108,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 public void run() {
                     RefreshCoaches();
                 }
-            }, 250);
+            }, 100);
         } catch (Exception e) {
             System.out.println("An exception!");
         }
