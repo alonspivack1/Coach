@@ -37,7 +37,7 @@ public class User {
         this.time = details.substring(answer[4]+1,details.indexOf(", {Equ"));
         this.item = details.substring(answer[5]+1,details.indexOf(", {Age"));
         this.age = details.substring(answer[6]+1,details.indexOf(", {Goa"));
-        this.goal = details.substring(answer[7]+1,details.length()-1);
+        this.goal = details.substring(answer[7]+2,details.length()-2);
         Log.e("Full",details);
     }
 

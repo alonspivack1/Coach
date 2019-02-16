@@ -47,6 +47,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+
         String name = getItem(position).getName();
         String age = getItem(position).getAge();
         String time = getItem(position).getTime();
@@ -94,7 +95,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         holder.tvlistname.setText("שם: "+coach.getName());
         holder.tvlistage.setText("גיל: " + coach.getAge());
         holder.tvlisttime.setText("כמה זמן מאמן: "+coach.getTime());
-        holder.tvlistwhere.setText("למד ב: "+coach.getWhere());
+        holder.tvlistwhere.setText("איפה למד לאמן: "+coach.getWhere());
         holder.tvlistprofessionalization.setText("התמקצעות: "+coach.getProfessionalization());
         holder.tvlistgender.setText("מין: "+coach.getGender());
         holder.tvlistdescription.setText("תיאור קצר: "+coach.getDescription());

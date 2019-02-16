@@ -86,7 +86,6 @@ public class CoachProfileMaker extends AppCompatActivity {
                 Log.e("TRY",TRY);
                 if (!coach.getAge().equals("0"))
                 {
-
                     etcoachage.setText(coach.getAge());
                     etcoachwhere.setText(coach.getWhere());
                     etcoachtime.setText(coach.getTime());

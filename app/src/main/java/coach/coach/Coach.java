@@ -15,12 +15,12 @@ public class Coach {
     int[] answer = new int[6];
 
     public Coach(String name, String age,String time,String where,String description,String professionalization) {
-       this.name = name;
-       this.age = age;
-       this.time = time;
-       this.where = where;
-       this.description = description;
-       this.professionalization = professionalization;
+        this.name = name;
+        this.age = age;
+        this.time = time;
+        this.where = where;
+        this.description = description;
+        this.professionalization = professionalization;
 
     }
     public Coach(String name,String details)
@@ -36,7 +36,7 @@ public class Coach {
 
         this.name = name;
         this.where = details.substring(answer[0]+1,details.indexOf(", {Pro"));
-        this.professionalization = details.substring(answer[1]+1,details.indexOf(", {Age"));
+        this.professionalization = details.substring(answer[1]+2,details.indexOf(", {Age")-1);
         this.age = details.substring(answer[2]+1,details.indexOf(", {Coa"));
         this.time = details.substring(answer[3]+1,details.indexOf(", {Gen"));
         this.gender = details.substring(answer[4]+1,details.indexOf(", {Des"));
@@ -71,9 +71,9 @@ public class Coach {
     public  String getGender() {
         if (this.gender.equals("Male"))
         {
-        return "זכר";
-    }
-    else
+            return "זכר";
+        }
+        else
         {
             return "נקבה";
         }
