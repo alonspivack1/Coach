@@ -2,6 +2,7 @@ package coach.coach;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -27,9 +29,11 @@ public class FragmentProgram extends Fragment{
     DatabaseReference databaseReference;
     DataSnapshot dataSnap;
     Coach[] coaches = new Coach[3];
+    User[] users = new User[3];
     int i =0;
     String username,type,sub,help;
     ArrayList<Coach> coachesList;
+    ArrayList<User> usersList;
     ListView listView;
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
@@ -38,6 +42,7 @@ public class FragmentProgram extends Fragment{
         View view = inflater.inflate(R.layout.fragment_program, container,false);
         listView = (ListView) view.findViewById(R.id.programlist);
         coachesList = new ArrayList<>();
+        usersList = new ArrayList<>();
 
         MainActivity activity = (MainActivity) getActivity();
         username = activity.getUsername();
@@ -62,14 +67,43 @@ public class FragmentProgram extends Fragment{
             }
         });
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                if (type.equals("User"))
+                {
+                    Intent ChatIntent = new Intent(getActivity(),ViewProgram.class);
+                    ChatIntent.putExtra("receiver",username);
+                    ChatIntent.putExtra("sender",coaches[position].getName());
+                    startActivity(ChatIntent);
+                    Log.e("receiver",username);
+                    Log.e("sender",coaches[position].getName());
+                }
+                if (type.equals("Coach"))
+                {
+                    Intent ChatIntent = new Intent(getActivity(),Program.class);
+                    ChatIntent.putExtra("sender",username);
+                    ChatIntent.putExtra("receiver",users[position].getName());
+                    startActivity(ChatIntent);
+                    Log.e("sender",username);
+                    Log.e("receiver",users[position].getName());
+                }
+            }
+        });
 
         try {
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    RefreshProgramlist();
+                    if (type.equals("User")) {
+                        UserRefreshProgramlist();
+                    }
+                    if (type.equals("Coach"))
+                    {
+                        CoachRefreshProgramlist();
+                    }
                 }
             }, 100);
         } catch (Exception e) {
@@ -80,7 +114,7 @@ public class FragmentProgram extends Fragment{
 
     }
 
-    public void RefreshProgramlist(){
+    public void UserRefreshProgramlist(){
         Log.e("Program",dataSnap.child("UserNames").child(username).getValue().toString());
 
         //Coach coach = new Coach("pp","{{StudyPlace}=באר שבע, {Professionalization}=,שריפת שומנים,אימוני כוח בחדר כושר,אימוני כוח בסטרייט,אימונים בבית,שיפור מרחק בריצות,שיפור מהירות בריצות,, {Age}=26, {CoachTime}=שנתיים, {Gender}=Male, {Description}=אין מה לתאר}");
@@ -110,6 +144,52 @@ public class FragmentProgram extends Fragment{
 
 
         CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
+
+        listView.setAdapter(adapter);
+    }
+    public void CoachRefreshProgramlist(){
+        Log.e("Program",dataSnap.child("CoachNames").child(username).getValue().toString());
+
+        //Coach coach = new Coach("pp","{{StudyPlace}=באר שבע, {Professionalization}=,שריפת שומנים,אימוני כוח בחדר כושר,אימוני כוח בסטרייט,אימונים בבית,שיפור מרחק בריצות,שיפור מהירות בריצות,, {Age}=26, {CoachTime}=שנתיים, {Gender}=Male, {Description}=אין מה לתאר}");
+        help =dataSnap.child("CoachNames").child(username).getValue().toString();
+        sub = help.substring((help.indexOf(","+username+","))+2+username.length(),help.length());
+        Log.e("ProgramFull",sub);
+
+
+        int index = sub.indexOf(",");
+        Log.e("Index",index+"");
+        Log.e("sub", sub);
+        while (index >= 0) {
+
+            Log.e("Name", sub.substring(0, index));
+            users[i] = new User(sub.substring(0, index),dataSnap.child("ProfileUser").child(sub.substring(0, index)).getValue().toString());
+            Log.e("USER!","Name:"+sub.substring(0, index));
+            Log.e("USER!","User:"+dataSnap.child("ProfileUser").child(sub.substring(0, index)).getValue().toString());
+            Log.e("Name",users[i].getName());
+            Log.e("Height",users[i].getHeight());
+            Log.e("Gender",users[i].getGender());
+            Log.e("Weight",users[i].getWeight());
+            Log.e("Description",users[i].getDescription());
+            Log.e("Time",users[i].getTime());
+            Log.e("Item",users[i].getItem());
+            Log.e("Age",users[i].getAge());
+            Log.e("Goal",users[i].getGoal());
+            Log.e("Details",users[i].getDetails());
+
+            usersList.add(users[i]);
+            i++;
+            sub = sub.substring(index + 1);
+            Log.e("sub", sub);
+            index = sub.indexOf(",");
+            Log.e("Index", index + "");
+
+
+
+        }
+        //coachesList.add(coach);
+
+
+        UserListAdapter adapter = new UserListAdapter(getActivity(), R.layout.customlayoutuserprofile, usersList);
 
         listView.setAdapter(adapter);
     }

@@ -3,4 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorMessageSender">#11C037</color>
+    <color name="colorMessageReceive">#FFFFFF</color>
+    <color name="colorTextSender">#F0FFFFFF</color>
+    <color name="colorTextReceive">#000000</color>
 </resources>

@@ -63,7 +63,6 @@ public class User {
     public String getDescription() {
         return this.description;
     }
-
     public String getTime() {
         return this.time;
     }

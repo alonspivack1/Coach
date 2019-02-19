@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ViewProgram"></activity>
+        <activity android:name=".Program" />
+        <activity android:name=".Chat"
+        android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".FragmentChat" />
         <activity android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,14 +25,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity
-            android:name=".FragmentChat"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".TransferFragment" />
         <activity android:name=".CoachProfileMaker" />
         <activity android:name=".UserProfileMaker" />
         <activity android:name=".MainActivity" />
         <activity android:name=".FragmentProgram" />
-        <activity android:name=".FragmentSearch"></activity>
+        <activity android:name=".FragmentSearch" />
     </application>
 
 </manifest>

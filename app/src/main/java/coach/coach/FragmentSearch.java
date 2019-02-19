@@ -1,6 +1,8 @@
 package coach.coach;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -37,12 +39,13 @@ import static java.lang.Thread.sleep;
 
 public class FragmentSearch extends Fragment implements View.OnClickListener {
     DatabaseReference databaseReference;
-    String CoachProfiles = "", HelpString = "";
+    String CoachProfiles = "",UserProfiles ="", HelpString = "";
     TextView fragtv;
     Boolean FirstOnClick = true;
     ListView listView;
     DataSnapshot dataSnap;
     Coach[] coaches = new Coach[8];
+    User[] users = new User[8];
     int i = 0;
     AlertDialog.Builder adb;
     int positionadb=0;
@@ -54,14 +57,15 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
                 dataSnap = dataSnapshot;
-                CoachProfiles = objectMap.toString();
+                CoachProfiles = dataSnapshot.child("CoachNames").getValue().toString();
+                UserProfiles = dataSnapshot.child("UserNames").getValue().toString();
+
                 //fragtv.setText(CoachProfiles+"");
                 // i++;
 
@@ -106,7 +110,13 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    RefreshCoaches();
+                    if (type.equals("User")) {
+                        RefreshCoaches();
+                    }
+                    if (type.equals("Coach"))
+                    {
+                        RefreshUsers();
+                    }
                 }
             }, 100);
         } catch (Exception e) {
@@ -115,6 +125,73 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
 
         return v;
+    }
+
+    private void RefreshUsers()
+    {
+        Log.e("1","0");
+        if (FirstOnClick){
+            HelpString=UserProfiles;
+            Log.e("1","1");}
+        while (HelpString.indexOf(", ")!=-1)
+        {
+            if (FirstOnClick)
+            {
+                Log.e("1","2");
+                UserCoachCheack = dataSnap.child("CoachNames").child(username).getValue().toString();
+                if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
+                    FirstOnClick=false;
+                    //HelpString=CoachProfiles;
+                    Log.e("FULL",HelpString);
+                    users[i] = new User(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileUser").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());
+                    //  coaches[0] = new Coach("coach","1","1","1","1","1");
+                    Log.e("Answer",HelpString.substring(1,HelpString.indexOf("=")));
+                    i++;
+
+                    Log.e("Dealits",dataSnap.child("ProfileUser").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());}
+                else
+                {
+                    FirstOnClick=false;
+                }
+            }
+            else
+            {
+                Log.e("1","3");
+                if (((HelpString.indexOf(", ")!=-1)))//i<coaches.length&&
+                {
+                    Log.e("1","4");
+                    HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
+                    Log.e("FULL",HelpString);
+                    Log.e("1",UserCoachCheack);
+                    if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
+                    {
+                        Log.e("1","5");
+                        users[i] = new User(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileUser").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                        // coaches[1] = new Coach("pp","1","1","1","1","1");
+                        Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
+
+                        i++;
+
+
+                        Log.e("Dealits",dataSnap.child("ProfileUser").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                    }
+
+
+
+                }
+            }}
+        if (HelpString.indexOf(", ")==-1){
+            Log.e("Array","Start");
+            ArrayList<User> usersList = new ArrayList<>();
+            for (int j=0; j<i; j++)
+            {
+                usersList.add(users[j]);
+            }
+
+            UserListAdapter adapter = new UserListAdapter(getActivity(), R.layout.customlayoutuserprofile, usersList);
+            listView.setAdapter(adapter);
+            return;
+        }
     }
 
     private void RefreshCoaches() {
@@ -207,12 +284,13 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("sender",username);
                 hashMap.put("receiver",coaches[positionadb].getName());
-                hashMap.put("message","startchat");
+                hashMap.put("message","נשלחה בקשת קשר");
                 //.child(username+"&"+(coaches[positionadb].getName())
-                reference3.child(username+"&"+(coaches[positionadb].getName())).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                reference3.child(username+"&"+(coaches[positionadb].getName())).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()) {
+                            reference3.child(username+"&"+(coaches[positionadb].getName())).child("num").child("num").setValue(2);
                             reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("message","Empty program");
