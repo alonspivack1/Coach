@@ -7,4 +7,7 @@
     <color name="colorMessageReceive">#FFFFFF</color>
     <color name="colorTextSender">#F0FFFFFF</color>
     <color name="colorTextReceive">#000000</color>
+    <color name="blue_200">#FF90CAF9</color>
+    <color name="blue_500">#FF2196F3</color>
+    <color name="blue_700">#FF1976D2</color>
 </resources>

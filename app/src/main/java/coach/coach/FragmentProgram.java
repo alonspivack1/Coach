@@ -73,19 +73,19 @@ public class FragmentProgram extends Fragment{
                                     int position, long id) {
                 if (type.equals("User"))
                 {
-                    Intent ChatIntent = new Intent(getActivity(),ViewProgram.class);
-                    ChatIntent.putExtra("receiver",username);
-                    ChatIntent.putExtra("sender",coaches[position].getName());
-                    startActivity(ChatIntent);
+                    Intent ProgramIntent = new Intent(getActivity(),ViewProgram.class);
+                    ProgramIntent.putExtra("receiver",username);
+                    ProgramIntent.putExtra("sender",coaches[position].getName());
+                    startActivity(ProgramIntent);
                     Log.e("receiver",username);
                     Log.e("sender",coaches[position].getName());
                 }
                 if (type.equals("Coach"))
                 {
-                    Intent ChatIntent = new Intent(getActivity(),Program.class);
-                    ChatIntent.putExtra("sender",username);
-                    ChatIntent.putExtra("receiver",users[position].getName());
-                    startActivity(ChatIntent);
+                    Intent ProgramIntent = new Intent(getActivity(),Program.class);
+                    ProgramIntent.putExtra("sender",username);
+                    ProgramIntent.putExtra("receiver",users[position].getName());
+                    startActivity(ProgramIntent);
                     Log.e("sender",username);
                     Log.e("receiver",users[position].getName());
                 }

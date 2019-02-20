@@ -17,10 +17,10 @@ public class User {
     int[] answer = new int[8];
 
 
-    public User(String name, String details)
+    public User(String name, String detailss)
     {
         this.name = name;
-        this.details = details;
+        this.details = detailss.substring(0,detailss.length()-1)+", {";
         int index = details.indexOf("=");
         while (index >= 0) {
             Log.e("Answers",index+"");
@@ -28,17 +28,31 @@ public class User {
             this.i++;
             index = details.indexOf("=", index + 1);
         }
+        Log.e("details",details);
 
+        Log.e("height",details.substring(details.indexOf("{Height}=")+9,details.indexOf(", {",details.indexOf("{Height}=")+9)));
+        this.height = details.substring(details.indexOf("{Height}=")+9,details.indexOf(", {",details.indexOf("{Height}=")+9));
 
-        this.height = details.substring(answer[0]+1,details.indexOf(", {Gen"));
-        this.gender = details.substring(answer[1]+1,details.indexOf(", {Des"));
-        this.description = details.substring(answer[2]+1,details.indexOf(", {Wei"));
-        this.weight = details.substring(answer[3]+1,details.indexOf(", {Pra"));
-        this.time = details.substring(answer[4]+1,details.indexOf(", {Equ"));
-        this.item = details.substring(answer[5]+1,details.indexOf(", {Age"));
-        this.age = details.substring(answer[6]+1,details.indexOf(", {Goa"));
-        this.goal = details.substring(answer[7]+2,details.length()-2);
-        Log.e("Full",details);
+        Log.e("gender",details.substring(details.indexOf("{Gender}=")+9,details.indexOf(", {",details.indexOf("{Gender}=")+9)));
+        this.gender = details.substring(details.indexOf("{Gender}=")+9,details.indexOf(", {",details.indexOf("{Gender}=")+9));
+
+        Log.e("description",details.substring(details.indexOf("{Description}=")+14,details.indexOf(", {",details.indexOf("{Description}=")+14)));
+        this.description = details.substring(details.indexOf("{Description}=")+14,details.indexOf(", {",details.indexOf("{Description}=")+14));
+
+        Log.e("weight",details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9)));
+        this.weight = details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9));
+
+        Log.e("time",  this.time = details.substring(details.indexOf("{PracticeTime}=")+16,details.indexOf(", {",details.indexOf("{PracticeTime}=")+16)));
+        this.time = details.substring(details.indexOf("{PracticeTime}=")+16,details.indexOf(", {",details.indexOf("{PracticeTime}=")+16));
+
+        Log.e("item",details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12)));
+        this.item = details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12));
+
+        Log.e("age",details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6)));
+        this.age = details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6));
+
+        Log.e("goal",details.substring(details.indexOf("{Goal}=")+7,details.indexOf(", {",details.indexOf("{Goal}=")+7)));
+        this.goal = details.substring(details.indexOf("{Goal}=")+7,details.indexOf(", {",details.indexOf("{Goal}=")+7));
     }
 
     public  String getName() {

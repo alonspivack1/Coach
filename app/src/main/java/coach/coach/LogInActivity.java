@@ -146,7 +146,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     String userid = firebaseUser.getUid();
                     String username = editTextUserName.getText().toString();
-                    if (UserNames.indexOf(userid+","+username)!=-1)
+                    if (UserNames.indexOf(userid+","+username+",")!=-1)
                     {
                         Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileUser").child(username).getValue();
                         String UserData = objectMap.toString();
@@ -170,7 +170,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                     else {
-                        if (CoachNames.indexOf(userid+","+editTextUserName.getText().toString())!=-1)
+                        if (CoachNames.indexOf(userid+","+editTextUserName.getText().toString()+",")!=-1)
                             {
                                 Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileCoach").child(username).getValue();
                                 String CoachData = objectMap.toString();
