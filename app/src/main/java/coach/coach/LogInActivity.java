@@ -1,20 +1,29 @@
 package coach.coach;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +45,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     String UserNames="",CoachNames="";
     DataSnapshot DataSnap;
     Intent userIntent,coachIntent,MainActivityIntent;
+    AlertDialog.Builder adb;
+
 
     private DatabaseReference databaseReference,databaseReference2,databaseReference3;
     @Override
@@ -101,6 +112,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.textViewSignup).setOnClickListener(this);
         findViewById(R.id.buttonLogin).setOnClickListener(this);
+        findViewById(R.id.textViewForgotPassword).setOnClickListener(this);
 
     }
 
@@ -221,6 +233,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -233,7 +246,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             case R.id.buttonLogin:
                 userLogin();
                 break;
-        }
+            case R.id.textViewForgotPassword:
+                startActivity(new Intent(this, ResetPassword.class));
+                finish();
+                break; }
     }
 
 }

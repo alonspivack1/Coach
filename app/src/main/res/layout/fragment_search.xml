@@ -15,6 +15,32 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/etSearchInListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="חיפוש מאמן"/>
+            <Button
+                android:id="@+id/SearchInListView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="חפש" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"

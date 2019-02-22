@@ -3,19 +3,26 @@ package coach.coach;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.autofill.AutofillValue;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import io.github.mthli.knife.KnifeText;
 
@@ -34,11 +41,21 @@ public class Program extends AppCompatActivity {
         sender=intent.getStringExtra("sender");
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProgramRoom").child(receiver+"&"+sender);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
+                // knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
+                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
 
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         knife = (KnifeText) findViewById(R.id.knife);
-        knife.toHtml();
-        //knife.fromHtml(EXAMPLE);
         knife.setSelection(knife.getEditableText().length());
 
         setupBold();

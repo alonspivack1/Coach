@@ -11,9 +11,11 @@
         android:weightSum="6">
         <Button
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fragment Chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="צאטים"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:onClick="FragmentOneClick"
             android:layout_weight="2"/>
 
@@ -21,14 +23,18 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fragment Program"
+            android:text="תוכנית אישית"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:onClick="FragmentTwoClick"
             android:layout_weight="2"/>
         <Button
             android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fragment Search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="חיפוש מאמנים"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:onClick="FragmentThirdClick"
             android:layout_weight="2"/>
     </LinearLayout>

@@ -16,6 +16,7 @@
     <ListView
         android:id="@+id/programlist"
         android:layout_width="match_parent"
+        android:longClickable="true"
         android:divider="#20000000"
         android:dividerHeight="10dp"
         android:layout_height="match_parent" />

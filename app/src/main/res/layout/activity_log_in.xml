@@ -53,9 +53,7 @@ tools:context=".LogInActivity">
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="7dp"
-            android:text="Login"
-            android:onClick="AAAAAA"
-            android:textAllCaps="false" />
+            android:text="Login" android:textAllCaps="false" />
 
         <TextView
             android:id="@+id/textViewSignup"
@@ -63,6 +61,15 @@ tools:context=".LogInActivity">
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Don't have account? Sign Up"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/textViewForgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Forgot your password? Reset password"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 

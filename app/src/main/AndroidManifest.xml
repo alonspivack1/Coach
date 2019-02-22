@@ -12,10 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewProgram"></activity>
+        <activity android:name=".ResetPassword"></activity>
+        <activity android:name=".ViewProgram" />
         <activity android:name=".Program" />
-        <activity android:name=".Chat"
-        android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".Chat"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".FragmentChat" />
         <activity android:name=".LogInActivity">
             <intent-filter>

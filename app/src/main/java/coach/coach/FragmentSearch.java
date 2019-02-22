@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     Boolean FirstOnClick = true;
     ListView listView;
     DataSnapshot dataSnap;
+    Coach coachedittext;
     Coach[] coaches = new Coach[8];
     User[] users = new User[8];
     int i = 0;
@@ -51,7 +53,9 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     int positionadb=0;
     String username,type,UserCoachCheack;
     DatabaseReference reference,reference2,reference3,reference4;
-
+    Button SearchInListView;
+    EditText etSearchInListView;
+    String stringCoachSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +82,10 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             }
         });
         fragtv = (TextView) v.findViewById(R.id.fragtv);
+        SearchInListView = v.findViewById(R.id.SearchInListView);
+        SearchInListView.setOnClickListener(this);
         Button b = (Button) v.findViewById(R.id.button);
+        etSearchInListView = v.findViewById(R.id.etSearchInListView);
         b.setOnClickListener(this);
         listView = (ListView) v.findViewById(R.id.listView);
 
@@ -113,10 +120,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                     if (type.equals("User")) {
                         RefreshCoaches();
                     }
-                    if (type.equals("Coach"))
-                    {
-                        RefreshUsers();
-                    }
                 }
             }, 100);
         } catch (Exception e) {
@@ -127,28 +130,34 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         return v;
     }
 
-    private void RefreshUsers()
-    {
+
+    private void RefreshCoach() {
+        FirstOnClick=true;
         Log.e("1","0");
         if (FirstOnClick){
-            HelpString=UserProfiles;
+            HelpString=CoachProfiles;
             Log.e("1","1");}
         while (HelpString.indexOf(", ")!=-1)
         {
             if (FirstOnClick)
             {
                 Log.e("1","2");
-                UserCoachCheack = dataSnap.child("CoachNames").child(username).getValue().toString();
+                UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
                 if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
-                    FirstOnClick=false;
+                    FirstOnClick = false;
                     //HelpString=CoachProfiles;
-                    Log.e("FULL",HelpString);
-                    users[i] = new User(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileUser").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());
-                    //  coaches[0] = new Coach("coach","1","1","1","1","1");
-                    Log.e("Answer",HelpString.substring(1,HelpString.indexOf("=")));
-                    i++;
+                    coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))).getValue().toString());
+                    if (coaches[i].getName().equals(stringCoachSearch))
+                    {
+                        coachedittext=new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))).getValue().toString());
+                        Log.e("FINDD",coachedittext.getName());
+                            /*ArrayList<Coach> coachesList2 = new ArrayList<>();
+                            CoachListAdapter adapter2 = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
+                            adapter2.add(coachedittext);
+                            listView.setAdapter(adapter2);*/
+                    }
 
-                    Log.e("Dealits",dataSnap.child("ProfileUser").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());}
+                }
                 else
                 {
                     FirstOnClick=false;
@@ -157,23 +166,29 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             else
             {
                 Log.e("1","3");
-                if (((HelpString.indexOf(", ")!=-1)))//i<coaches.length&&
+                if (((HelpString.indexOf(", ")!=-1)&&(i<coaches.length)))//i<coaches.length&&
                 {
                     Log.e("1","4");
                     HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
-                    Log.e("FULL",HelpString);
                     Log.e("1",UserCoachCheack);
                     if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                     {
                         Log.e("1","5");
-                        users[i] = new User(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileUser").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                        coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
                         // coaches[1] = new Coach("pp","1","1","1","1","1");
-                        Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
+                        if (coaches[i].getName().equals(stringCoachSearch))
+                        {
+                            coachedittext=new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                            Log.e("FINDD",coachedittext.getName());
+                            /*ArrayList<Coach> coachesList2 = new ArrayList<>();
+                            CoachListAdapter adapter2 = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
+                            adapter2.add(coachedittext);
+                            listView.setAdapter(adapter2);*/
+                        }
 
-                        i++;
 
 
-                        Log.e("Dealits",dataSnap.child("ProfileUser").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                        Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
                     }
 
 
@@ -181,14 +196,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 }
             }}
         if (HelpString.indexOf(", ")==-1){
-            Log.e("Array","Start");
-            ArrayList<User> usersList = new ArrayList<>();
-            for (int j=0; j<i; j++)
-            {
-                usersList.add(users[j]);
-            }
-
-            UserListAdapter adapter = new UserListAdapter(getActivity(), R.layout.customlayoutuserprofile, usersList);
+            ArrayList<Coach> coachesList2 = new ArrayList<>();
+            if (coachedittext!=null){
+                coachesList2.add(coachedittext);}
+                coaches[0]=coachedittext;
+            CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
             listView.setAdapter(adapter);
             return;
         }
@@ -224,7 +236,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             else
             {
                 Log.e("1","3");
-                if (((HelpString.indexOf(", ")!=-1)))//i<coaches.length&&
+                if (((HelpString.indexOf(", ")!=-1)&&(i<coaches.length)))//i<coaches.length&&
                 {
                     Log.e("1","4");
                     HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
@@ -293,7 +305,8 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                             reference3.child(username+"&"+(coaches[positionadb].getName())).child("num").child("num").setValue(2);
                             reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("message","Empty program");
+                            String htmlnewprogram="<ul><li><blockquote><b><i><u><del>&#1492;&#1502;&#1488;&#1502;&#1503; &#1506;&#1491;&#1497;&#1497;&#1503; &#1500;&#1488; &#1513;&#1500;&#1495; </del></u></i></b><b><i><u><del><u>&#1514;&#1493;&#1499;&#1504;&#1497;&#1514;</u></del></u></i></b></blockquote></li></ul>";
+                            hashMap.put("Data",htmlnewprogram);
                             //.child(username+"&"+(coaches[positionadb].getName())
                             reference4.child(username+"&"+(coaches[positionadb].getName())).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -333,6 +346,14 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     }
     @Override
     public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.SearchInListView:
+                stringCoachSearch=etSearchInListView.getText().toString();
+                listView.setAdapter(null);
+                RefreshCoach();
+                break;
+        }
         /*switch (v.getId()) {
             case R.id.button:
                 Log.e("1","0");

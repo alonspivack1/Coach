@@ -28,13 +28,12 @@ public class ViewProgram extends AppCompatActivity {
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
+        knife = (KnifeText) findViewById(R.id.knife);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProgramRoom").child(receiver+"&"+sender);
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-                knife = (KnifeText) findViewById(R.id.knife);
                // knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
                 knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
                 knife.setActivated(false);

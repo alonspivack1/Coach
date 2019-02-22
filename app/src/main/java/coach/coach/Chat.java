@@ -32,13 +32,12 @@ public class Chat extends AppCompatActivity {
     SimpleAdapter adapter;
     HashMap<String,String> item;
     ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
-    String[][]Messages = new String[1000][1000];
     DatabaseReference databaseReference,ChatReference;
     DataSnapshot dataSnap;
     Boolean FirstRefresh=true,Emulator=true;
     EditText etMessageText;
     String MessageString;
-    int MessageNum,MessageNumNow;
+    int MessageNum;
     Button chatbuttonsend;
     int FLAGINT=1;
 
