@@ -22,7 +22,7 @@ public class TransferFragment extends Fragment {
             public void run() {
                 Transfer();
             }
-        }, 500);
+        }, 1000);
         return view;
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -38,7 +39,6 @@ public class UserProfileMaker extends AppCompatActivity {
     String username,Goal=",",Gender;
     DataSnapshot dataSnap;
     Switch switchusergender;
-    String TRY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +48,7 @@ public class UserProfileMaker extends AppCompatActivity {
         username=intent.getStringExtra("username");
 
         MainActivityIntent = new Intent(this,MainActivity.class);
+
 
         etuserage = findViewById(R.id.etuserage);
         etuserweight = findViewById(R.id.etuserweight);
@@ -87,8 +88,6 @@ public class UserProfileMaker extends AppCompatActivity {
             public void run() {
                 User user;
                 user = new User(username,dataSnap.child("ProfileUser").child(username).getValue().toString());
-                TRY=dataSnap.child("ProfileUser").child(username).getValue().toString();
-                Log.e("TRY",TRY);
                 if (!user.getAge().equals("0"))
                 {
 
@@ -128,8 +127,6 @@ public class UserProfileMaker extends AppCompatActivity {
                     }
 
                 }
-
-
 
             }
         }, 1000);
@@ -174,30 +171,30 @@ public class UserProfileMaker extends AppCompatActivity {
             etuserdescription.requestFocus();
             return;
         }
-        Goal=",";
+        Goal="";
         if (cbuserburnfat.isChecked())
         {
-            Goal+=""+cbuserburnfat.getText().toString()+",";
+            Goal+=","+cbuserburnfat.getText().toString();
         }
         if (cbusergym.isChecked())
         {
-            Goal+=""+cbusergym.getText().toString()+",";
+            Goal+=","+cbusergym.getText().toString();
         }
         if (cbuserstreet.isChecked())
         {
-            Goal+=""+cbuserstreet.getText().toString()+",";
+            Goal+=","+cbuserstreet.getText().toString();
         }
         if (cbuserhome.isChecked())
         {
-            Goal+=""+cbuserhome.getText().toString()+",";
+            Goal+=","+cbuserhome.getText().toString();
         }
         if (cbuserdistance.isChecked())
         {
-            Goal+=""+cbuserdistance.getText().toString()+",";
+            Goal+=","+cbuserdistance.getText().toString();
         }
         if (cbuserspeed.isChecked())
         {
-            Goal+=""+cbuserspeed.getText().toString()+",";
+            Goal+=","+cbuserspeed.getText().toString();
         }
         if(!Pattern.matches("[0-9.]+", etuserage.getText().toString()))
         {
@@ -243,6 +240,11 @@ public class UserProfileMaker extends AppCompatActivity {
         }
         else {
             Gender ="Female";
+        }
+
+        if (Goal.length()==0)
+        {
+            Goal=",";
         }
 
         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -35,7 +36,6 @@ public class CoachProfileMaker extends AppCompatActivity {
     String username,Professionalization=",",Gender;
     DataSnapshot dataSnap;
     Switch switchcoachgender;
-    String TRY;
     private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class CoachProfileMaker extends AppCompatActivity {
         username=intent.getStringExtra("username");
 
         MainActivityIntent = new Intent(this,MainActivity.class);
+
 
         etcoachage = findViewById(R.id.etcoachage);
         etcoachwhere = findViewById(R.id.etcoachwhere);
@@ -81,9 +82,7 @@ public class CoachProfileMaker extends AppCompatActivity {
             @Override
             public void run() {
                 Coach coach;
-                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username).getValue().toString());
-                TRY=dataSnap.child("ProfileCoach").child(username).getValue().toString();
-                Log.e("TRY",TRY);
+                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username).getValue().toString());;
                 if (!coach.getAge().equals("0"))
                 {
                     etcoachage.setText(coach.getAge());
@@ -122,7 +121,6 @@ public class CoachProfileMaker extends AppCompatActivity {
                 }
 
 
-
             }
         }, 1000);
     }
@@ -153,30 +151,30 @@ public class CoachProfileMaker extends AppCompatActivity {
             return;
         }
 
-        Professionalization=",";
+        Professionalization="";
         if (cbcoachburnfat.isChecked())
         {
-            Professionalization+=""+cbcoachburnfat.getText().toString()+",";
+            Professionalization+=","+cbcoachburnfat.getText().toString();
         }
         if (cbcoachgym.isChecked())
         {
-            Professionalization+=""+cbcoachgym.getText().toString()+",";
+            Professionalization+=","+cbcoachgym.getText().toString();
         }
         if (cbcoachstreet.isChecked())
         {
-            Professionalization+=""+cbcoachstreet.getText().toString()+",";
+            Professionalization+=","+cbcoachstreet.getText().toString();
         }
         if (cbcoachhome.isChecked())
         {
-            Professionalization+=""+cbcoachhome.getText().toString()+",";
+            Professionalization+=","+cbcoachhome.getText().toString();
         }
         if (cbcoachdistance.isChecked())
         {
-            Professionalization+=""+cbcoachdistance.getText().toString()+",";
+            Professionalization+=","+cbcoachdistance.getText().toString();
         }
         if (cbcoachspeed.isChecked())
         {
-            Professionalization+=""+cbcoachspeed.getText().toString()+",";
+            Professionalization+=","+cbcoachspeed.getText().toString();
         }
 
         if(!Pattern.matches("[0-9.]+", etcoachage.getText().toString()))
@@ -215,6 +213,10 @@ public class CoachProfileMaker extends AppCompatActivity {
         }
         else {
             Gender ="Female";
+        }
+        if (Professionalization.length()==0)
+        {
+            Professionalization=",";
         }
 
 

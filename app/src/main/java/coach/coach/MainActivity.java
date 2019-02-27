@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     int FragInt=1;
     public Fragment myfragment;
     private DatabaseReference databaseReference;
+    Button button1,button2,button3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +49,25 @@ public class MainActivity extends AppCompatActivity {
         fragtv = (TextView) findViewById(R.id.fragtv);
 
         intent = getIntent();
-        username=intent.getStringExtra("username");
-        type=intent.getStringExtra("type");
+        username = intent.getStringExtra("username");
+        type = intent.getStringExtra("type");
+        button3 = (Button) findViewById(R.id.button3);
+        button2 = (Button) findViewById(R.id.button2);
+        button1 = (Button) findViewById(R.id.button1);
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
+        button3.setVisibility(View.GONE);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                button1.setVisibility(View.VISIBLE);
+                button2.setVisibility(View.VISIBLE);
+                if (type.equals("User")) {
+                    button3.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 1000);
 
 
        /* if (type.equals("Coach")){

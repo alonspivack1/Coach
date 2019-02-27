@@ -259,7 +259,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             hashMap.put("{Weight}","0" );
                             hashMap.put("{Height}","0" );
                             hashMap.put("{PracticeTime}", "0");
-                            hashMap.put("{Goal}", ",");
+                            hashMap.put("{Goal}",",");
                             hashMap.put("{Equipment}", "0");
                             hashMap.put("{Gender}","Male" );
                             hashMap.put("{Description}", "0");

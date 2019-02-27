@@ -48,7 +48,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     AlertDialog.Builder adb;
 
 
-    private DatabaseReference databaseReference,databaseReference2,databaseReference3;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,39 +62,33 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DataSnap = dataSnapshot;
+
                 Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
                 CoachNames = objectMap.toString();
                 Log.e("CoachNames",CoachNames);
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference2 = FirebaseDatabase.getInstance().getReference();
-        databaseReference2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
-                UserNames = objectMap.toString();
+                Map<String, Object> objectMap2 = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
+                UserNames = objectMap2.toString();
                 Log.e("UserNames",UserNames);
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference3 = FirebaseDatabase.getInstance().getReference();
-        databaseReference3.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataSnap = dataSnapshot;
+                // databaseReference.child("Rating").child("pa").child("RatersNames").child("aa").setValue("4");
+                // databaseReference.child("Rating").child("pa").child("RatersNames").child("aaa").setValue("6");
+               /* if (dataSnapshot.child("Rating").child("pa").child("RatersNames").hasChild("aaa"))
+                {
+                    Log.e("aaa","NoNull");
+                }
+                else
+                {                    Log.e("aaa","Null");
+                }
+                if (!dataSnapshot.child("Rating").child("pa").child("RatersNames").hasChild("ap"))
+                {
+                    Log.e("ap","Null");
+                }
+                Log.e("RatersNames",dataSnapshot.child("Rating").child("pp").child("RatersNames").child("aa").getValue().toString());
+                Log.e("RatersNumber",dataSnapshot.child("Rating").child("pp").child("RatersNumber").getValue().toString());
+                Log.e("Rating",dataSnapshot.child("Rating").child("pp").child("Rating").getValue().toString());*/
             }
 
             @Override

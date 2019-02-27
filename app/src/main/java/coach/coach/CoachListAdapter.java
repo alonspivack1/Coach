@@ -2,13 +2,21 @@ package coach.coach;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -25,6 +33,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
     private int lastPosition = -1;
 
 
+
     private static class ViewHolder {
 
         TextView tvlistname;
@@ -34,6 +43,10 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         TextView tvlistprofessionalization;
         TextView tvlistdescription;
         TextView tvlistgender;
+        RatingBar rblistrate;
+        DatabaseReference databaseReference;
+        TextView tvlistrate;
+
     }
 
 
@@ -41,6 +54,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+
     }
 
     @NonNull
@@ -56,13 +70,13 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         String description = getItem(position).getDescription();
         String gender = getItem(position).getGender();
         String details =getItem(position).getDetails();
-
-
         Coach coach = new Coach(name,details);
+
+
         //Coach coach = new Coach(name,age,time,where,professionalization,description);
         final View result;
 
-        ViewHolder holder;
+        final ViewHolder holder;
 
 
         if(convertView == null){
@@ -76,6 +90,8 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
             holder.tvlistprofessionalization = (TextView) convertView.findViewById(R.id.tvlistprofessionalization);
             holder.tvlistdescription = (TextView) convertView.findViewById(R.id.tvlistdescription);
             holder.tvlistgender = (TextView)convertView.findViewById(R.id.tvlistgender);
+            holder.rblistrate = (RatingBar) convertView.findViewById(R.id.rblistrate);
+            holder.tvlistrate = (TextView) convertView.findViewById(R.id.tvlistrate);
 
             result = convertView;
 
@@ -99,6 +115,26 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         holder.tvlistprofessionalization.setText("התמקצעות: "+coach.getProfessionalization());
         holder.tvlistgender.setText("מין: "+coach.getGender());
         holder.tvlistdescription.setText("תיאור קצר: "+coach.getDescription());
+        holder.databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating").child(name);
+        holder.databaseReference.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int RatersNumber=Integer.parseInt(dataSnapshot.child("RatersNumber").getValue().toString());
+                        float Rating = Float.valueOf(dataSnapshot.child("Rating").getValue().toString());
+                        Rating = Rating/RatersNumber;
+                        holder.rblistrate.setRating(Rating);
+                        holder.tvlistrate.setText("("+RatersNumber+")");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        holder.rblistrate.setRating(0);
+                        holder.tvlistrate.setText("(0)");
+
+                    }
+                });
+
         return convertView;
     }
 }

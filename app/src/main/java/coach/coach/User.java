@@ -13,21 +13,12 @@ public class User {
     private String goal;
     private String gender;
     private String details;
-    int i=0;
-    int[] answer = new int[8];
 
 
     public User(String name, String detailss)
     {
         this.name = name;
-        this.details = detailss.substring(0,detailss.length()-1)+", {";
-        int index = details.indexOf("=");
-        while (index >= 0) {
-            Log.e("Answers",index+"");
-            answer[i]=index;
-            this.i++;
-            index = details.indexOf("=", index + 1);
-        }
+        this.details = detailss.substring(0,detailss.length()-1)+", {{";
         Log.e("details",details);
 
         Log.e("height",details.substring(details.indexOf("{Height}=")+9,details.indexOf(", {",details.indexOf("{Height}=")+9)));
@@ -42,8 +33,8 @@ public class User {
         Log.e("weight",details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9)));
         this.weight = details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9));
 
-        Log.e("time",  this.time = details.substring(details.indexOf("{PracticeTime}=")+16,details.indexOf(", {",details.indexOf("{PracticeTime}=")+16)));
-        this.time = details.substring(details.indexOf("{PracticeTime}=")+16,details.indexOf(", {",details.indexOf("{PracticeTime}=")+16));
+        Log.e("time",  this.time = details.substring(details.indexOf("{PracticeTime}=")+15,details.indexOf(", {",details.indexOf("{PracticeTime}=")+15)));
+        this.time = details.substring(details.indexOf("{PracticeTime}=")+15,details.indexOf(", {",details.indexOf("{PracticeTime}=")+15));
 
         Log.e("item",details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12)));
         this.item = details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12));
@@ -51,8 +42,8 @@ public class User {
         Log.e("age",details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6)));
         this.age = details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6));
 
-        Log.e("goal",details.substring(details.indexOf("{Goal}=")+7,details.indexOf(", {",details.indexOf("{Goal}=")+7)));
-        this.goal = details.substring(details.indexOf("{Goal}=")+7,details.indexOf(", {",details.indexOf("{Goal}=")+7));
+        Log.e("goal",details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8)));
+        this.goal = details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8));
     }
 
     public  String getName() {
