@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -37,18 +38,21 @@ public class UserProfileMaker extends AppCompatActivity {
     private DatabaseReference databaseReference;
     Intent intent,MainActivityIntent;
     String username,Goal=",",Gender;
+    TextView tvuserbmi;
     DataSnapshot dataSnap;
     Switch switchusergender;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_maker);
+        setTitle("עדכון פרופיל");
 
         intent = getIntent();
         username=intent.getStringExtra("username");
 
         MainActivityIntent = new Intent(this,MainActivity.class);
 
+        tvuserbmi = findViewById(R.id.tvuserbmi);
 
         etuserage = findViewById(R.id.etuserage);
         etuserweight = findViewById(R.id.etuserweight);
@@ -87,7 +91,7 @@ public class UserProfileMaker extends AppCompatActivity {
             @Override
             public void run() {
                 User user;
-                user = new User(username,dataSnap.child("ProfileUser").child(username).getValue().toString());
+                user = new User(username,dataSnap.child("ProfileUser").child(username));
                 if (!user.getAge().equals("0"))
                 {
 
@@ -96,6 +100,8 @@ public class UserProfileMaker extends AppCompatActivity {
                     etuserheight.setText(user.getHeight());
                     etusertime.setText(user.getTime());
                     etuseritem.setText(user.getItem());
+                    double bmi = Double.valueOf(user.getWeight())/((Double.valueOf(user.getHeight())/100)*(Double.valueOf(user.getHeight()))/100);
+                    tvuserbmi.setText("BMI:"+String.valueOf(bmi));
                     etuserdescription.setText(user.getDescription());
                     if (user.getGender().equals("Female"))
                     {
@@ -249,14 +255,14 @@ public class UserProfileMaker extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("{Age}",etuserage.getText().toString());
-        hashMap.put("{Gender}",Gender );
-        hashMap.put("{Weight}",etuserweight.getText().toString());
-        hashMap.put("{Height}",etuserheight.getText().toString());
-        hashMap.put("{PracticeTime}",etusertime.getText().toString());
-        hashMap.put("{Goal}",Goal);
-        hashMap.put("{Equipment}",etuseritem.getText().toString());
-        hashMap.put("{Description}",etuserdescription.getText().toString());
+        hashMap.put("Age",etuserage.getText().toString());
+        hashMap.put("Gender",Gender );
+        hashMap.put("Weight",etuserweight.getText().toString());
+        hashMap.put("Height",etuserheight.getText().toString());
+        hashMap.put("PracticeTime",etusertime.getText().toString());
+        hashMap.put("Goal",Goal);
+        hashMap.put("Equipment",etuseritem.getText().toString());
+        hashMap.put("Description",etuserdescription.getText().toString());
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

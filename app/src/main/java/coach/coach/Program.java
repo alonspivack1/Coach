@@ -13,7 +13,6 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.autofill.AutofillValue;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -36,6 +35,7 @@ public class Program extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program);
+        setTitle("כתיבת תוכנית");
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");

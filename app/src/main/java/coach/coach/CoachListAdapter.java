@@ -69,7 +69,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         String professionalization = getItem(position).getProfessionalization();
         String description = getItem(position).getDescription();
         String gender = getItem(position).getGender();
-        String details =getItem(position).getDetails();
+        DataSnapshot details =getItem(position).getDetails();
         Coach coach = new Coach(name,details);
 
 

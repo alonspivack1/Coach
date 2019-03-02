@@ -41,6 +41,7 @@ public class CoachProfileMaker extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coach_profile_maker);
+        setTitle("עדכון פרופיל");
 
         intent = getIntent();
         username=intent.getStringExtra("username");
@@ -82,7 +83,7 @@ public class CoachProfileMaker extends AppCompatActivity {
             @Override
             public void run() {
                 Coach coach;
-                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username).getValue().toString());;
+                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username));;
                 if (!coach.getAge().equals("0"))
                 {
                     etcoachage.setText(coach.getAge());
@@ -223,12 +224,12 @@ public class CoachProfileMaker extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("{Age}",etcoachage.getText().toString());
-        hashMap.put("{Gender}",Gender );
-        hashMap.put("{Professionalization}",Professionalization);
-        hashMap.put("{StudyPlace}",etcoachwhere.getText().toString());
-        hashMap.put("{Description}",etcoachdescription.getText().toString());
-        hashMap.put("{CoachTime}",etcoachtime.getText().toString());
+        hashMap.put("Age",etcoachage.getText().toString());
+        hashMap.put("Gender",Gender );
+        hashMap.put("Professionalization",Professionalization);
+        hashMap.put("StudyPlace",etcoachwhere.getText().toString());
+        hashMap.put("Description",etcoachdescription.getText().toString());
+        hashMap.put("CoachTime",etcoachtime.getText().toString());
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

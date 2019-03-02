@@ -32,6 +32,8 @@ public class ViewProgram extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_program);
         rbViewProgram = (RatingBar)findViewById(R.id.rbViewProgram);
+        setTitle("תוכנית אישית מהמאמן");
+
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
@@ -102,10 +104,11 @@ public class ViewProgram extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("Data")){
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-               // knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
-                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
-                knife.setActivated(false);
+                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());}
+                knife.getLinksClickable();
+                knife.setClickable(true);
                 knife.setFocusable(false);
 
             }
@@ -117,4 +120,5 @@ public class ViewProgram extends AppCompatActivity {
         });
 
     }
+
 }

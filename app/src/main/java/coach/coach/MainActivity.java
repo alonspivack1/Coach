@@ -1,12 +1,15 @@
 package coach.coach;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,8 +23,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.flags.Flag;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +39,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    Intent intent,intentSettings;
+    Intent intent,intentSettings,intentCredits;
     String username,type,CoachProfiles="";
     TextView fragchat,fragtv;
     int FragInt=1;
@@ -45,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("");
 
-        fragtv = (TextView) findViewById(R.id.fragtv);
+
 
         intent = getIntent();
         username = intent.getStringExtra("username");
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     button3.setVisibility(View.VISIBLE);
                 }
             }
-        }, 1000);
+        }, 500);
 
 
        /* if (type.equals("Coach")){
@@ -102,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+        menu.add("התנתקות");
+        menu.add("עדכון פרופיל");
 
         return true;
     }
@@ -109,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         String st = item.getTitle().toString();
-        if (st.equals("Settings")) {
+        if (st.equals("עדכון פרופיל")) {
             if (type.equals("Coach")) {
                 intentSettings = new Intent(this, CoachProfileMaker.class);
                 intentSettings.putExtra("username",username);
@@ -117,11 +125,26 @@ public class MainActivity extends AppCompatActivity {
             }
             if (type.equals("User")) {
                 intentSettings = new Intent(this, UserProfileMaker.class);
-                intentSettings.putExtra("username",username);
+                intentSettings.putExtra("username", username);
                 startActivity(intentSettings);
-
             }
-
+        }
+        if (st.equals("קרדיטים"))
+        {
+            intentCredits = new Intent(this, Credits.class);
+            startActivity(intentCredits);
+        }
+        if (st.equals("התנתקות"))
+        {
+            SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
+            editor.putString("username", "nousername");
+            editor.putString("type", "notype");
+            editor.putString("email", "noemail");
+            editor.putString("password", "nopassword");
+            editor.apply();
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            startActivity(new Intent(this,LogInActivity.class));
         }
         return true;
     }
@@ -174,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_switch, myfragment);
                 fragmentTransaction.commit();
+
             }
         }
     }catch (Exception e) {
@@ -187,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
     public String getType() {
         return type;
     }
+
 
   /*
     public void ABC(View view) {

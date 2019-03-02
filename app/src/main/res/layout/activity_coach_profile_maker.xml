@@ -22,6 +22,8 @@ tools:context=".CoachProfileMaker">
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="right"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorHint"
             android:hint="גיל"
             android:inputType="phone" />
 
@@ -34,7 +36,8 @@ tools:context=".CoachProfileMaker">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Female"/>
+                android:textColor="@color/colorText"
+                android:text="נקבה"/>
             <Switch
                 android:id="@+id/switchcoachgender"
                 android:layout_width="wrap_content"
@@ -44,7 +47,8 @@ tools:context=".CoachProfileMaker">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Male"/>
+                android:textColor="@color/colorText"
+                android:text="זכר"/>
         </LinearLayout>
 
         <EditText
@@ -54,6 +58,8 @@ tools:context=".CoachProfileMaker">
             android:ems="10"
             android:gravity="right"
             android:hint="איפה למדת"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorHint"
             android:inputType="textPersonName" />
 
         <EditText
@@ -63,6 +69,8 @@ tools:context=".CoachProfileMaker">
             android:ems="10"
             android:gravity="right"
             android:hint="כמה זמן מאמן"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorHint"
             android:inputType="textPersonName" />
 
 
@@ -71,6 +79,8 @@ tools:context=".CoachProfileMaker">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:textColor="@color/colorText"
+            android:textColorHint="@color/colorHint"
             android:gravity="right"
             android:hint="תיאור קצר" />
 
@@ -82,7 +92,7 @@ tools:context=".CoachProfileMaker">
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="התמקצעות"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorText"
             android:textStyle="bold" />
 
 
@@ -92,6 +102,7 @@ tools:context=".CoachProfileMaker">
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
+            android:textColor="@color/colorText"
             android:layoutDirection="rtl"
             android:text="שריפת שומנים" />
 
@@ -102,6 +113,7 @@ tools:context=".CoachProfileMaker">
             android:layout_gravity="right"
             android:layout_weight="1"
             android:layoutDirection="rtl"
+            android:textColor="@color/colorText"
             android:text="אימוני כוח בחדר כושר" />
 
 
@@ -110,6 +122,7 @@ tools:context=".CoachProfileMaker">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:textColor="@color/colorText"
             android:layout_weight="1"
             android:layoutDirection="rtl"
             android:text="אימוני כוח בסטרייט" />
@@ -119,6 +132,7 @@ tools:context=".CoachProfileMaker">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:textColor="@color/colorText"
             android:layout_weight="1"
             android:layoutDirection="rtl"
             android:text="אימונים בבית" />
@@ -130,6 +144,7 @@ tools:context=".CoachProfileMaker">
             android:layout_gravity="right"
             android:layout_weight="1"
             android:layoutDirection="rtl"
+            android:textColor="@color/colorText"
             android:text="שיפור מרחק בריצות" />
 
         <CheckBox
@@ -139,6 +154,7 @@ tools:context=".CoachProfileMaker">
             android:layout_gravity="right"
             android:layout_weight="1"
             android:layoutDirection="rtl"
+            android:textColor="@color/colorText"
             android:text="שיפור מהירות בריצות" />
 
 
@@ -147,8 +163,10 @@ tools:context=".CoachProfileMaker">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/background"
+            android:textColor="#FFFF"
             android:onClick="CoachSend"
-            android:text="send"/>
+            android:text="שלח"/>
 
 
     </LinearLayout>

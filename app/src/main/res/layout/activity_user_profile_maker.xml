@@ -22,6 +22,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="right"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:hint="גיל"
                 android:inputType="phone" />
 
@@ -33,7 +35,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Female"/>
+                    android:textColor="@color/colorText"
+                    android:text="נקבה"/>
                 <Switch
                     android:id="@+id/switchusergender"
                     android:layout_width="wrap_content"
@@ -43,7 +46,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Male"/>
+                    android:textColor="@color/colorText"
+                    android:text="זכר"/>
             </LinearLayout>
 
 
@@ -53,6 +57,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="right"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:hint="משקל"
                 android:inputType="phone" />
 
@@ -63,8 +69,20 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="right"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:hint="גובה"
                 android:inputType="phone" />
+            <TextView
+                android:id="@+id/tvuserbmi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/colorText"
+                android:textStyle="bold"
+                android:text="BMI:0" />
+
 
             <EditText
                 android:id="@+id/etusertime"
@@ -73,12 +91,16 @@
                 android:ems="10"
                 android:gravity="right"
                 android:hint="כמה זמן מתאמן"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/etuseritem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:ems="10"
                 android:gravity="right"
                 android:hint="ציוד בבית" />
@@ -88,6 +110,8 @@
                 android:id="@+id/etuserdescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorHint"
                 android:ems="10"
                 android:gravity="right"
                 android:hint="תיאור קצר" />
@@ -100,7 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="מטרה"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
 
@@ -110,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="1"
+                android:textColor="@color/colorText"
                 android:layoutDirection="rtl"
                 android:text="שריפת שומנים" />
 
@@ -119,6 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="1"
+                android:textColor="@color/colorText"
                 android:layoutDirection="rtl"
                 android:text="אימוני כוח בחדר כושר" />
 
@@ -129,6 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="1"
+                android:textColor="@color/colorText"
                 android:layoutDirection="rtl"
                 android:text="אימוני כוח בסטרייט" />
 
@@ -139,6 +166,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:layoutDirection="rtl"
+                android:textColor="@color/colorText"
                 android:text="אימונים בבית" />
 
             <CheckBox
@@ -147,6 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="1"
+                android:textColor="@color/colorText"
                 android:layoutDirection="rtl"
                 android:text="שיפור מרחק בריצות" />
 
@@ -157,6 +186,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:layoutDirection="rtl"
+                android:textColor="@color/colorText"
                 android:text="שיפור מהירות בריצות" />
 
 
@@ -165,6 +195,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:background="@drawable/background"
+                android:textColor="#FFFF"
+                android:textStyle="bold"
+                android:textSize="18dp"
                 android:onClick="UserSend"
                 android:text="send" />
 

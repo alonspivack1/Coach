@@ -33,6 +33,5 @@ public class TransferFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_switch, myfragment);
         fragmentTransaction.commit();
-
     }
 }

@@ -1,10 +1,12 @@
 package coach.coach;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,20 +47,34 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     EditText editTextEmail, editTextPassword,editTextUserName;
     ProgressBar progressBar;
     String UserNames="",CoachNames="";
+    String type;
     DataSnapshot DataSnap;
-    Intent userIntent,coachIntent,MainActivityIntent;
-    AlertDialog.Builder adb;
-
+    Intent userIntent,coachIntent,MainActivityIntent,intentCredits;
+    String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
+    CheckBox cbAutoLogIn;
+    boolean OneTimeSP=true;
 
     private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
+        setTitle("התחברות");
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);
         MainActivityIntent = new Intent(this,MainActivity.class);
+        cbAutoLogIn = (CheckBox) findViewById(R.id.cbAutoLogIn);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextUserName = findViewById(R.id.editTextUserName);
+        progressBar = findViewById(R.id.progressbar);
+
+        final TextView textViewSignup = (TextView)findViewById(R.id.textViewSignup);
+        final TextView textViewForgotPassword = (TextView)findViewById(R.id.textViewForgotPassword);
+        final Button buttonLogin = (Button)findViewById(R.id.buttonLogin);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -64,14 +82,36 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataSnap = dataSnapshot;
 
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
-                CoachNames = objectMap.toString();
-                Log.e("CoachNames",CoachNames);
+                    if (dataSnapshot.hasChild("CoachNames")) {
+                        Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
+                        CoachNames = objectMap.toString();
+                        Log.e("CoachNames", CoachNames);
+                    }
+                    if (dataSnapshot.hasChild("UserNames")) {
 
-                Map<String, Object> objectMap2 = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
-                UserNames = objectMap2.toString();
-                Log.e("UserNames",UserNames);
+                        Map<String, Object> objectMap2 = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
+                        UserNames = objectMap2.toString();
+                        Log.e("UserNames", UserNames);
+                    }
+                if (OneTimeSP){
+                    OneTimeSP=false;
+                SharedPreferences prefs = getSharedPreferences("AutoLogIn", MODE_PRIVATE);
+                SPusername = prefs.getString("username", "nousername");
+                SPtype = prefs.getString("type","notype");
+                SPemail = prefs.getString("email","noemail");
+                SPpassword = prefs.getString("password","nopassword");
+                if ((!SPusername.equals("nousername"))&&(!SPtype.equals("notype"))&&(!SPemail.equals("noemail"))&&(!SPpassword.equals("nopassword")))
+                {
+                    editTextEmail.setVisibility(View.GONE);
+                    editTextPassword.setVisibility(View.GONE);
+                    editTextUserName.setVisibility(View.GONE);
+                    cbAutoLogIn.setVisibility(View.GONE);
+                    buttonLogin.setVisibility(View.GONE);
+                    textViewSignup.setVisibility(View.GONE);
+                    textViewForgotPassword.setVisibility(View.GONE);
 
+                    AutoLogIn();
+                }}
 
                 // databaseReference.child("Rating").child("pa").child("RatersNames").child("aa").setValue("4");
                 // databaseReference.child("Rating").child("pa").child("RatersNames").child("aaa").setValue("6");
@@ -97,22 +137,33 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        mAuth = FirebaseAuth.getInstance();
+        textViewSignup.setOnClickListener(this);
+        textViewForgotPassword.setOnClickListener(this);
+        buttonLogin.setOnClickListener(this);
+    }
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
 
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
-        editTextUserName = findViewById(R.id.editTextUserName);
-        progressBar = findViewById(R.id.progressbar);
+        return true;
+    }
 
-        findViewById(R.id.textViewSignup).setOnClickListener(this);
-        findViewById(R.id.buttonLogin).setOnClickListener(this);
-        findViewById(R.id.textViewForgotPassword).setOnClickListener(this);
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        String st = item.getTitle().toString();
+            if (st.equals("קרדיטים"))
+            {
+                intentCredits = new Intent(this, Credits.class);
+                startActivity(intentCredits);
+            }
+        return true;
     }
 
     private void userLogin() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
@@ -145,6 +196,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
+
                     //finish();
                     /*
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -154,15 +206,32 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     String username = editTextUserName.getText().toString();
                     if (UserNames.indexOf(userid+","+username+",")!=-1)
                     {
-                        Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileUser").child(username).getValue();
-                        String UserData = objectMap.toString();
-                        if (UserData.indexOf(", {Age}=0")==-1)
+                        type="User";
+                    }
+                    if (CoachNames.indexOf(userid+","+editTextUserName.getText().toString()+",")!=-1)
+                    {
+                        type="Coach";
+                    }
+                    if (cbAutoLogIn.isChecked())
+                    {
+                        SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
+                        editor.putString("username", username);
+                        editor.putString("type", type);
+                        editor.putString("email", email);
+                        editor.putString("password", password);
+                        editor.apply();
+                    }
+                    if (type.equals("User"))
+                    {
+                        String UserData = DataSnap.child("ProfileUser").child(username).child("Age").getValue().toString();
+
+                        if (!UserData.equals("0"))
                         {
                             MainActivityIntent.putExtra("username",username);
-                            MainActivityIntent.putExtra("type","User");
+                            MainActivityIntent.putExtra("type",type);
                             startActivity(MainActivityIntent);
                             finish();
-                            Log.e("WORK!","WORK!!");
+                            Log.e("WORK!","WORK!");
 
                         }
                         else
@@ -176,17 +245,17 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                     else {
-                        if (CoachNames.indexOf(userid+","+editTextUserName.getText().toString()+",")!=-1)
+                        if (type.equals("Coach"))
                             {
-                                Map<String, Object> objectMap = (HashMap<String, Object>) DataSnap.child("ProfileCoach").child(username).getValue();
-                                String CoachData = objectMap.toString();
-                                if (CoachData.indexOf(", {Age}=0")==-1)
+                                String CoachData = DataSnap.child("ProfileCoach").child(username).child("Age").getValue().toString();
+
+                                if (!CoachData.equals("0"))
                                 {
                                     MainActivityIntent.putExtra("username",username);
-                                    MainActivityIntent.putExtra("type","Coach");
+                                    MainActivityIntent.putExtra("type",type);
                                     startActivity(MainActivityIntent);
                                     finish();
-                                    Log.e("WORK!","WORK!!");
+                                    Log.e("WORK!!","WORK!!");
 
 
                                 }
@@ -226,8 +295,77 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    public void AutoLogIn()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(SPemail,SPpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    String userid = firebaseUser.getUid();
+                    String username = SPusername;
+                    if (UserNames.indexOf(userid+","+username+",")!=-1)
+                    {
+                        String UserData = DataSnap.child("ProfileUser").child(username).child("Age").getValue().toString();
+
+                        if (!UserData.equals("0"))
+                        {
+                            finish();
+                            MainActivityIntent.putExtra("username",username);
+                            MainActivityIntent.putExtra("type","User");
+                            startActivity(MainActivityIntent);
+                            Log.e("WORK!!!1","WORK!!!1");
 
 
+                        }
+                        else
+                        {
+                            userIntent.putExtra("username",username);
+                            startActivity(userIntent);
+                            finish();
+                        }
+                    }
+                    else {
+                        if (CoachNames.indexOf(userid+","+username+",")!=-1)
+                        {
+                            String CoachData = DataSnap.child("ProfileCoach").child(username).child("Age").getValue().toString();
+
+                            if (!CoachData.equals("0"))
+                            {
+                                MainActivityIntent.putExtra("username",username);
+                                MainActivityIntent.putExtra("type","Coach");
+                                startActivity(MainActivityIntent);
+                                finish();
+                                Log.e("WORK!!!!1","WORK!!!!");
+
+
+
+                            }
+                            else
+                            {
+
+                                coachIntent.putExtra("username",username);
+                                startActivity(coachIntent);
+                                finish();
+                            }
+                        }
+                        else{
+                            Log.e("ERROR","Email or password or username, is wrong");
+                        }
+                    }
+
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

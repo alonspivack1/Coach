@@ -2,6 +2,8 @@ package coach.coach;
 
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+
 public class User {
     private String name;
     private String age;
@@ -12,9 +14,24 @@ public class User {
     private String description;
     private String goal;
     private String gender;
-    private String details;
+    private DataSnapshot details;
+
+    public User (String name,DataSnapshot dataSnapshot)
+    {
+        this.name = name;
+        this.age = dataSnapshot.child("Age").getValue().toString();
+        this.weight = dataSnapshot.child("Weight").getValue().toString();
+        this.height = dataSnapshot.child("Height").getValue().toString();
+        this.time = dataSnapshot.child("PracticeTime").getValue().toString();
+        this.item = dataSnapshot.child("Equipment").getValue().toString();
+        this.description = dataSnapshot.child("Description").getValue().toString();
+        this.goal = dataSnapshot.child("Goal").getValue().toString();
+        this.gender = dataSnapshot.child("Gender").getValue().toString();
+        this.details = dataSnapshot;
 
 
+    }
+/*
     public User(String name, String detailss)
     {
         this.name = name;
@@ -44,7 +61,7 @@ public class User {
 
         Log.e("goal",details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8)));
         this.goal = details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8));
-    }
+    }*/
 
     public  String getName() {
         return this.name;
@@ -82,7 +99,7 @@ public class User {
         return this.goal;
     }
 
-    public String getDetails()
+    public DataSnapshot getDetails()
     {
         return this.details;
     }

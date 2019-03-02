@@ -4,55 +4,98 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/fragtv"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00ff0d"
-        android:gravity="center"
-        android:text="Fragment Search"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:background="@drawable/background"
+        android:minHeight="?attr/actionBarSize">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:text="צאטים"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#FFFF"
+            android:background="@android:color/transparent" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:text="תוכנית אישית"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#FFFF"
+            android:background="@android:color/transparent" />
+
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:text="חיפוש מאמנים"
+            android:textSize="20dp"
+            android:textColor="#FFFF"
+            android:background="#FFFF"
+            android:textStyle="bold" />
+
+
+
+
+    </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:orientation="horizontal">
-            <EditText
-                android:id="@+id/etSearchInListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="חיפוש מאמן"/>
             <Button
                 android:id="@+id/SearchInListView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="#FFFF"
+                android:textStyle="bold"
+                android:textSize="18dp"
                 android:text="חפש" />
+            <EditText
+                android:id="@+id/etSearchInListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFF"
+                android:textColorHint="#FFFF"
+                android:hint="חיפוש מאמן"/>
+
         </LinearLayout>
 
 
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="ABC"
-        android:text="Button" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:divider="#20000000"
         android:dividerHeight="10dp"
+        android:background="@drawable/background"
         android:layout_height="match_parent" />
 
 </LinearLayout>

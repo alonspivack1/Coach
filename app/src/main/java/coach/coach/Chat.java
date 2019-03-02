@@ -46,6 +46,8 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        setTitle("צאט");
+
 
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
@@ -58,22 +60,28 @@ public class Chat extends AppCompatActivity {
         chatlvmessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatlvmessages.setStackFromBottom(true);
 
-            ChatReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(room);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    dataSnap = dataSnapshot;
+        ChatReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(room);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dataSnap = dataSnapshot;
+                if (dataSnapshot.hasChild("num")) { //TODO שלא יקרוס אחרי מחיקת קשר
                     MessageString = dataSnapshot.child("num").getValue().toString();
-                    MessageString = MessageString.substring(5,MessageString.length()-1);
-                    Log.e("MessageString",MessageString);
+                    MessageString = MessageString.substring(5, MessageString.length() - 1);
+                    Log.e("MessageString", MessageString);
                     MessageNum = Integer.parseInt(MessageString);
-                    if (FirstRefresh){
+
+                if (FirstRefresh){
                     RefreshMessages();}
-                    else
-                    {
-                        Refresh();
-                    }
+                else
+                {
+                    Refresh();
+                }
+                }
+                else{ //TODO כדי שאם הקשר יגמר ואז יחזור האפליקציה לא תקרוס בגלל שהצאט התחיל עם הבוליאן לא מאותחל לtrue
+                    FirstRefresh=true;
+                }
                     /*if (FLAGINT%2!=0){
                         try
                         {
@@ -103,13 +111,13 @@ public class Chat extends AppCompatActivity {
                     MessageNum = Integer.parseInt(MessageString);
                         RefreshMessages();
                     }*/
-                }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
 
         adapter = new SimpleAdapter(this, list,
@@ -117,20 +125,54 @@ public class Chat extends AppCompatActivity {
                 new String[] { "sender","receiver" },
                 new int[] {R.id.sendmessage, R.id.receivemessage});
 
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 RefreshMessages(); } }, 100);
 
 
     }
+
     public void Refresh()
     {
         FLAGINT++;
         if (FLAGINT%2==0)
         {
-            if (Emulator){
+            item = new HashMap<String,String>();
+
+            String messagedata =dataSnap.child(String.valueOf(MessageNum)).child("message").getValue().toString();
+            String mesasgesender =dataSnap.child(String.valueOf(MessageNum)).child("sender").getValue().toString();
+            if (mesasgesender.equals(sender))
+            {
+                Log.e("Time","3");
+                item.put("sender",messagedata);
+                item.put("receiver","");
+                list.add(item);
+            }
+            else {
+                Log.e("Time","4");
+                item.put("receiver",messagedata);
+                item.put("sender","");
+                list.add(item);
+            }
+            /*item = new HashMap<String,String>();
+                String messagedata =dataSnap.child(String.valueOf(i+1)).child("message").getValue().toString();
+                String mesasgesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
+                if (mesasgesender.equals(sender))
+                {
+                    Log.e("Time","3");
+                    item.put("sender",messagedata);
+                    item.put("receiver","");
+                    list.add(item);
+                }
+                else {
+                    Log.e("Time","4");
+                    item.put("receiver",messagedata);
+                    item.put("sender","");
+                    list.add(item);
+                }*/
+        /*    if (Emulator){
         Log.e("Refresh","num="+MessageNum);
             item = new HashMap<String,String>();
             String messagedata =dataSnap.child(String.valueOf(MessageNum)).getValue().toString();
@@ -167,17 +209,39 @@ public class Chat extends AppCompatActivity {
                     item.put("receiver",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
                     list.add(item);
                 }
-            }
+            }*/
         }
         //chatlvmessages.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        }
+    }
 
     public void RefreshMessages()
     {
         if (FirstRefresh){
             FirstRefresh=false;
-            if (Emulator){
+            for (int i=0; i<MessageNum-1; i++)
+            {
+                item = new HashMap<String,String>();
+                String messagedata =dataSnap.child(String.valueOf(i+1)).child("message").getValue().toString();
+                String mesasgesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
+                if (mesasgesender.equals(sender))
+                {
+                    Log.e("Time","3");
+                    item.put("sender",messagedata);
+                    item.put("receiver","");
+                    list.add(item);
+                }
+                else {
+                    Log.e("Time","4");
+                    item.put("receiver",messagedata);
+                    item.put("sender","");
+                    list.add(item);
+                }
+
+            }
+            chatlvmessages.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            /*if (Emulator){
             for (int i=0; i<MessageNum-1; i++)
             {
                 item = new HashMap<String,String>();
@@ -231,7 +295,7 @@ public class Chat extends AppCompatActivity {
                 }
                 chatlvmessages.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-        }
+        }*/
 
         }
 

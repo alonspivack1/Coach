@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="#369636"
+        android:background="@drawable/background"
         android:gravity="center"
-        android:text="Trasnfer, please wait"
+        android:text="אקטיביטי מעבר"
         android:textColor="#ffffff"
         android:textSize="20dp"
         android:textStyle="bold" />

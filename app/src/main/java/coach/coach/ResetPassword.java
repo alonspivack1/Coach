@@ -23,6 +23,8 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
+        setTitle("שחזור סיסמה");
+
         editTextForgotEmail=(EditText)findViewById(R.id.editTextForgotEmail);
         findViewById(R.id.textViewBackToLogIn).setOnClickListener(this);
         findViewById(R.id.textViewBackToSignup).setOnClickListener(this);

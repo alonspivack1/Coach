@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,21 +43,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     ProgressBar progressBar;
     EditText editTextEmail, editTextPassword,editTextUser,etPhoneNo,etCode;
     Button SMSbtn;
-    DatabaseReference reference,reference2;
+    DatabaseReference reference,reference2,reference3;
     int numflag1,numflag2,numflag3,numflag4;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference,databaseReference2;
-    String CoachAnswer,UserAnswer;
+    String CoachAnswer="",UserAnswer="";
     Random rn;
-    Intent LogInIntent,UserIntent,CoachIntent;
+    Intent LogInIntent,UserIntent,CoachIntent,intentCredits;
     int codeInt;
     String smsNum;
-    String codeString;
+    String codeString="";
     Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        setTitle("הרשמה");
+
         FirebaseDatabase reference;
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
@@ -93,9 +98,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
-                CoachAnswer = objectMap.toString();
-
+                if (dataSnapshot.hasChild("CoachNames")) {
+                    Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
+                    CoachAnswer = objectMap.toString();
+                }
             }
 
             @Override
@@ -107,8 +113,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         databaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
-                UserAnswer = objectMap.toString();
+                if (dataSnapshot.hasChild("UserNames")) {
+                    Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
+                UserAnswer = objectMap.toString();}
                // Log.e("Coach:",CoachAnswer);
              //   Log.e("User:",UserAnswer);
 
@@ -119,6 +126,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        String st = item.getTitle().toString();
+        if (st.equals("קרדיטים"))
+        {
+            intentCredits = new Intent(this, Credits.class);
+            startActivity(intentCredits);
+        }
+        return true;
     }
 
     private void registerUser() {
@@ -255,14 +281,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         {
                             reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                             HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("{Age}","0" );
-                            hashMap.put("{Weight}","0" );
-                            hashMap.put("{Height}","0" );
-                            hashMap.put("{PracticeTime}", "0");
-                            hashMap.put("{Goal}",",");
-                            hashMap.put("{Equipment}", "0");
-                            hashMap.put("{Gender}","Male" );
-                            hashMap.put("{Description}", "0");
+                            hashMap.put("Age","0" );
+                            hashMap.put("Weight","0" );
+                            hashMap.put("Height","0" );
+                            hashMap.put("PracticeTime", "0");
+                            hashMap.put("Goal",",");
+                            hashMap.put("Equipment", "0");
+                            hashMap.put("Gender","Male" );
+                            hashMap.put("Description", "0");
                             //   hashMap.put("username",username);
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -279,13 +305,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             {
                                 reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
                                 HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("{Age}","0" );
-                                hashMap.put("{StudyPlace}","0" );
-                                hashMap.put("{Professionalization}","," );
-                                hashMap.put("{Description}", "0");
-                                hashMap.put("{Gender}","Male" );
-                                hashMap.put("{CoachTime}", "0");
-
+                                hashMap.put("Age","0" );
+                                hashMap.put("StudyPlace","0" );
+                                hashMap.put("Professionalization","," );
+                                hashMap.put("Description", "0");
+                                hashMap.put("Gender","Male" );
+                                hashMap.put("CoachTime", "0");
+                                reference3=FirebaseDatabase.getInstance().getReference("Rating").child(username);
+                                HashMap<String, String> hashMap2 = new HashMap<>();
+                                hashMap2.put("RatersNumber",""+0 );
+                                hashMap2.put("Rating", ""+0);
+                                reference3.setValue(hashMap2);//TODO לבדוק אם צריך להוסיף oncompletelistener
                                 //   hashMap.put("username",username);
                                 reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -332,6 +362,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     {
                             codeInt=rn.nextInt(90000)+10000;
                             codeString="" + codeInt;
+                            Log.e("smsNum",smsNum);
+                            Log.e("codeString",codeString);
                             sendSMS(smsNum, codeString);
                     }
                     else {

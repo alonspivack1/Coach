@@ -224,7 +224,7 @@ public class FragmentProgram extends Fragment{
         while (index >= 0) {
 
             Log.e("Name", sub.substring(0, index));
-            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)).getValue().toString());
+            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)));
             coachesList.add(coaches[i]);
             i++;
             sub = sub.substring(index + 1);
@@ -261,7 +261,7 @@ public class FragmentProgram extends Fragment{
         while (index >= 0) {
 
             Log.e("Name", sub.substring(0, index));
-            users[i] = new User(sub.substring(0, index),dataSnap.child("ProfileUser").child(sub.substring(0, index)).getValue().toString());
+            users[i] = new User(sub.substring(0, index),dataSnap.child("ProfileUser").child(sub.substring(0, index)));
             Log.e("USER!","Name:"+sub.substring(0, index));
             Log.e("USER!","User:"+dataSnap.child("ProfileUser").child(sub.substring(0, index)).getValue().toString());
             Log.e("Name",users[i].getName());
@@ -273,7 +273,7 @@ public class FragmentProgram extends Fragment{
             Log.e("Item",users[i].getItem());
             Log.e("Age",users[i].getAge());
             Log.e("Goal",users[i].getGoal());
-            Log.e("Details",users[i].getDetails());
+            Log.e("Details",users[i].getDetails().toString());
 
             usersList.add(users[i]);
             i++;

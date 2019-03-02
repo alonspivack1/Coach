@@ -17,9 +17,23 @@ public class Coach {
     private String description;
     private String professionalization;
     private String gender;
-    private String details;
+    private DataSnapshot details;
+
+    public Coach (String name,DataSnapshot dataSnapshot)
+    {
+        this.name = name;
+        this.age = dataSnapshot.child("Age").getValue().toString();
+        this.time = dataSnapshot.child("CoachTime").getValue().toString();
+        this.where = dataSnapshot.child("StudyPlace").getValue().toString();
+        this.description = dataSnapshot.child("Description").getValue().toString();
+        this.professionalization = dataSnapshot.child("Professionalization").getValue().toString();
+        this.gender = dataSnapshot.child("Gender").getValue().toString();
+        this.details = dataSnapshot;
 
 
+    }
+
+    /*
     public Coach(String name,String detailss) {
 
         Log.e("detailss", detailss);
@@ -40,7 +54,7 @@ public class Coach {
         Log.e("description", details.substring(details.indexOf("{Description}=") + 14, (details.indexOf(", {", details.indexOf("{Description}=") + 14))));
         this.description = details.substring(details.indexOf("{Description}=") + 14, (details.indexOf(", {", details.indexOf("{Description}=") + 14)));
 
-
+*/
         /*Log.e("where",details.substring(answer[0]+1,details.indexOf(", {Pro")));
         this.where = details.substring(answer[0]+1,details.indexOf(", {Pro"));
         Log.e("professionalization",details.substring(answer[1]+2,details.indexOf(", {Age")-1));
@@ -53,7 +67,7 @@ public class Coach {
         this.description = details.substring(answer[5]+1,details.length()-1);*/
         //this.description = details.substring(answer[5]+1,details.indexOf(details.length()-2));
         //this.description = details.substring(answer[5]+1,details.indexOf("}"));
-    }
+    //}
 
     public  String getName() {
         return this.name;
@@ -74,7 +88,7 @@ public class Coach {
     public String getProfessionalization() {
         return this.professionalization;
     }
-    public String getDetails()
+    public DataSnapshot getDetails()
     {
         return this.details;
     }

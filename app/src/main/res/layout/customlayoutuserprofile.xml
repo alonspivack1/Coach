@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="שם"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold" />
 
     <TextView
@@ -19,14 +20,16 @@
         android:layout_width="match_parent"
         android:gravity="right"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="גיל" />
     <TextView
         android:id="@+id/usertvlistgender"
         android:layout_width="match_parent"
         android:gravity="right"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:layout_height="wrap_content"
         android:text="מין" />
@@ -35,7 +38,8 @@
         android:layout_width="match_parent"
         android:gravity="right"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="משקל" />
     <TextView
@@ -43,7 +47,8 @@
         android:layout_width="match_parent"
         android:gravity="right"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="גובה" />
 
@@ -51,7 +56,8 @@
         android:id="@+id/usertvlisttime"
         android:layout_width="match_parent"
         android:gravity="right"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:layout_height="wrap_content"
         android:text="זמן מאמן" />
@@ -62,7 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="איפה למד" />
 
@@ -71,7 +78,8 @@
         android:layout_width="match_parent"
         android:gravity="right"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="התמקצעות" />
 
@@ -80,7 +88,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="#FFFF"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="תיאור קצר" />
 

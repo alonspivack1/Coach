@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
 
 /**
@@ -65,7 +67,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
 
         String name = getItem(position).getName();
-        String details =getItem(position).getDetails();
+        DataSnapshot details =getItem(position).getDetails();
 
 
         User user = new User(name,details);
