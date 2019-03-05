@@ -47,7 +47,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     EditText editTextEmail, editTextPassword,editTextUserName;
     ProgressBar progressBar;
     String UserNames="",CoachNames="";
-    String type;
+    String type="";
     DataSnapshot DataSnap;
     Intent userIntent,coachIntent,MainActivityIntent,intentCredits;
     String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
@@ -221,6 +221,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         editor.putString("password", password);
                         editor.apply();
                     }
+                    Log.e("Type",type);
                     if (type.equals("User"))
                     {
                         String UserData = DataSnap.child("ProfileUser").child(username).child("Age").getValue().toString();
