@@ -110,8 +110,8 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         holder.sex.setText(person.getSex());*/
         holder.tvlistname.setText("שם: "+coach.getName());
         holder.tvlistage.setText("גיל: " + coach.getAge());
-        holder.tvlisttime.setText("כמה זמן מאמן: "+coach.getTime());
-        holder.tvlistwhere.setText("איפה למד לאמן: "+coach.getWhere());
+        holder.tvlisttime.setText("ותק באימון: "+coach.getTime());
+        holder.tvlistwhere.setText("מקום התמקצעות: "+coach.getWhere());
         holder.tvlistprofessionalization.setText("התמקצעות: "+coach.getProfessionalization());
         holder.tvlistgender.setText("מין: "+coach.getGender());
         holder.tvlistdescription.setText("תיאור קצר: "+coach.getDescription());
