@@ -88,14 +88,6 @@ android:orientation="vertical"
                 android:text="שלח קוד" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/etCode"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="top"
-            android:textColor="@color/colorText"
-            android:textColorHint="@color/colorHint"
-            android:hint="קוד"/>
 
 
         <Button

@@ -2,13 +2,17 @@ package coach.coach;
 
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,6 +58,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     String smsNum;
     String codeString="";
     Spinner spinner;
+    EditText codeet;
+    String username,password,email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +88,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         SMSbtn = (Button) findViewById(R.id.btnSendSMS);
         etPhoneNo = (EditText) findViewById(R.id.etPhoneNo);
-        etCode = (EditText) findViewById(R.id.etCode);
         rn = (Random) new Random();
 
         LogInIntent= new Intent(this,LogInActivity.class);
@@ -148,9 +153,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void registerUser() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-        final String username = editTextUser.getText().toString();
+        email = editTextEmail.getText().toString().trim();
+        password = editTextPassword.getText().toString().trim();
+        username = editTextUser.getText().toString();
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
@@ -231,16 +236,42 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this,"Choose type",Toast.LENGTH_LONG).show();
             return;
         }
-
-        if (!codeString.equals(etCode.getText().toString())) {
-            etCode.setError("Wrong sms code");
-            etCode.requestFocus();
+        if (codeString=="")
+        {
+            etPhoneNo.setError("לא נשלח קוד");
+            etPhoneNo.requestFocus();
             return;
         }
 
 
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
+        codeet = new EditText(this);
+        codeet.setHint("קוד");
+        codeet.setGravity(Gravity.CENTER_HORIZONTAL);
+        alertDialog.setView(codeet);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL,"שלח", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
 
+                if (codeet.getText().toString().equals(codeString)){
+
+                    StartSignUp();
+                }
+                else
+                {
+                  Log.e("Wrong","Worng code");
+                  //TODO לשנות לטוסט
+                }
+            }
+
+        });
+
+        new Dialog(getApplicationContext());
+        alertDialog.show();
+    }
+
+    public void StartSignUp()
+    {
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -263,71 +294,71 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
                     }
 
-                  //  reference2.child(username).setValue(smsNum);
-                  //  HashMap<String, String> hashMap2 = new HashMap<>();
-                //    hashMap2.put(username,"");
+                    //  reference2.child(username).setValue(smsNum);
+                    //  HashMap<String, String> hashMap2 = new HashMap<>();
+                    //    hashMap2.put(username,"");
                     //reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        /*reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            task.isComplete();
-                            startActivity(LogInIntent);
-                            finish();
+                    /*reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        task.isComplete();
+                        startActivity(LogInIntent);
+                        finish();
 
 
-                        }
-                    });*/
-                        if (spinner.getSelectedItem().toString().equals("User"))
-                        {
-                            reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("Age","0" );
-                            hashMap.put("Weight","0" );
-                            hashMap.put("Height","0" );
-                            hashMap.put("PracticeTime", "0");
-                            hashMap.put("Goal",",");
-                            hashMap.put("Equipment", "0");
-                            hashMap.put("Gender","Male" );
-                            hashMap.put("Description", "0");
-                            //   hashMap.put("username",username);
-                            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isComplete()) {
-                                        UserIntent.putExtra("username",username+"");
-                                        startActivity(UserIntent);
-                                        finish();
-                                    }
+                    }
+                });*/
+                    if (spinner.getSelectedItem().toString().equals("User"))
+                    {
+                        reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("Age","0" );
+                        hashMap.put("Weight","0" );
+                        hashMap.put("Height","0" );
+                        hashMap.put("PracticeTime", "0");
+                        hashMap.put("Goal",",");
+                        hashMap.put("Equipment", "0");
+                        hashMap.put("Gender","Male" );
+                        hashMap.put("Description", "0");
+                        //   hashMap.put("username",username);
+                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isComplete()) {
+                                    UserIntent.putExtra("username",username+"");
+                                    startActivity(UserIntent);
+                                    finish();
                                 }
-                            });
-                        }
-                        else
-                            {
-                                reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
-                                HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("Age","0" );
-                                hashMap.put("StudyPlace","0" );
-                                hashMap.put("Professionalization","," );
-                                hashMap.put("Description", "0");
-                                hashMap.put("Gender","Male" );
-                                hashMap.put("CoachTime", "0");
-                                reference3=FirebaseDatabase.getInstance().getReference("Rating").child(username);
-                                HashMap<String, String> hashMap2 = new HashMap<>();
-                                hashMap2.put("RatersNumber",""+0 );
-                                hashMap2.put("Rating", ""+0);
-                                reference3.setValue(hashMap2);//TODO לבדוק אם צריך להוסיף oncompletelistener
-                                //   hashMap.put("username",username);
-                                reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isComplete()) {
-                                            CoachIntent.putExtra("username",username);
-                                            startActivity(CoachIntent);
-                                            finish();
-                                        }
-                                    }
-                                });
                             }
+                        });
+                    }
+                    else
+                    {
+                        reference = FirebaseDatabase.getInstance().getReference("ProfileCoach").child(username);
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("Age","0" );
+                        hashMap.put("StudyPlace","0" );
+                        hashMap.put("Professionalization","," );
+                        hashMap.put("Description", "0");
+                        hashMap.put("Gender","Male" );
+                        hashMap.put("CoachTime", "0");
+                        reference3=FirebaseDatabase.getInstance().getReference("Rating").child(username);
+                        HashMap<String, String> hashMap2 = new HashMap<>();
+                        hashMap2.put("RatersNumber",""+0 );
+                        hashMap2.put("Rating", ""+0);
+                        reference3.setValue(hashMap2);//TODO לבדוק אם צריך להוסיף oncompletelistener
+                        //   hashMap.put("username",username);
+                        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isComplete()) {
+                                    CoachIntent.putExtra("username",username);
+                                    startActivity(CoachIntent);
+                                    finish();
+                                }
+                            }
+                        });
+                    }
 
                 } else {
 
@@ -343,6 +374,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
+
     private void sendSMS(String phoneNumber, String message)
     {
 
