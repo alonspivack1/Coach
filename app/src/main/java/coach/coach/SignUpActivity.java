@@ -320,6 +320,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         hashMap.put("Equipment", "0");
                         hashMap.put("Gender","Male" );
                         hashMap.put("Description", "0");
+                        hashMap.put("Image", "0");
+
                         //   hashMap.put("username",username);
                         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -342,6 +344,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         hashMap.put("Description", "0");
                         hashMap.put("Gender","Male" );
                         hashMap.put("CoachTime", "0");
+                        hashMap.put("Image", "0");
+
                         reference3=FirebaseDatabase.getInstance().getReference("Rating").child(username);
                         HashMap<String, String> hashMap2 = new HashMap<>();
                         hashMap2.put("RatersNumber",""+0 );

@@ -15,6 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+            <ImageView
+                android:id="@+id/ivuserimage"
+                android:layout_width="200px"
+                android:layout_height="200px"
+                android:src="@drawable/unimage"
+                android:layout_gravity="center"
+                android:onClick="ChangeUserImage"/>
 
             <EditText
                 android:id="@+id/etuserage"

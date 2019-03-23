@@ -1,11 +1,13 @@
 package coach.coach;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -52,6 +54,8 @@ public class UserListAdapter extends ArrayAdapter<User> {
         TextView usertvlistdescription;
         TextView usertvlistheight;
         TextView usertvlistweight;
+        ImageView userivlistimage;
+
     }
 
 
@@ -68,6 +72,8 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
         String name = getItem(position).getName();
         DataSnapshot details =getItem(position).getDetails();
+        Bitmap image = getItem(position).getImage();
+
 
 
         User user = new User(name,details);
@@ -88,6 +94,8 @@ public class UserListAdapter extends ArrayAdapter<User> {
             holder.usertvlistitem = (TextView) convertView.findViewById(R.id.usertvlistitem);
             holder.usertvlistgoal = (TextView) convertView.findViewById(R.id.usertvlistgoal);
             holder.usertvlistdescription = (TextView) convertView.findViewById(R.id.usertvlistdescription);
+            holder.userivlistimage = (ImageView) convertView.findViewById(R.id.userivlistimage);
+
 
 
             result = convertView;
@@ -111,6 +119,15 @@ public class UserListAdapter extends ArrayAdapter<User> {
         holder.usertvlisttime.setText("כמה זמן מתאמן: "+user.getTime());
         holder.usertvlistitem.setText("ציוד בבית: "+user.getItem());
         holder.usertvlistgoal.setText("מטרה: "+user.getGoal());
+        if (user.getImage()==null)
+        {
+            holder.userivlistimage.setImageResource(R.drawable.unimage);
+
+        }
+        else {
+            holder.userivlistimage.setImageBitmap(user.getImage());
+
+        }
         holder.usertvlistdescription.setText("תיאור קצר: "+user.getDescription());
         return convertView;
     }

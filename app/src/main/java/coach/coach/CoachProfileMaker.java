@@ -1,15 +1,22 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 
@@ -21,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -37,6 +46,10 @@ public class CoachProfileMaker extends AppCompatActivity {
     DataSnapshot dataSnap;
     Switch switchcoachgender;
     private DatabaseReference databaseReference;
+    ImageView ivcoachimage;
+    private static int RESULT_LOAD_IMAGE = 1;
+    String ImageString="0";
+    Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +58,9 @@ public class CoachProfileMaker extends AppCompatActivity {
 
         intent = getIntent();
         username=intent.getStringExtra("username");
+
+        ivcoachimage = (ImageView)findViewById(R.id.ivcoachimage);
+
 
         MainActivityIntent = new Intent(this,MainActivity.class);
 
@@ -86,6 +102,7 @@ public class CoachProfileMaker extends AppCompatActivity {
                 coach = new Coach(username,dataSnap.child("ProfileCoach").child(username));;
                 if (!coach.getAge().equals("0"))
                 {
+                    ivcoachimage.setImageBitmap(coach.getImage());
                     etcoachage.setText(coach.getAge());
                     etcoachwhere.setText(coach.getWhere());
                     etcoachtime.setText(coach.getTime());
@@ -230,6 +247,7 @@ public class CoachProfileMaker extends AppCompatActivity {
         hashMap.put("StudyPlace",etcoachwhere.getText().toString());
         hashMap.put("Description",etcoachdescription.getText().toString());
         hashMap.put("CoachTime",etcoachtime.getText().toString());
+        hashMap.put("Image",ImageString);
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -242,4 +260,54 @@ public class CoachProfileMaker extends AppCompatActivity {
             }
         });
     }
+    public void ChangeCoachImage(View view) {
+        Intent getImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getImageIntent .setType("image/*");
+        startActivityForResult(getImageIntent ,  RESULT_LOAD_IMAGE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode== RESULT_LOAD_IMAGE  && resultCode == RESULT_OK) {
+            Uri fullPhotoUri = data.getData();
+            try {
+              bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bitmap=getResizedBitmap(bitmap,200);
+            ImageString = BitmapToString(bitmap);
+            Log.e("Bitmap", ImageString);
+            ivcoachimage.setImageBitmap(bitmap);
+
+        }
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+    public static String BitmapToString(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] b = baos.toByteArray();
+            String temp = Base64.encodeToString(b, Base64.DEFAULT);
+            return temp;
+        } catch (NullPointerException e) {
+            return null;
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
+    }
+
 }

@@ -60,6 +60,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
         setTitle("התחברות");
+
+
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);
         MainActivityIntent = new Intent(this,MainActivity.class);
@@ -384,5 +386,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break; }
     }
+
 
 }

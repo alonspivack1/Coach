@@ -39,13 +39,15 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    Intent intent,intentSettings,intentCredits;
+    Intent intent,intentSettings,intentCredits,intentMail;
     String username,type,CoachProfiles="";
     TextView fragchat,fragtv;
     int FragInt=1;
     public Fragment myfragment;
     private DatabaseReference databaseReference;
     Button button1,button2,button3;
+    Boolean SignOut=false;
+    String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,27 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         username = intent.getStringExtra("username");
         type = intent.getStringExtra("type");
+
+        SharedPreferences prefs = getSharedPreferences("AutoLogIn", MODE_PRIVATE);
+        SPusername = prefs.getString("username", "nousername");
+        SPtype = prefs.getString("type","notype");
+        SPemail = prefs.getString("email","noemail");
+        SPpassword = prefs.getString("password","nopassword");
+        if ((!SPusername.equals("nousername"))&&(!SPtype.equals("notype"))&&(!SPemail.equals("noemail"))&&(!SPpassword.equals("nopassword")))
+        {
+
+            Intent service = new Intent(this,TimerService.class);
+            SharedPreferences.Editor editor = getSharedPreferences("service", MODE_PRIVATE).edit();
+            editor.putString("username", username);
+            editor.putBoolean("signout", false);
+            editor.apply();
+            service.putExtra("time",15);
+            startService(service);
+
+        }
+
+
+
         button3 = (Button) findViewById(R.id.button3);
         button2 = (Button) findViewById(R.id.button2);
         button1 = (Button) findViewById(R.id.button1);
@@ -110,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         menu.add("התנתקות");
         menu.add("עדכון פרופיל");
+        menu.add("שליחת מייל למפתח");
+
 
         return true;
     }
@@ -134,14 +159,25 @@ public class MainActivity extends AppCompatActivity {
             intentCredits = new Intent(this, Credits.class);
             startActivity(intentCredits);
         }
+        if (st.equals("שליחת מייל למפתח"))
+        {
+            intentMail = new Intent(this, Mail.class);
+            startActivity(intentMail);
+        }
         if (st.equals("התנתקות"))
         {
+            SharedPreferences.Editor editorsevice = getSharedPreferences("service", MODE_PRIVATE).edit();
+            editorsevice.putString("username", username);
+            editorsevice.putBoolean("signout", true);
+            editorsevice.apply();
+
             SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
             editor.putString("username", "nousername");
             editor.putString("type", "notype");
             editor.putString("email", "noemail");
             editor.putString("password", "nopassword");
             editor.apply();
+            SignOut=true;
             FirebaseAuth.getInstance().signOut();
             finish();
             startActivity(new Intent(this,LogInActivity.class));

@@ -31,6 +31,9 @@ public class Program extends AppCompatActivity {
     Intent intent;
     String receiver,sender;
     DatabaseReference databaseReference;
+    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notifcation");
+    Boolean UpdateNotifiction=false;
+    String NotificationProgramAlarm="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,8 @@ public class Program extends AppCompatActivity {
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
+        Reference = Reference.child(receiver);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProgramRoom").child(receiver+"&"+sender);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -47,6 +52,54 @@ public class Program extends AppCompatActivity {
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
                 // knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
                 knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.v("NotificationProgram","1");
+                if (dataSnapshot.hasChild("ProgramAlarm"))
+                {
+                    Log.v("NotificationProgram","2");
+
+                    NotificationProgramAlarm=dataSnapshot.child("ProgramAlarm").getValue().toString();
+                    if ((NotificationProgramAlarm).indexOf(sender+",")!=-1)
+                    {
+                        Log.v("NotificationProgram","3");
+
+                        if (((NotificationProgramAlarm).indexOf(","+sender+",")!=-1)||((NotificationProgramAlarm).indexOf(sender+",")==0))
+                        {
+                            Log.v("NotificationProgram","4");
+
+                            UpdateNotifiction=false;
+
+                        }
+                        else{
+                            Log.v("NotificationProgram","5");
+
+                            UpdateNotifiction=true;
+
+                        }
+                    }
+                    else
+                    {
+                        Log.v("NotificationProgram","6");
+
+                        UpdateNotifiction=true;
+
+                    }
+                }
+                else {
+                    Log.v("NotificationProgram","7");
+
+                    UpdateNotifiction=true;
+                }
 
             }
 
@@ -64,7 +117,6 @@ public class Program extends AppCompatActivity {
         setupStrikethrough();
         setupBullet();
         setupQuote();
-        setupLink();
         setUpundo();
         setUpredo();
     }
@@ -183,24 +235,6 @@ public class Program extends AppCompatActivity {
             }
         });
     }
-    private void setupLink() {
-        ImageButton link = (ImageButton) findViewById(R.id.link);
-
-        link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLinkDialog();
-            }
-        });
-
-        link.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_insert_link, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
     private void setUpundo() {
         ImageButton undo = (ImageButton) findViewById(R.id.undo);
 
@@ -241,43 +275,13 @@ public class Program extends AppCompatActivity {
 
 
 
-    private void showLinkDialog() {
-        final int start = knife.getSelectionStart();
-        final int end = knife.getSelectionEnd();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-
-        View view = getLayoutInflater().inflate(R.layout.dialog_link, null, false);
-        final EditText editText = (EditText) view.findViewById(R.id.edit);
-        builder.setView(view);
-        builder.setTitle(R.string.dialog_title);
-
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String link = editText.getText().toString().trim();
-                if (TextUtils.isEmpty(link)) {
-                    return;
-                }
-
-                // When KnifeText lose focus, use this method
-                knife.link(link, start, end);
-            }
-        });
-
-        builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // DO NOTHING HERE
-            }
-        });
-
-        builder.create().show();
-    }
 
     public void SendProgram(View view) {
         databaseReference.child("Data").setValue(knife.toHtml());
         knife.fromHtml(knife.toHtml());
+        if (UpdateNotifiction)
+        {
+            Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
+        }
     }
 }

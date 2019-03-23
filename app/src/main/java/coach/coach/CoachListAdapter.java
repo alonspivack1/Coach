@@ -1,6 +1,7 @@
 package coach.coach;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -46,6 +48,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         RatingBar rblistrate;
         DatabaseReference databaseReference;
         TextView tvlistrate;
+        ImageView ivlistimage;
 
     }
 
@@ -70,6 +73,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         String description = getItem(position).getDescription();
         String gender = getItem(position).getGender();
         DataSnapshot details =getItem(position).getDetails();
+        Bitmap image = getItem(position).getImage();
         Coach coach = new Coach(name,details);
 
 
@@ -92,6 +96,8 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
             holder.tvlistgender = (TextView)convertView.findViewById(R.id.tvlistgender);
             holder.rblistrate = (RatingBar) convertView.findViewById(R.id.rblistrate);
             holder.tvlistrate = (TextView) convertView.findViewById(R.id.tvlistrate);
+            holder.ivlistimage = (ImageView) convertView.findViewById(R.id.ivlistimage);
+
 
             result = convertView;
 
@@ -114,6 +120,15 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         holder.tvlistwhere.setText("מקום התמקצעות: "+coach.getWhere());
         holder.tvlistprofessionalization.setText("התמקצעות: "+coach.getProfessionalization());
         holder.tvlistgender.setText("מין: "+coach.getGender());
+        if (coach.getImage()==null)
+        {
+            holder.ivlistimage.setImageResource(R.drawable.unimage);
+
+        }
+        else {
+            holder.ivlistimage.setImageBitmap(coach.getImage());
+
+        }
         holder.tvlistdescription.setText("תיאור קצר: "+coach.getDescription());
         holder.databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating").child(name);
         holder.databaseReference.addListenerForSingleValueEvent(

@@ -1,5 +1,8 @@
 package coach.coach;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -14,6 +17,7 @@ public class User {
     private String description;
     private String goal;
     private String gender;
+    private Bitmap image;
     private DataSnapshot details;
 
     public User (String name,DataSnapshot dataSnapshot)
@@ -27,6 +31,7 @@ public class User {
         this.description = dataSnapshot.child("Description").getValue().toString();
         this.goal = dataSnapshot.child("Goal").getValue().toString();
         this.gender = dataSnapshot.child("Gender").getValue().toString();
+        this.image = StringToBitmap(dataSnapshot.child("Image").getValue().toString());
         this.details = dataSnapshot;
 
 
@@ -91,7 +96,9 @@ public class User {
     public String getItem(){
         return this.item;
     }
-
+    public Bitmap getImage() {
+        return this.image;
+    }
     public String getAge() {
         return this.age;
     }
@@ -103,6 +110,26 @@ public class User {
     {
         return this.details;
     }
+
+    private static Bitmap StringToBitmap(String encodedString) {
+        if (encodedString.equals("0"))
+        {
+            return null;
+        }
+        else{
+            try {
+                byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                return bitmap;
+            } catch (NullPointerException e) {
+                e.getMessage();
+                return null;
+            } catch (OutOfMemoryError e) {
+                return null;
+            }
+        }
+    }
+
 
 
 }

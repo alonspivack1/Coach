@@ -1,5 +1,6 @@
 package coach.coach;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -34,12 +35,15 @@ public class Chat extends AppCompatActivity {
     ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
     DatabaseReference databaseReference,ChatReference;
     DataSnapshot dataSnap;
-    Boolean FirstRefresh=true,Emulator=true;
+    Boolean FirstRefresh=true;
     EditText etMessageText;
     String MessageString;
     int MessageNum;
+    String NotificationChat="";
     Button chatbuttonsend;
     int FLAGINT=1;
+    Boolean UpdateNotifiction;
+    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notifcation");
 
 
     @Override
@@ -53,6 +57,7 @@ public class Chat extends AppCompatActivity {
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
         room=intent.getStringExtra("room");
+        Reference = Reference.child(receiver);
 
         chatbuttonsend = (Button)findViewById(R.id.chatbuttonsend);
         etMessageText = (EditText)findViewById(R.id.etMessageText);
@@ -119,10 +124,59 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+        Reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.v("NotificationChat","1");
+                if (dataSnapshot.hasChild("Chat"))
+                {
+                    Log.v("NotificationChat","2");
+
+                    NotificationChat=dataSnapshot.child("Chat").getValue().toString();
+                    if ((NotificationChat).indexOf(sender+",")!=-1)
+                    {
+                        Log.v("NotificationChat","3");
+
+                        if (((NotificationChat).indexOf(","+sender+",")!=-1)||((NotificationChat).indexOf(sender+",")==0))
+                        {
+                            Log.v("NotificationChat","4");
+
+                            UpdateNotifiction=false;
+
+                        }
+                        else{
+                            Log.v("NotificationChat","5");
+
+                            UpdateNotifiction=true;
+
+                        }
+                    }
+                    else
+                    {
+                        Log.v("NotificationChat","6");
+
+                        UpdateNotifiction=true;
+
+                    }
+                }
+                else {
+                    Log.v("NotificationChat","7");
+
+                    UpdateNotifiction=true;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         adapter = new SimpleAdapter(this, list,
                 R.layout.twolines,
-                new String[] { "sender","receiver" },
+                new String[] { "sender","receiver"},
                 new int[] {R.id.sendmessage, R.id.receivemessage});
 
         final Handler handler = new Handler();
@@ -310,6 +364,10 @@ public class Chat extends AppCompatActivity {
         ChatReference.child(room).child(""+MessageNum).setValue(newmessage);
         MessageNum++;
         ChatReference.child(room).child("num").child("num").setValue(MessageNum);
+        if (UpdateNotifiction)
+        {
+            Reference.child("Chat").setValue(NotificationChat+sender+",");
+        }
         /*ChatReference.child(room).child(""+MessageNum).setValue(newmessage).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

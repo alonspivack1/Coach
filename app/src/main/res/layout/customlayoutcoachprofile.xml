@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/ivlistimage"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:gravity="right"
+        android:layout_gravity="right" />
     <TextView
         android:id="@+id/tvlistname"
         android:layout_width="match_parent"

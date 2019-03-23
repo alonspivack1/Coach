@@ -38,9 +38,6 @@
         app:bulletGapWidth="@dimen/bullet_gap_width"
         app:historyEnable="true"
         app:historySize="99"
-        app:linkColor="@color/blue_500"
-        app:linkUnderline="true"
-        android:linksClickable="true"
         app:quoteColor="@color/colorPrimaryDark"
         app:quoteStripeWidth="@dimen/quote_stripe_width"
         app:quoteCapWidth="@dimen/quote_gap_width">

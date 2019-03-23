@@ -1,5 +1,9 @@
 package coach.coach;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.RatingBar;
 
@@ -17,6 +21,7 @@ public class Coach {
     private String description;
     private String professionalization;
     private String gender;
+    private Bitmap image;
     private DataSnapshot details;
 
     public Coach (String name,DataSnapshot dataSnapshot)
@@ -28,6 +33,7 @@ public class Coach {
         this.description = dataSnapshot.child("Description").getValue().toString();
         this.professionalization = dataSnapshot.child("Professionalization").getValue().toString();
         this.gender = dataSnapshot.child("Gender").getValue().toString();
+        this.image = StringToBitmap(dataSnapshot.child("Image").getValue().toString());
         this.details = dataSnapshot;
 
 
@@ -92,6 +98,10 @@ public class Coach {
     {
         return this.details;
     }
+    public Bitmap getImage() {
+        return this.image;
+    }
+
     public  String getGender() {
         if (this.gender.equals("Male"))
         {
@@ -101,6 +111,24 @@ public class Coach {
         {
             return "נקבה";
         }
+    }
+    private static Bitmap StringToBitmap(String encodedString) {
+        if (encodedString.equals("0"))
+        {
+            return null;
+        }
+        else{
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (NullPointerException e) {
+            e.getMessage();
+            return null;
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
+    }
     }
 
 
