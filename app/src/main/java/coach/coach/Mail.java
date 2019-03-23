@@ -33,13 +33,14 @@ public class Mail extends AppCompatActivity {
     }
 
     private void sendMail() {
-        String recipient = "alonspivack1@gmail.com";
 
+        String recipient = "alonspivack1@gmail.com";
+        String[] recipients = recipient.split(",");
         String subject = mEditTextSubject.getText().toString();
         String message = mEditTextMessage.getText().toString();
 
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, recipient);
+        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, message);
 
