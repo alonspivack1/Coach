@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/background"
+        android:layoutDirection="rtl"
+        android:textDirection="rtl"
         android:gravity="center"
         android:text="אקטיביטי מעבר"
         android:textColor="#ffffff"

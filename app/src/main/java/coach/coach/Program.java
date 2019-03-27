@@ -3,6 +3,8 @@ package coach.coach;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +12,16 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,15 +30,19 @@ import com.google.firebase.database.ValueEventListener;
 
 import io.github.mthli.knife.KnifeText;
 
+//Notification
+//Notifcation
+
 public class Program extends AppCompatActivity {
 
     private KnifeText knife;
     Intent intent;
     String receiver,sender;
     DatabaseReference databaseReference;
-    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notifcation");
+    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notification");
     Boolean UpdateNotifiction=false;
     String NotificationProgramAlarm="";
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,12 +285,65 @@ public class Program extends AppCompatActivity {
 
 
 
-    public void SendProgram(View view) {
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_program, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        String st = item.getTitle().toString();
+        if (st.equals("שלח")) {
+            databaseReference.child("Data").setValue(knife.toHtml());
+            knife.fromHtml(knife.toHtml());
+            if (UpdateNotifiction)
+            {
+                Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
+            }
+            }
+
+
+        return true;
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "לחץ שוב על הלחצן חזור כדי לצאת, התוכנית תשמר אוטומטית", Toast.LENGTH_SHORT).show();
         databaseReference.child("Data").setValue(knife.toHtml());
         knife.fromHtml(knife.toHtml());
         if (UpdateNotifiction)
         {
             Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
         }
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
+
+    @Override
+    protected void onUserLeaveHint()
+    {
+        databaseReference.child("Data").setValue(knife.toHtml());
+        knife.fromHtml(knife.toHtml());
+        if (UpdateNotifiction)
+        {
+            Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
+        }
+        Toast.makeText(this, "השינויים נשמרו אוטמטית", Toast.LENGTH_SHORT).show();
+        Log.d("onUserLeaveHint","Home button pressed");
+    }
+
 }

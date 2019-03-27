@@ -3,6 +3,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menuCredits"
+        android:enabled="true"
+        android:icon="@drawable/unimage"
         android:orderInCategory="100"
-        android:title="קרדיטים" />
+        android:title="קרדיטים"
+        android:visible="true" />
+
+
 </menu>

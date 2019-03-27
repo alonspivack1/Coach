@@ -49,7 +49,7 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
             case R.id.buttonReset:
                 email = editTextForgotEmail.getText().toString();
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    editTextForgotEmail.setError("Please enter a valid email");
+                    editTextForgotEmail.setError("הכנס בבקשה איימל תקין");
                     editTextForgotEmail.requestFocus();
                 }
                 else{
@@ -61,7 +61,7 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
     public void resetUserPassword(String email){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final ProgressDialog progressDialog = new ProgressDialog(ResetPassword.this);
-        progressDialog.setMessage("verifying..");
+        progressDialog.setMessage("מאשר....");
         progressDialog.show();
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -69,12 +69,12 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "Reset password instructions has sent to your email",
+                            Toast.makeText(getApplicationContext(), "שחזור סיסמא נשלח לאיימל",
                                     Toast.LENGTH_SHORT).show();
                         }else{
                             progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),
-                                    "Email don't exist", Toast.LENGTH_SHORT).show();
+                                    "איימל לא נמצא", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

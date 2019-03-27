@@ -19,6 +19,7 @@ public class Mail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail);
+        setTitle("שליחת מייל למפתח");
 
 
         mEditTextSubject = findViewById(R.id.mail_edit_text_subject);

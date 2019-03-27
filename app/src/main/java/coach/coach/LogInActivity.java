@@ -3,12 +3,19 @@ package coach.coach;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +61,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
     CheckBox cbAutoLogIn;
     boolean OneTimeSP=true;
+    ProgressBar PBlogin;
 
     private DatabaseReference databaseReference;
     @Override
@@ -62,10 +71,13 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         setTitle("התחברות");
 
 
+
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);
         MainActivityIntent = new Intent(this,MainActivity.class);
         cbAutoLogIn = (CheckBox) findViewById(R.id.cbAutoLogIn);
+
+        PBlogin = (ProgressBar)findViewById(R.id.PBlogin);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -111,9 +123,23 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     buttonLogin.setVisibility(View.GONE);
                     textViewSignup.setVisibility(View.GONE);
                     textViewForgotPassword.setVisibility(View.GONE);
-
                     AutoLogIn();
-                }}
+                    PBlogin.setVisibility(View.GONE);
+
+                }
+                else
+                {
+                    editTextEmail.setVisibility(View.VISIBLE);
+                    editTextPassword.setVisibility(View.VISIBLE);
+                    editTextUserName.setVisibility(View.VISIBLE);
+                    cbAutoLogIn.setVisibility(View.VISIBLE);
+                    buttonLogin.setVisibility(View.VISIBLE);
+                    textViewSignup.setVisibility(View.VISIBLE);
+                    textViewForgotPassword.setVisibility(View.VISIBLE);
+                    PBlogin.setVisibility(View.GONE);
+
+                }
+                }
 
                 // databaseReference.child("Rating").child("pa").child("RatersNames").child("aa").setValue("4");
                 // databaseReference.child("Rating").child("pa").child("RatersNames").child("aaa").setValue("6");
@@ -382,6 +408,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 userLogin();
                 break;
             case R.id.textViewForgotPassword:
+
                 startActivity(new Intent(this, ResetPassword.class));
                 finish();
                 break; }

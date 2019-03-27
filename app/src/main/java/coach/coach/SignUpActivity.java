@@ -2,11 +2,21 @@ package coach.coach;
 
 
 
+import android.Manifest;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.gsm.SmsManager;
@@ -66,6 +76,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_up);
         setTitle("הרשמה");
 
+
+
+
+
+        ActivityCompat.requestPermissions(SignUpActivity.this,
+                new String[]{Manifest.permission.SEND_SMS},
+                1);
+
         FirebaseDatabase reference;
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
@@ -78,9 +96,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         spinner = (Spinner) findViewById(R.id.spinner);
         String[] SpinnerStrings = new String[3];
-        SpinnerStrings[0]="Select Type:";
-        SpinnerStrings[1]="User";
-        SpinnerStrings[2]="Coach";
+        SpinnerStrings[0]="סוג המשתמש";
+        SpinnerStrings[1]="מתאמן";
+        SpinnerStrings[2]="מאמן";
 
         ArrayAdapter<String>SpinnerAdapter = new ArrayAdapter<String>(SignUpActivity.this,android.R.layout.simple_list_item_1,SpinnerStrings);
         SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -157,46 +175,46 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         password = editTextPassword.getText().toString().trim();
         username = editTextUser.getText().toString();
         if (email.isEmpty()) {
-            editTextEmail.setError("Email is required");
+            editTextEmail.setError("לא מילאת איימל");
             editTextEmail.requestFocus();
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Enter a valid email");
+            editTextEmail.setError("האיימל שגוי");
             editTextEmail.requestFocus();
             return;
         }
 
         if (password.isEmpty()) {
-            editTextPassword.setError("Password is required");
+            editTextPassword.setError("לא מילאת סיסמא");
             editTextPassword.requestFocus();
             return;
         }
 
         if (password.length() < 6) {
-            editTextPassword.setError("Minimum lenght of password should be 6");
+            editTextPassword.setError("אורך הסיסמא לא יכול להיות פחות מ6 תווים");
             editTextPassword.requestFocus();
             return;
         }
         if (username.length() < 2) {
-            editTextUser.setError("Minimum lenght of username should be 2");
+            editTextUser.setError("אורך שן המשתמש לא יכול להיות פחות מ2 תווים");
             editTextUser.requestFocus();
             return;
         }
         if (username.length() > 10) {
-            editTextUser.setError("Max lenght of username should be 10");
+            editTextUser.setError("אורך שם המשתמש לא יכול להיות יותר מ10 תווים");
             editTextUser.requestFocus();
             return;
         }
         if (password.length() > 16) {
-            editTextPassword.setError("Max lenght of password should be 16");
+            editTextPassword.setError("אורך הסיסמא לא יכול להיות יותר מ16 תווים");
             editTextPassword.requestFocus();
             return;
         }
         if(!Pattern.matches("[A-Za-z0-9]+", username))
         {
-            editTextUser.setError("Use just letters and numbers");
+            editTextUser.setError("אפשר להשתמש רק באותיות ומספרים");
             editTextUser.requestFocus();
             return;
         }
@@ -208,7 +226,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             numflag1 =CoachAnswer.toLowerCase().indexOf("{"+username.toLowerCase()+"=");
             if(numflag1!=-1)
             {
-            editTextUser.setError("This name is taken, choose other name");
+            editTextUser.setError("השם משתמש הזה משומש, בחר שם אחר");
             editTextUser.requestFocus();
             return;
             }
@@ -220,23 +238,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             numflag3 =UserAnswer.toLowerCase().indexOf("{"+username.toLowerCase()+"=");
             if(numflag3!=-1)
             {
-                editTextUser.setError("This name is taken, choose other name");
+                editTextUser.setError("השם משתמש הזה משומש, בחר שם אחר");
                 editTextUser.requestFocus();
                 return;
             }
         }
         else {
-            editTextUser.setError("This name is taken, choose other name");
+            editTextUser.setError("השם משתמש הזה משומש, בחר שם אחר");
             editTextUser.requestFocus();
             return;
         }
 
-        if (spinner.getSelectedItem().toString().equals("Select Type:"))
+        if (spinner.getSelectedItem().toString().equals("סוג המשתמש"))
         {
-            Toast.makeText(this,"Choose type",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"בחר סוג המשתמש",Toast.LENGTH_LONG).show();
             return;
         }
-        if (codeString=="")
+        if (codeString.equals(""))
         {
             etPhoneNo.setError("לא נשלח קוד");
             etPhoneNo.requestFocus();
@@ -282,13 +300,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     String userid = firebaseUser.getUid();
-                    if (spinner.getSelectedItem().toString().equals("User"))
+                    if (spinner.getSelectedItem().toString().equals("מתאמן"))
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("UserNames");
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
 
                     }
-                    if (spinner.getSelectedItem().toString().equals("Coach"))
+                    if (spinner.getSelectedItem().toString().equals("מאמן"))
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("CoachNames");
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
@@ -308,7 +326,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     }
                 });*/
-                    if (spinner.getSelectedItem().toString().equals("User"))
+                    if (spinner.getSelectedItem().toString().equals("מתאמן"))
                     {
                         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                         HashMap<String, String> hashMap = new HashMap<>();
@@ -367,7 +385,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
 
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "האיימל הזה כבר רשום", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -403,13 +421,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             sendSMS(smsNum, codeString);
                     }
                     else {
-                        etPhoneNo.setError("This number is used");
+                        etPhoneNo.setError("מספר הפלאפון הזה משומש");
                         etPhoneNo.requestFocus();
                     }
 
             }
             else {
-                etPhoneNo.setError("This number is used");
+                etPhoneNo.setError("מספר הפלאפון הזה משומש");
                 etPhoneNo.requestFocus();
             }
 
@@ -417,7 +435,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         else{
             Toast.makeText(getBaseContext(),
-                    "Enter phone number.",
+                    "הכנס את מספר הפלאפון שלך",
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -438,7 +456,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 catch (Exception e)
                 {
-                    Toast.makeText(this, "Verify your phone number",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "אמת את מספר הטלפון שלך",Toast.LENGTH_LONG).show();
                 }
                 //Log.e("keys",spinner.getSelectedItem().toString());
                 break;
@@ -450,4 +468,33 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    startActivity(LogInIntent);
+                    finish();
+                    Toast.makeText(SignUpActivity.this, "כדי להירשם אתה צריך לאשר גישה להודעות", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+
 }

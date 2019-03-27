@@ -37,8 +37,8 @@ public class FragmentProgram extends Fragment{
 
     DatabaseReference databaseReference;
     DataSnapshot dataSnap;
-    Coach[] coaches = new Coach[3];
-    User[] users = new User[3];
+    Coach[] coaches = new Coach[100];
+    User[] users = new User[100];
     int i =0;
     String username,type,sub,help;
     ArrayList<Coach> coachesList;

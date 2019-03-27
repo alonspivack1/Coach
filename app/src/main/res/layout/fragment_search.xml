@@ -2,25 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl"
     android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="2dp"
         android:orientation="horizontal"
+        android:layout_gravity="right"
+        android:layoutDirection="rtl"
+        android:textDirection="rtl"
+        android:gravity="right"
         android:background="@drawable/background"
         android:minHeight="?attr/actionBarSize">
-
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="1dp"
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
             android:text="צאטים"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="#FFFF"
             android:background="@android:color/transparent" />
+
         <Space
             android:layout_width="20dp"
             android:layout_height="match_parent" />
@@ -33,6 +40,8 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="#FFFF"
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
             android:background="@android:color/transparent" />
 
 
@@ -47,7 +56,10 @@
             android:textSize="20dp"
             android:textColor="#FFFF"
             android:background="#FFFF"
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
             android:textStyle="bold" />
+
 
 
 
@@ -61,27 +73,122 @@
         android:orientation="vertical"
         android:background="@drawable/background">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cbsearchburnfat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שריפת שומנים"
+                android:textColor="#FFFF" />
+
+            <CheckBox
+                android:id="@+id/cbsearchhome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימונים בבית"
+                android:textColor="#FFFF" />
+
+            <CheckBox
+                android:id="@+id/cbsearchgym"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימוני כוח בחדר כושר"
+                android:textColor="#FFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cbsearchdistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שיפור מרחק בריצות"
+                android:textColor="#FFFF" />
+
+            <CheckBox
+                android:id="@+id/cbsearchstreet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="אימוני כוח בסטרייט"
+                android:textColor="#FFFF" />
+
+            <CheckBox
+                android:id="@+id/cbsearchspeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layoutDirection="rtl"
+                android:text="שיפור מהירות בריצות"
+                android:textColor="#FFFF" />
+
+        </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
             android:orientation="horizontal">
+            <EditText
+                android:id="@+id/etSearchInListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:textDirection="rtl"
+                android:textColor="#FFFF"
+                android:textColorHint="#FFFF"
+                android:hint="חיפוש מאמן"/>
             <Button
                 android:id="@+id/SearchInListView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:layoutDirection="rtl"
+                android:textDirection="rtl"
                 android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:text="חפש" />
-            <EditText
-                android:id="@+id/etSearchInListView"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/ResetSearchInListView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layoutDirection="rtl"
+                android:textDirection="rtl"
                 android:textColor="#FFFF"
-                android:textColorHint="#FFFF"
-                android:hint="חיפוש מאמן"/>
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="איפוס חיפוש" />
+
+
+
 
         </LinearLayout>
 

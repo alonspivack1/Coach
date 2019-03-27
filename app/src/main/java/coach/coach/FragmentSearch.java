@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,16 +48,27 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     ListView listView;
     DataSnapshot dataSnap;
     Coach coachedittext;
-    Coach[] coaches = new Coach[8];
-    User[] users = new User[8];
+    ArrayList<Coach> coachesList2;
+    Coach[] coaches = new Coach[100];
     int i = 0;
+    int ii = 1;
     AlertDialog.Builder adb;
     int positionadb=0;
     String username,type,UserCoachCheack;
     DatabaseReference reference,reference2,reference3,reference4;
-    Button SearchInListView;
+    Button SearchInListView,ResetSearchInListView;
     EditText etSearchInListView;
     String stringCoachSearch;
+    boolean takecoach=false;
+    CoachListAdapter adapter;
+    ArrayList<Coach> coachesList;
+    Coach coachhelp;
+    CheckBox cbsearchburnfat,cbsearchdistance,cbsearchgym,cbsearchhome,cbsearchspeed,cbsearchstreet;
+    boolean burnfat=false,distance=false,gym=false,home=false,speed=false,street=false;
+    String Burnfat="שריפת שומנים",Distance="שיפור מרחק בריצות",Gym="אימוני כוח בחדר כושר",Home="אימונים בבית",Speed="שיפור מהירות בריצות",Street="אימוני כוח בסטרייט";
+
+    boolean CBcoachcheack=true;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,9 +97,18 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             }
         });
         SearchInListView = v.findViewById(R.id.SearchInListView);
+        ResetSearchInListView = v.findViewById(R.id.ResetSearchInListView);
         SearchInListView.setOnClickListener(this);
+        ResetSearchInListView.setOnClickListener(this);
         etSearchInListView = v.findViewById(R.id.etSearchInListView);
         listView = (ListView) v.findViewById(R.id.listView);
+        cbsearchburnfat = (CheckBox)v.findViewById(R.id.cbsearchburnfat);
+        cbsearchdistance = (CheckBox)v.findViewById(R.id.cbsearchdistance);
+        cbsearchgym = (CheckBox)v.findViewById(R.id.cbsearchgym);
+        cbsearchhome = (CheckBox)v.findViewById(R.id.cbsearchhome);
+        cbsearchspeed = (CheckBox)v.findViewById(R.id.cbsearchspeed);
+        cbsearchstreet = (CheckBox)v.findViewById(R.id.cbsearchstreet);
+
 
         MainActivity activity = (MainActivity) getActivity();
         username = activity.getUsername();
@@ -127,76 +149,317 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
 
     private void RefreshCoach() {
-        FirstOnClick=true;
         Log.e("1","0");
-        if (FirstOnClick) {
-            HelpString = CoachProfiles;
-            Log.e("1", "1");
-
+        if (FirstOnClick){
+            HelpString=CoachProfiles;
+            Log.e("HelpString","HelpString="+HelpString);
+            Log.e("CoachProfiles","CoachProfiles="+CoachProfiles);
+            Log.e("CoachProfiles2","CoachProfiles2="+dataSnap.child("CoachNames").getValue().toString());
+            Log.e("1","1");
             Log.e("1","2");
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
-                FirstOnClick = false;
+                FirstOnClick=false;
                 //HelpString=CoachProfiles;
-                coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))));
-                if (coaches[i].getName().equals(stringCoachSearch))
+                Log.e("FULL",HelpString);
+                coachhelp = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))));
+                if (coachhelp.getName().indexOf(stringCoachSearch)!=-1)
                 {
-                    coachedittext=new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))));
-                    Log.e("FINDD",coachedittext.getName());
-                            /*ArrayList<Coach> coachesList2 = new ArrayList<>();
-                            CoachListAdapter adapter2 = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
-                            adapter2.add(coachedittext);
-                            listView.setAdapter(adapter2);*/
+                    if (coachhelp.getName().equals(stringCoachSearch))
+                    {
+                        if (burnfat)
+                        {
+                            Log.e("CBCBCOACH","burnfat"+burnfat);
+
+                            if (coachhelp.getProfessionalization().indexOf(Burnfat)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (distance)
+                        {
+                            Log.e("CBCBCOACH","distance"+distance);
+                            if (coachhelp.getProfessionalization().indexOf(Distance)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (gym)
+                        {
+                            Log.e("CBCBCOACH","gym"+gym);
+                            if (coachhelp.getProfessionalization().indexOf(Gym)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (home)
+                        {
+                            Log.e("CBCBCOACH","home"+home);
+                            if (coachhelp.getProfessionalization().indexOf(Home)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (speed)
+                        {
+                            Log.e("CBCBCOACH","speed"+speed);
+                            if (coachhelp.getProfessionalization().indexOf(Speed)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (street)
+                        {
+                            Log.e("CBCBCOACH","street"+street);
+                            if (coachhelp.getProfessionalization().indexOf(Street)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (CBcoachcheack) {
+                            takecoach = true;
+                            coaches[0] = coachhelp;
+                        }
+                        else {
+                            CBcoachcheack=true;
+                        }
+                    }
+                    else {
+                        if (burnfat)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Burnfat)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (distance)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Distance)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (gym)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Gym)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (home)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Home)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (speed)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Speed)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (street)
+                        {
+                            if (coachhelp.getProfessionalization().indexOf(Street)==-1)
+                            {
+                                CBcoachcheack=false;
+                            }
+                        }
+                        if (CBcoachcheack) {
+                            coaches[ii] = coachhelp;
+                            Log.e("Answer", HelpString.substring(1, HelpString.indexOf("=")));
+                            ii++;
+                            Log.e("Dealits", dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))).getValue().toString());
+                        }
+                        else {
+                            CBcoachcheack=true;
+                        }
+                    }
                 }
 
             }
+                //  coaches[0] = new Coach("coach","1","1","1","1","1");
+
+
             else
             {
                 FirstOnClick=false;
             }
-
-
         }
         while (HelpString.indexOf(", ")!=-1)
         {
 
-                Log.e("1","3");
-                if (((HelpString.indexOf(", ")!=-1)&&(i<coaches.length)))//i<coaches.length&&
+            Log.e("1","3");
+            if (((HelpString.indexOf(", ")!=-1)&&(ii<coaches.length)))//i<coaches.length&&
+            {
+                Log.e("1","4");
+                HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
+                Log.e("FULL",HelpString);
+                Log.e("1",UserCoachCheack);
+                if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                 {
-                    Log.e("1","4");
-                    HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
-                    Log.e("1",UserCoachCheack);
-                    if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
+                    Log.e("1","5");
+                    coachhelp = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
+                    if (coachhelp.getName().indexOf(stringCoachSearch)!=-1)
                     {
-                        Log.e("1","5");
-                        coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-                        // coaches[1] = new Coach("pp","1","1","1","1","1");
-                        if (coaches[i].getName().equals(stringCoachSearch))
+                        if (coachhelp.getName().equals(stringCoachSearch))
                         {
-                            coachedittext=new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-                            Log.e("FINDD",coachedittext.getName());
-                            /*ArrayList<Coach> coachesList2 = new ArrayList<>();
-                            CoachListAdapter adapter2 = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
-                            adapter2.add(coachedittext);
-                            listView.setAdapter(adapter2);*/
+                            if (burnfat)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Burnfat)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (distance)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Distance)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (gym)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Gym)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (home)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Home)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (speed)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Speed)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (street)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Street)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (CBcoachcheack) {
+                                takecoach=true;
+                                coaches[0]=coachhelp;
+                            }
+                            else {
+                                CBcoachcheack=true;
+                            }
+
                         }
+                        else {
+                            if (burnfat)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Burnfat)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (distance)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Distance)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (gym)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Gym)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (home)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Home)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (speed)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Speed)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (street)
+                            {
+                                if (coachhelp.getProfessionalization().indexOf(Street)==-1)
+                                {
+                                    CBcoachcheack=false;
+                                }
+                            }
+                            if (CBcoachcheack) {
+                                coaches[ii] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
+                                Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
+                                ii++;
+                                Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
+                            }
+                            else {
+                                CBcoachcheack=true;
+                            }
+
+                    }}
+
+                }
 
 
 
-                        Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
-                    }
-
-
+            }
+        }
+        if (HelpString.indexOf(", ")==-1){
+            Log.e("Array","Start");
+            coachesList2 = new ArrayList<>();
+            if (takecoach)
+            {
+                coachesList2.add(coaches[0]);
+                for (int j=1; j<ii; j++)
+                {
+                    coachesList2.add(coaches[j]);
+                    Log.e("NAME",coaches[j].getName());
+                    Log.e("NUMBER",String.valueOf(j));
 
                 }
             }
-        if (HelpString.indexOf(", ")==-1){
-            ArrayList<Coach> coachesList2 = new ArrayList<>();
-            if (coachedittext!=null){
-                coachesList2.add(coachedittext);}
-                coaches[0]=coachedittext;
-            CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
+            else
+            {
+                for (int j=1; j<ii; j++)
+                {
+                    Log.e("ABC!J",j+"");
+                    Log.e("ABC!ii",ii+"");
+
+                    coachesList2.add(coaches[j]);
+                    Log.e("NAME",coaches[j].getName());
+
+                }
+            }
+
+
+            adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
             listView.setAdapter(adapter);
+            Log.e("NUMBERS",""+ii);
+            if (coaches[0]==null)
+            {
+                Log.e("NUMBERS","NULL!");
+            }
+            else
+            {
+                Log.e("NUMBERS",coaches[0].getName());
+
+            }
+
+
             return;
         }
     }
@@ -256,13 +519,13 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             }
         if (HelpString.indexOf(", ")==-1){
             Log.e("Array","Start");
-            ArrayList<Coach> coachesList = new ArrayList<>();
+            coachesList = new ArrayList<>();
             for (int j=0; j<i; j++)
             {
                 coachesList.add(coaches[j]);
             }
 
-            CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
+            adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
             listView.setAdapter(adapter);
             return;
         }
@@ -288,10 +551,21 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 reference2.child(coaches[positionadb].getName()).setValue(coachdata+username+",");
 
                 reference3 = FirebaseDatabase.getInstance().getReference("ChatRoom");
+
+
+                Calendar cal = Calendar.getInstance();
+                int minute = cal.get(Calendar.MINUTE);
+                int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
+                Log.e("time",time);
+
+
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("sender",username);
                 hashMap.put("receiver",coaches[positionadb].getName());
                 hashMap.put("message","נשלחה בקשת קשר");
+                hashMap.put("time",time);
+
                 //.child(username+"&"+(coaches[positionadb].getName())
                 reference3.child(username+"&"+(coaches[positionadb].getName())).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -344,9 +618,56 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         switch (v.getId())
         {
             case R.id.SearchInListView:
-                stringCoachSearch=etSearchInListView.getText().toString();
-                listView.setAdapter(null);
-                RefreshCoach();
+                    burnfat=false;
+                    distance=false;
+                    gym=false;
+                    home=false;
+                    speed=false;
+                    street=false;
+
+                    CBcoachcheack=true;
+                    if (cbsearchburnfat.isChecked())
+                    {
+                        burnfat=true;
+                    }
+                    if (cbsearchdistance.isChecked())
+                    {
+                        distance=true;
+                    }
+                    if (cbsearchgym.isChecked())
+                    {
+                        gym=true;
+                    }
+                    if (cbsearchhome.isChecked())
+                    {
+                        home=true;
+                    }
+                    if (cbsearchspeed.isChecked())
+                    {
+                        speed=true;
+                    }
+                    if (cbsearchstreet.isChecked())
+                    {
+                        street=true;
+                    }
+                    FirstOnClick=true;
+                    stringCoachSearch = etSearchInListView.getText().toString();
+                    listView.setAdapter(null);
+                    RefreshCoach();
+                    ii=1;
+                    takecoach=false;
+                    break;
+            case R.id.ResetSearchInListView:
+                etSearchInListView.setText("");
+                cbsearchstreet.setChecked(false);
+                cbsearchspeed.setChecked(false);
+                cbsearchhome.setChecked(false);
+                cbsearchgym.setChecked(false);
+                cbsearchdistance.setChecked(false);
+                cbsearchburnfat.setChecked(false);
+
+                adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
+                listView.setAdapter(adapter);
                 break;
         }
         /*switch (v.getId()) {
@@ -418,7 +739,5 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
         }*/
     }
-
-
 
 }

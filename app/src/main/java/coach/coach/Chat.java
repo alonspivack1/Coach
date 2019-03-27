@@ -2,20 +2,29 @@ package coach.coach;
 
 import android.app.Notification;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,27 +32,35 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
+/*
+*       Calendar cal = Calendar.getInstance();
+        int minute = cal.get(Calendar.MINUTE);
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
+        Log.e("time",time);
+*/
 public class Chat extends AppCompatActivity {
     Intent intent;
-    String receiver,sender,room;
+    String receiver,sender,room,type;
     ListView chatlvmessages;
     SimpleAdapter adapter;
     HashMap<String,String> item;
     ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
-    DatabaseReference databaseReference,ChatReference;
+    DatabaseReference databaseReference,ChatReference,databasePhone;
     DataSnapshot dataSnap;
     Boolean FirstRefresh=true;
     EditText etMessageText;
     String MessageString;
     int MessageNum;
     String NotificationChat="";
-    Button chatbuttonsend;
+    ImageButton chatbuttonsend;
     int FLAGINT=1;
     Boolean UpdateNotifiction;
-    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notifcation");
+    String Phone="";
+    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notification");
 
 
     @Override
@@ -57,13 +74,44 @@ public class Chat extends AppCompatActivity {
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
         room=intent.getStringExtra("room");
+        type=intent.getStringExtra("type");
+
         Reference = Reference.child(receiver);
 
-        chatbuttonsend = (Button)findViewById(R.id.chatbuttonsend);
+        chatbuttonsend = (ImageButton)findViewById(R.id.chatbuttonsend);
         etMessageText = (EditText)findViewById(R.id.etMessageText);
         chatlvmessages = (ListView)findViewById(R.id.chatlvmessages);
         chatlvmessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatlvmessages.setStackFromBottom(true);
+
+       /* TextView textView = (TextView)findViewById(R.id.receivemessage);
+        textView.setHint("asdfasdfasdfasdfsd");*/
+       if (type.equals("User"))
+       {
+           databasePhone = FirebaseDatabase.getInstance().getReference().child("CoachNames");
+       }
+       else
+       {
+           databasePhone = FirebaseDatabase.getInstance().getReference().child("UserNames");
+       }
+
+       databasePhone.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.e("PHONEE",dataSnapshot.toString());
+                Phone = dataSnapshot.child(receiver).getValue().toString();
+                Log.e("PHONEE",Phone);
+                Phone=Phone.substring(0,Phone.indexOf(","));
+
+            }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+        });
+
 
         ChatReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom");
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ChatRoom").child(room);
@@ -176,8 +224,8 @@ public class Chat extends AppCompatActivity {
 
         adapter = new SimpleAdapter(this, list,
                 R.layout.twolines,
-                new String[] { "sender","receiver"},
-                new int[] {R.id.sendmessage, R.id.receivemessage});
+                new String[] { "sender","receiver","sendertime","receivertime"},
+                new int[] {R.id.sendmessage, R.id.receivemessage,R.id.sendertime,R.id.receivetime});
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -197,17 +245,25 @@ public class Chat extends AppCompatActivity {
 
             String messagedata =dataSnap.child(String.valueOf(MessageNum)).child("message").getValue().toString();
             String mesasgesender =dataSnap.child(String.valueOf(MessageNum)).child("sender").getValue().toString();
+            String mesasgetime =dataSnap.child(String.valueOf(MessageNum)).child("time").getValue().toString();
+
             if (mesasgesender.equals(sender))
             {
                 Log.e("Time","3");
                 item.put("sender",messagedata);
-                item.put("receiver","");
+               // item.put("receiver","");
+              //  item.put("receivertime","");
+                item.put("sendertime"," "+mesasgetime+" ");
                 list.add(item);
             }
             else {
                 Log.e("Time","4");
                 item.put("receiver",messagedata);
-                item.put("sender","");
+              //  item.put("sender","");
+                item.put("receivertime"," "+mesasgetime+" ");
+
+               // item.put("sendertime","");
+
                 list.add(item);
             }
             /*item = new HashMap<String,String>();
@@ -278,17 +334,22 @@ public class Chat extends AppCompatActivity {
                 item = new HashMap<String,String>();
                 String messagedata =dataSnap.child(String.valueOf(i+1)).child("message").getValue().toString();
                 String mesasgesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
+                String mesasgetime =dataSnap.child(String.valueOf(i+1)).child("time").getValue().toString();
                 if (mesasgesender.equals(sender))
                 {
                     Log.e("Time","3");
                     item.put("sender",messagedata);
                     item.put("receiver","");
+                    item.put("receivertime","");
+                    item.put("sendertime"," "+mesasgetime+" ");
                     list.add(item);
                 }
                 else {
                     Log.e("Time","4");
                     item.put("receiver",messagedata);
                     item.put("sender","");
+                    item.put("receivertime"," "+mesasgetime+" ");
+                    item.put("sendertime","");
                     list.add(item);
                 }
 
@@ -357,10 +418,20 @@ public class Chat extends AppCompatActivity {
     }
     private void Message(String sender, String receiver, final String message) {
         etMessageText.setText("");
+
+        Calendar cal = Calendar.getInstance();
+        int minute = cal.get(Calendar.MINUTE);
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
+        Log.e("time",time);
+
         HashMap<String, String> newmessage = new HashMap<>();
         newmessage.put("sender",sender);
         newmessage.put("receiver",receiver);
         newmessage.put("message",message);
+        newmessage.put("time",time);
+
+
         ChatReference.child(room).child(""+MessageNum).setValue(newmessage);
         MessageNum++;
         ChatReference.child(room).child("num").child("num").setValue(MessageNum);
@@ -403,7 +474,17 @@ public class Chat extends AppCompatActivity {
             Message(sender, receiver, etMessageText.getText().toString());
 
         }
-
-
     }
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_chat, menu);
+        if (Phone.charAt(0)=='=')
+        {
+            menu.add(Phone.substring(1)+"").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        return true;
+    }
+
 }

@@ -32,8 +32,8 @@ public class FragmentChat extends Fragment{
 
     DatabaseReference databaseReference;
     DataSnapshot dataSnap;
-    Coach[] coaches = new Coach[50];
-    User[] users = new User[50];
+    Coach[] coaches = new Coach[100];
+    User[] users = new User[100];
     int i =0;
     String username,type,sub,help;
     ArrayList<Coach> coachesList;
@@ -92,6 +92,7 @@ public class FragmentChat extends Fragment{
                     ChatIntent.putExtra("receiver",receiver);
                     ChatIntent.putExtra("sender",username);
                     ChatIntent.putExtra("room",room);
+                    ChatIntent.putExtra("type",type);
                     startActivity(ChatIntent);
                     Log.e("receiver",receiver);
                     Log.e("sender",username);
@@ -105,6 +106,7 @@ public class FragmentChat extends Fragment{
                     ChatIntent.putExtra("receiver",receiver);
                     ChatIntent.putExtra("sender",username);
                     ChatIntent.putExtra("room",room);
+                    ChatIntent.putExtra("type",type);
                     startActivity(ChatIntent);
                     Log.e("receiver",receiver);
                     Log.e("sender",username);

@@ -45,12 +45,13 @@
             android:focusableInTouchMode="true"
             android:text="" />
 
-        <Button
+        <ImageButton
             android:id="@+id/chatbuttonsend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:onClick="SendMessage"
+            android:src="@android:drawable/ic_menu_send"
             android:background="@android:color/transparent"
             android:textColor="#FFFF"
             android:text="שלח"

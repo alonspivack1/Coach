@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".Mail">
+    tools:context=".Settings">
 
     <TextView
         android:layout_width="match_parent"
@@ -15,53 +15,41 @@
         android:textStyle="bold"
         android:textColor="@color/colorText"
         android:textSize="18dp"
-        android:text="כותרת"
-        android:gravity="right"
+        android:text="הגדרות"
+        android:gravity="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"  />
-
-    <EditText
-        android:id="@+id/mail_edit_text_subject"
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/cbsettingsservice"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
         android:textColor="@color/colorText"
-        android:textColorHint="@color/colorHint"
-        android:gravity="right"
-        android:hint="כותרת"
-        android:inputType="textEmailSubject" />
+        android:layoutDirection="rtl"
+        android:text="הפעלת התראות" />
+
+    <CheckBox
+        android:id="@+id/cbsettingsphone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textColor="@color/colorText"
+        android:layoutDirection="rtl"
+        android:text="להציג את מספר הפלאפון בצאט" />
     <Space
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
-
-    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textStyle="bold"
-        android:textColor="@color/colorText"
-        android:textSize="18dp"
-        android:text="הודעה"
-        android:gravity="right"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <EditText
-        android:id="@+id/mail_edit_text_message"
-        android:layout_width="match_parent"
-        android:hint="הודעה"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorText"
-        android:textColorHint="@color/colorHint"
-        android:gravity="right"
-        android:lines="10" />
-
+        android:layout_height="20dp" />
     <Button
-        android:id="@+id/mail_button_send"
+        android:id="@+id/btnsettingssave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FFFF"
         android:textSize="20dp"
         android:textStyle="bold"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:onClick="SaveSettings"
         android:textAllCaps="false"
         android:background="@drawable/background"
-        android:text="שלח מייל" />
+        android:text="שמור שינויים" />
 
 </LinearLayout>

@@ -2,50 +2,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
     android:orientation="vertical">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:gravity="left"
-        android:paddingLeft="15dp"
-        android:paddingRight="60dp"
+        android:background="@drawable/balloon"
+        android:backgroundTint="@color/colorMessageSender"
+        android:orientation="horizontal"
+        android:layout_gravity="left|bottom"
+        android:layoutDirection="rtl"
+        android:textDirection="rtl"
+        android:gravity="bottom"
         android:clipToPadding="false">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/sendmessage"
-            android:background="@drawable/balloon"
             android:textColor="@color/colorTextReceive"
-            android:padding="10dp"
             android:maxEms="10"
-            android:backgroundTint="@color/colorMessageSender"
             android:elevation="2dp"
             android:textSize="18dp"
             android:layout_alignParentRight="true"
-            android:text="הודעה נשלחת"
+            android:text="ששדגשדג"
             />
 
-    </RelativeLayout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/sendertime"
+            android:maxEms="10"
+            android:elevation="2dp"
+            android:textSize="18dp"
+            android:layout_alignParentRight="true"
+            android:text="10:23"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:gravity="right"
-        android:paddingRight="15dp"
-        android:paddingLeft="60dp"
+        android:background="@drawable/balloon"
+        android:backgroundTint="@color/colorMessageReceive"
+        android:orientation="horizontal"
+        android:gravity="right|bottom"
+        android:layoutDirection="rtl"
+        android:textDirection="rtl"
+        android:layout_gravity="right|bottom"
         android:clipToPadding="false">
+
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/receivetime"
+            android:maxEms="10"
+            android:elevation="2dp"
+            android:textSize="18dp"
+            android:layout_alignParentRight="true"
+            android:text="12:31"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/receivemessage"
-            android:background="@drawable/balloon"
             android:textColor="@color/colorTextReceive"
-            android:backgroundTint="@color/colorMessageReceive"
-            android:padding="10dp"
             android:maxEms="10"
             android:elevation="2dp"
             android:textSize="18dp"
@@ -54,6 +82,7 @@
             />
 
 
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

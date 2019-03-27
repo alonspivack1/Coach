@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    Intent intent,intentSettings,intentCredits,intentMail;
+    Intent intent,intentSettings,intentUpdateProfile,intentCredits,intentMail;
     String username,type,CoachProfiles="";
     TextView fragchat,fragtv;
     int FragInt=1;
@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("");
-
-
 
         intent = getIntent();
         username = intent.getStringExtra("username");
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     button3.setVisibility(View.VISIBLE);
                 }
             }
-        }, 500);
+        }, 1100);
 
 
        /* if (type.equals("Coach")){
@@ -134,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add("התנתקות");
         menu.add("עדכון פרופיל");
         menu.add("שליחת מייל למפתח");
+        menu.add("הגדרות");
 
 
         return true;
@@ -144,20 +143,28 @@ public class MainActivity extends AppCompatActivity {
         String st = item.getTitle().toString();
         if (st.equals("עדכון פרופיל")) {
             if (type.equals("Coach")) {
-                intentSettings = new Intent(this, CoachProfileMaker.class);
-                intentSettings.putExtra("username",username);
-                startActivity(intentSettings);
+                intentUpdateProfile = new Intent(this, CoachProfileMaker.class);
+                intentUpdateProfile.putExtra("username",username);
+                startActivity(intentUpdateProfile);
             }
             if (type.equals("User")) {
-                intentSettings = new Intent(this, UserProfileMaker.class);
-                intentSettings.putExtra("username", username);
-                startActivity(intentSettings);
+                intentUpdateProfile = new Intent(this, UserProfileMaker.class);
+                intentUpdateProfile.putExtra("username", username);
+                startActivity(intentUpdateProfile);
             }
         }
         if (st.equals("קרדיטים"))
         {
             intentCredits = new Intent(this, Credits.class);
             startActivity(intentCredits);
+        }
+        if (st.equals("הגדרות"))
+        {
+            intentSettings = new Intent(this, Settings.class);
+            intentSettings.putExtra("type",type);
+            intentSettings.putExtra("username",username);
+
+            startActivity(intentSettings);
         }
         if (st.equals("שליחת מייל למפתח"))
         {
