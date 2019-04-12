@@ -60,6 +60,7 @@ public class Chat extends AppCompatActivity {
     Boolean FirstRefresh=true;
     EditText etMessageText;
     String MessageString;
+    String time="";
     int MessageNum;
     String NotificationChat="";
     ImageButton chatbuttonsend;
@@ -428,7 +429,12 @@ public class Chat extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int minute = cal.get(Calendar.MINUTE);
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-        String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
+        if (minute>=10){
+            time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+        else
+        {
+            time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+        }
         Log.e("time",time);
 
         HashMap<String, String> newmessage = new HashMap<>();

@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListProgramNoInternet"></activity>
+        <activity android:name=".Alerts"></activity>
+        <activity android:name=".ListProgramNoInternet" />
         <activity android:name=".ProgramNoInternet" />
         <activity android:name=".Settings" />
         <activity android:name=".Mail" />

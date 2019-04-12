@@ -19,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 public class Settings extends AppCompatActivity {
 
     CheckBox cbsettingsphone;
-    boolean phone=false;
     String Phone="";
     DatabaseReference databasePhone;
     String type,username;
@@ -29,8 +28,6 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         setTitle("הגדרות");
         cbsettingsphone=(CheckBox)findViewById(R.id.cbsettingsphone);
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        phone = prefs.getBoolean("phone",false);
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
@@ -63,7 +60,7 @@ public class Settings extends AppCompatActivity {
         });
 
 
-        if (phone)
+        if (Phone.indexOf("=")==0)
         {
             cbsettingsphone.setChecked(true);
         }
@@ -82,21 +79,16 @@ public class Settings extends AppCompatActivity {
 
                     databasePhone.setValue(Phone);
                 }
-                phone=true;
             }
             else {
                 if (Phone.charAt(0)=='=')
                 {
                     Log.e("PHONEB",Phone);
-                    Phone=Phone.substring(1,Phone.length());
+                    Phone=Phone.substring(1);
                     Log.e("PHONEA",Phone);
                     databasePhone.setValue(Phone);
                 }
-                phone=false;
             }
-            SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-            editor.putBoolean("phone", phone);
-            editor.apply();
     }
 
     @Override

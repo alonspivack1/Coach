@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (st.equals("קרדיטים"))
         {
-            intentCredits = new Intent(this, Credits.class);
+            //intentCredits = new Intent(this, Credits.class);
+            intentCredits = new Intent(this, Alerts.class);
             startActivity(intentCredits);
         }
         if (st.equals("הגדרות"))

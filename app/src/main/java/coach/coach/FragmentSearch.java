@@ -52,6 +52,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     Coach[] coaches;
     int i = 0;
     int ii = 1;
+    String time="";
     AlertDialog.Builder adb;
     int positionadb=0;
     String username,type,UserCoachCheack;
@@ -557,7 +558,12 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 Calendar cal = Calendar.getInstance();
                 int minute = cal.get(Calendar.MINUTE);
                 int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
+                if (minute>=10){
+                    time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                else
+                {
+                    time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                }
                 Log.e("time",time);
 
 

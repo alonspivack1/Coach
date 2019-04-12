@@ -28,7 +28,7 @@
             android:elevation="2dp"
             android:textSize="18dp"
             android:layout_alignParentRight="true"
-            android:text="ששדגשדג"
+            android:text="הודעה נשלחת"
             />
 
         <TextView

@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,49 +43,98 @@ public class TimerService extends IntentService {
     private DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("Notification");
     private DataSnapshot dataSnap=null;
     int IdNotification=1;
-    Boolean Sticky=false,FirstLook=true;
-    int WakeUpNotificationcount=0,NotificationSec=3600;
-    private boolean connected,connectedlog;
+    Boolean FirstLook=true;
+    int WakeUpNotificationcount=0,NotificationSec=60;
+    boolean connected;
     private String username;
     private NotificationManager mNotificationManager;
     NotificationCompat.BigTextStyle bigText;
     PendingIntent pendingIntent;
     Intent ii;
+    Calendar cal;
+    int onoff;
+    int minute;
+    SharedPreferences onoffref;
+    int hourofday;
+    SharedPreferences.Editor editor;
+
+    String SPchat,SPprogram;
+    String time="";
     NotificationCompat.Builder mBuilder;
     public TimerService()
     {
-
         super("Timer Service");
     }
     public void onCreate(){
-    super.onCreate();
+        super.onCreate();
 
 
         Log.v("timer","Timer service has started");
         Log.v("timer","NOW!");
-        onStartCommand(null,0,1);
 
     }
 
     public int onStartCommand(Intent intent,int flags,int startId){
         super.onStartCommand(intent,flags,startId);
-        Sticky=false;
+
         return START_STICKY;
+
     };
 
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.e("timerstart","timerstart");
 
+        onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
+        onoff = onoffref.getInt("onoff",0);
+        onoff=onoff+1;
+        SharedPreferences.Editor editorr = getSharedPreferences("TimerService", MODE_PRIVATE).edit();
+        editorr.putInt("onoff",onoff);
+        editorr.apply();
+
+
+
+
+        /*
+        SharedPreferences prefs = getSharedPreferences("TimerService", MODE_PRIVATE);
+        int onoff = prefs.getInt("onoff",0);*/
         /*if (service)
         {*/
+        /*
+        *         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        }
+        else{
+            connected = false;}
+        SharedPreferences prefs = getSharedPreferences("service", MODE_PRIVATE);
+        String username = prefs.getString("username","");
+        boolean SignOut = prefs.getBoolean("signout",true);
 
+        if(!SignOut)
+        {
+            databaseReference=databaseReference.child(username);
 
-        if (intent==null){
-            Sticky=true;
-            SharedPreferences prefs = getSharedPreferences("service", MODE_PRIVATE);
-            username = prefs.getString("username","");
-            Boolean SignOut = prefs.getBoolean("signout",true);
+        }
+        }
+*/
+        connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        }
+        else{
+            connected = false;
+        }
+        SharedPreferences prefs = getSharedPreferences("service", MODE_PRIVATE);
+        username = prefs.getString("username","");
+        Boolean SignOut = prefs.getBoolean("signout",true);
+            SharedPreferences prefss = getSharedPreferences("Alerts", MODE_PRIVATE);
+            SPchat = prefs.getString("chat", "");
+            SPprogram = prefs.getString("program", "");
+
 
 
             if (!SignOut){
@@ -97,113 +147,36 @@ public class TimerService extends IntentService {
                 DatabaseReference deleteChat = FirebaseDatabase.getInstance().getReference().child("Notification").child(username).child("Chat");
                 deleteChat.removeValue();
 
-
-            connected = false;
-            connectedlog=false;
             for (int i=0; i<1;)
             {
                     Log.v("timer", "loop");
-                while (!connected&&i<1)
-                {
-                    if (!Sticky)
-                    {
-                        i++;
-                    }
-                    if (WakeUpNotificationcount>=NotificationSec)
-                {
-                    Log.v("timer","WakeUpNotifictioncount"+" finish");
-                    WakeUpNotificationcount=0;
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
-                    Intent ii = new Intent(this.getApplicationContext(), MainActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
 
-                    NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-                    bigText.setBigContentTitle("הרבה זמן לא נכנסת לאפליקציה");
-                    bigText.setSummaryText("תזכורת");
-
-                    mBuilder.setContentIntent(pendingIntent);
-                    mBuilder.setSmallIcon(R.drawable.logo);
-                    mBuilder.setContentTitle("Your Title");
-                    mBuilder.setContentText("Your text");
-                    mBuilder.setPriority(Notification.PRIORITY_MAX);
-                    mBuilder.setStyle(bigText);
-
-                    mNotificationManager =
-                            (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        String channelId = "YOUR_CHANNEL_ID";
-                        NotificationChannel channel = new NotificationChannel(channelId,
-                                "Channel human readable title",
-                                NotificationManager.IMPORTANCE_DEFAULT);
-                        mNotificationManager.createNotificationChannel(channel);
-                        mBuilder.setChannelId(channelId);
-                    }
-
-                    mNotificationManager.notify(0, mBuilder.build());
-
-
-                }
-                    try {
-                        Thread.sleep(1000);
-                        Log.v("timer","WakeUpNotifictioncount"+" "+WakeUpNotificationcount);
-                        WakeUpNotificationcount++;
-                    } catch (Exception e) {
-                    }
-                    if (connectedlog) {
-                        Log.v("timer","ConnectingFlase");
-                        connectedlog=false;
-                    }
-
-                    connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                    if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-                        //we are connected to a network
-                        connected = true;
-                    }
-                    else
-                        connected = false;
-                }
                 while (connected&&i<1){
-                    if (!Sticky)
-                    {
-                        i++;
-                    }
+
                     if (WakeUpNotificationcount>=NotificationSec)
                     {
-                        Log.v("timer","WakeUpNotifictioncount1"+" finish");
+                        Log.v("timer","WakeUpNotifictioncount"+" finish");
                         WakeUpNotificationcount=0;
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
-                        Intent ii = new Intent(this.getApplicationContext(), MainActivity.class);
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
+                        Intent ii = new Intent(this.getApplicationContext(), LogInActivity.class);
                         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
-
                         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                         bigText.setBigContentTitle("הרבה זמן לא נכנסת לאפליקציה");
                         bigText.setSummaryText("תזכורת");
-
                         mBuilder.setContentIntent(pendingIntent);
                         mBuilder.setSmallIcon(R.drawable.logo);
-                        mBuilder.setContentTitle("Your Title");
-                        mBuilder.setContentText("Your text");
+                      /*  mBuilder.setContentTitle("Your Title");
+                        mBuilder.setContentText("Your text");*/
                         mBuilder.setPriority(Notification.PRIORITY_MAX);
                         mBuilder.setStyle(bigText);
-
-                        mNotificationManager =
-                                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
+                        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             String channelId = "YOUR_CHANNEL_ID";
-                            NotificationChannel channel = new NotificationChannel(channelId,
-                                    "Channel human readable title",
-                                    NotificationManager.IMPORTANCE_DEFAULT);
+                            NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                             mNotificationManager.createNotificationChannel(channel);
                             mBuilder.setChannelId(channelId);
                         }
-
-                        mNotificationManager.notify(IdNotification, mBuilder.build());
-                        IdNotification++;
+                        mNotificationManager.notify(0, mBuilder.build());
                         /*bigText.setBigContentTitle("הרבה זמן לא נכנסת לאפליקציה");
                         bigText.setSummaryText("תזכורת");
                         mBuilder.setContentIntent(pendingIntent);
@@ -222,32 +195,55 @@ public class TimerService extends IntentService {
                         Thread.sleep(1000);
                         Log.v("timer","WakeUpNotifictioncount"+" "+WakeUpNotificationcount);
                         WakeUpNotificationcount++;
-                    } catch (Exception e) {
-                    }
 
-                    if (!connectedlog) {
-                        Log.v("timer","ConnectingTrue");
-                        connectedlog=true;
+                        onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
+                        if (onoff!=onoffref.getInt("onoff",0))
+                        {
+                            i=1;
+                        }
                     }
+                    catch (Exception e) { }
+
+
+                        Log.v("timerconnected","ConnectingTrue");
+
                     connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                     if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                             connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
                         connected = true;
                     }
-                    else
-                        connected = false;
+                    else{
+                        connected = false;}
                     try {
                         databaseReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (Sticky){
-                                    Log.e("timersticky",Sticky+"");
                                 if ((dataSnap != null && !dataSnapshot.toString().equals(dataSnap.toString()))||(FirstLook)) {
                                     FirstLook=false;
                                     if (dataSnapshot.hasChild("ProgramAlarm")) {
                                         String help = dataSnapshot.child("ProgramAlarm").getValue().toString();
                                         if (help.indexOf(",") != -1) {
+
+
+                                            Calendar cal = Calendar.getInstance();
+                                            int minute = cal.get(Calendar.MINUTE);
+                                            int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                            if (minute>=10){
+                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                            else
+                                            {
+                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                            }
+                                            Log.e("time",time);
+                                            SPprogram+="תוכנית האימון עודכנה מהמאמן " + help.substring(0,help.indexOf(","))+"-"+time+",";
+                                            SharedPreferences.Editor editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                            editor.putString("program",SPprogram);
+                                            editor.apply();
+
                                             Log.v("timer", help.substring(0, help.indexOf(",")));
+
+
+                                            /*
                                             mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                             ii = new Intent(getApplicationContext(), LogInActivity.class);
                                             pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -264,14 +260,30 @@ public class TimerService extends IntentService {
                                                 NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);}
-                                            mNotificationManager.notify(IdNotification, mBuilder.build());
+                                            mNotificationManager.notify(2, mBuilder.build());*/
 
                                             while (help.indexOf(",") != -1) {
 
                                                 help = help.substring(help.indexOf(",") + 1);
                                                 if (help.indexOf(",") != -1) {
-                                                    Log.v("timer", help.substring(0, help.indexOf(",")));
 
+                                                    cal = Calendar.getInstance();
+                                                    minute = cal.get(Calendar.MINUTE);
+                                                    hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                                    if (minute>=10){
+                                                        time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                                    else
+                                                    {
+                                                        time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                                    }
+                                                    Log.e("time",time);
+                                                    SPprogram+="תוכנית האימון עודכנה מהמאמן " + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                                    editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                                    editor.putString("program",SPprogram);
+                                                    editor.apply();
+
+                                                    Log.v("timer", help.substring(0, help.indexOf(",")));
+/*
                                                     mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                                     Intent ii = new Intent(getApplicationContext(), LogInActivity.class);
                                                     pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -287,11 +299,28 @@ public class TimerService extends IntentService {
                                                         NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                         mNotificationManager.createNotificationChannel(channel);
                                                         mBuilder.setChannelId(channelId);}
-                                                    mNotificationManager.notify(IdNotification, mBuilder.build());
+                                                    mNotificationManager.notify(2, mBuilder.build());*/
                                                 } else {
                                                     if (!help.equals("")) {
-                                                        Log.v("timer", help);
 
+                                                        cal = Calendar.getInstance();
+                                                        minute = cal.get(Calendar.MINUTE);
+                                                        hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                                        if (minute>=10){
+                                                            time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                                        else
+                                                        {
+                                                            time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                                        }
+                                                        Log.e("time",time);
+                                                        SPprogram+="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+",";
+                                                        editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                                        editor.putString("program",SPprogram);
+                                                        editor.apply();
+
+
+                                                        Log.v("timer", help);
+/*
                                                         mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                                         Intent ii = new Intent(getApplicationContext(), LogInActivity.class);
                                                         pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -308,15 +337,31 @@ public class TimerService extends IntentService {
                                                             mNotificationManager.createNotificationChannel(channel);
                                                             mBuilder.setChannelId(channelId);
                                                         }
-                                                        mNotificationManager.notify(IdNotification, mBuilder.build());
+                                                        mNotificationManager.notify(2, mBuilder.build());*/
                                                     }
 
                                                 }
 
                                             }
                                         } else {
+                                            cal = Calendar.getInstance();
+                                            minute = cal.get(Calendar.MINUTE);
+                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                            if (minute>=10){
+                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                            else
+                                            {
+                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                            }
+                                            Log.e("time",time);
+                                            SPprogram+="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+",";
+                                            editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                            editor.putString("program",SPprogram);
+                                            editor.apply();
+
                                             Log.v("timer", help);
-                                            mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+
+                                           /* mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                             Intent ii = new Intent(getApplicationContext(), LogInActivity.class);
                                             pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
@@ -331,18 +376,35 @@ public class TimerService extends IntentService {
                                                 NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);}
-                                            mNotificationManager.notify(IdNotification, mBuilder.build());
+                                            mNotificationManager.notify(2, mBuilder.build());*/
                                         }
                                         DatabaseReference deleteProgramAlarm = FirebaseDatabase.getInstance().getReference().child("Notification").child(username).child("ProgramAlarm");
                                         deleteProgramAlarm.removeValue();
-                                        IdNotification++;
 
                                     }
                                     if (dataSnapshot.hasChild("Chat")) {
                                         String help = dataSnapshot.child("Chat").getValue().toString();
                                         if (help.indexOf(",") != -1) {
+
+                                            cal = Calendar.getInstance();
+                                            minute = cal.get(Calendar.MINUTE);
+                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                            if (minute>=10){
+                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                            else
+                                            {
+                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                            }
+                                            Log.e("time",time);
+                                            SPchat+="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                            editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                            editor.putString("chat",SPchat);
+                                            editor.apply();
+
+
                                             Log.v("timer", help.substring(0, help.indexOf(",")));
-                                            mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+
+                                          /*  mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                             Intent ii = new Intent(getApplicationContext(), LogInActivity.class);
                                             pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
@@ -357,11 +419,29 @@ public class TimerService extends IntentService {
                                                 NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);}
-                                            mNotificationManager.notify(IdNotification, mBuilder.build());
+                                            mNotificationManager.notify(IdNotification, mBuilder.build());*/
                                             while (help.indexOf(",") != -1) {
                                                 help = help.substring(help.indexOf(",") + 1);
                                                 if (help.indexOf(",") != -1) {
+
+                                                    cal = Calendar.getInstance();
+                                                    minute = cal.get(Calendar.MINUTE);
+                                                    hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                                    if (minute>=10){
+                                                        time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                                    else
+                                                    {
+                                                        time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                                    }
+                                                    Log.e("time",time);
+                                                    SPchat+="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                                    editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                                    editor.putString("chat",SPchat);
+                                                    editor.apply();
+
                                                     Log.v("timer", help.substring(0, help.indexOf(",")));
+
+                                                    /*
                                                     mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                                     ii = new Intent(getApplicationContext(), LogInActivity.class);
                                                     pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -377,11 +457,28 @@ public class TimerService extends IntentService {
                                                         NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                         mNotificationManager.createNotificationChannel(channel);
                                                         mBuilder.setChannelId(channelId);}
-                                                    mNotificationManager.notify(IdNotification, mBuilder.build());
+                                                    mNotificationManager.notify(IdNotification, mBuilder.build());*/
                                                 } else {
                                                     if (!help.equals("")) {
-                                                        Log.v("timer", help);
 
+
+                                                        cal = Calendar.getInstance();
+                                                        minute = cal.get(Calendar.MINUTE);
+                                                        hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                                        if (minute>=10){
+                                                            time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                                        else
+                                                        {
+                                                            time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                                        }
+                                                        Log.e("time",time);
+                                                        SPchat+="התקבלה הודעה חדשה מ" + help+"-"+time+",";
+                                                        editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                                        editor.putString("chat",SPchat);
+                                                        editor.apply();
+
+                                                        Log.v("timer", help);
+/*
                                                         mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                                         ii = new Intent(getApplicationContext(), LogInActivity.class);
                                                         pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -397,13 +494,31 @@ public class TimerService extends IntentService {
                                                             NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                             mNotificationManager.createNotificationChannel(channel);
                                                             mBuilder.setChannelId(channelId); }
-                                                        mNotificationManager.notify(IdNotification, mBuilder.build());
+                                                        mNotificationManager.notify(IdNotification, mBuilder.build());*/
                                                     }
                                                 }
 
                                             }
                                         } else {
+
+                                            cal = Calendar.getInstance();
+                                            minute = cal.get(Calendar.MINUTE);
+                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                                            if (minute>=10){
+                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
+                                            else
+                                            {
+                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
+                                            }
+                                            Log.e("time",time);
+                                            SPchat+="התקבלה הודעה חדשה מ" + help+"-"+time+",";
+                                            editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                                            editor.putString("chat",SPchat);
+                                            editor.apply();
+
                                             Log.v("timer", help);
+
+                                            /*
                                             mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
                                             Intent ii = new Intent(getApplicationContext(), LogInActivity.class);
                                             pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, ii, 0);
@@ -419,20 +534,21 @@ public class TimerService extends IntentService {
                                                 NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId); }
-                                            mNotificationManager.notify(IdNotification, mBuilder.build());
+                                            mNotificationManager.notify(IdNotification, mBuilder.build());*/
 
 
                                         }
                                         DatabaseReference deleteChat = FirebaseDatabase.getInstance().getReference().child("Notification").child(username).child("Chat");
                                         deleteChat.removeValue();
-                                        IdNotification++;
 
                                     }
 
 
                                 }
                                 dataSnap = dataSnapshot;
-                            }
+
+
+
                             }
 
                             @Override
@@ -447,15 +563,63 @@ public class TimerService extends IntentService {
                         Log.v("timererror",e.toString());
                     }
                 }
+                while (!connected&&i<1)
+                {
 
-            }
-                for (int i = 0; i < 1;) {
-                    Log.v("timer", "null i = " + i);
+                    if (WakeUpNotificationcount>=NotificationSec)
+                    {
+                        Log.v("timer","WakeUpNotifictioncount"+" finish");
+                        WakeUpNotificationcount=0;
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
+                        Intent ii = new Intent(this.getApplicationContext(), LogInActivity.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
+                        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                        bigText.setBigContentTitle("הרבה זמן לא נכנסת לאפליקציה");
+                        bigText.setSummaryText("תזכורת");
+                        mBuilder.setContentIntent(pendingIntent);
+                        mBuilder.setSmallIcon(R.drawable.logo);
+                   /* mBuilder.setContentTitle("Your Title");
+                    mBuilder.setContentText("Your text");*/
+                        mBuilder.setPriority(Notification.PRIORITY_MAX);
+                        mBuilder.setStyle(bigText);
+                        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            String channelId = "YOUR_CHANNEL_ID";
+                            NotificationChannel channel = new NotificationChannel(channelId,
+                                    "Channel human readable title",
+                                    NotificationManager.IMPORTANCE_DEFAULT);
+                            mNotificationManager.createNotificationChannel(channel);
+                            mBuilder.setChannelId(channelId);
+                        }
+
+                        mNotificationManager.notify(0, mBuilder.build());
+
+
+                    }
                     try {
                         Thread.sleep(1000);
+                        Log.v("timer","WakeUpNotifictioncount"+" "+WakeUpNotificationcount);
+                        WakeUpNotificationcount++;
+
+                        onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
+                        if (onoff!=onoffref.getInt("onoff",0))
+                        {
+                            i=1;
+                        }
                     } catch (Exception e) {
                     }
+                    Log.v("timerconnected","ConnectingFlase");
+                    connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                    if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                        connected = true;
+                    }
+                    else{
+                        connected = false;}
                 }
+
+            }
+
             }
             /*
             NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
@@ -466,26 +630,19 @@ public class TimerService extends IntentService {
             NotificationManager nm =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             nm.notify(1,nb.build());*/
             return;
-        }
-        else
-        {
-        for (int i = 0; i < 1;) {
-            Log.v("timer", "i = " + i);
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
-        }}
+
     }
 
 
     @Override
     public void onDestroy() {
+
         Log.v("timer", "DESTROY");
-        Sticky=true;
+        onStartCommand(null,0,0);
+        /*
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
-        Intent ii = new Intent(this.getApplicationContext(), MainActivity.class);
+        Intent ii = new Intent(this.getApplicationContext(), LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
 
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
@@ -511,7 +668,8 @@ public class TimerService extends IntentService {
             mBuilder.setChannelId(channelId);
         }
 
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(0, mBuilder.build());*/
        // onStartCommand(null, 0, 0);
-    }}
+    }
+  }
 //}
