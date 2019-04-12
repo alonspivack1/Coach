@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -33,12 +34,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class FragmentProgram extends Fragment{
 
     DatabaseReference databaseReference;
     DataSnapshot dataSnap;
-    Coach[] coaches = new Coach[100];
-    User[] users = new User[100];
+    Coach[] coaches;
+    User[] users;
     int i =0;
     String username,type,sub,help;
     ArrayList<Coach> coachesList;
@@ -46,6 +49,7 @@ public class FragmentProgram extends Fragment{
     View view;
     ListView listView;
     AlertDialog.Builder adb;
+    String coachesnames="";
     int positionadb;
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +69,12 @@ public class FragmentProgram extends Fragment{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
+                Log.e("userchild",dataSnapshot.child("UserNames").getChildrenCount() + "");
+                coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+                users = new User[Integer.parseInt(dataSnapshot.child("UserNames").getChildrenCount()+"")];
                 dataSnap = dataSnapshot;
+
             }
 
             @Override
@@ -226,6 +235,7 @@ public class FragmentProgram extends Fragment{
             Log.e("Name", sub.substring(0, index));
             coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)));
             coachesList.add(coaches[i]);
+            coachesnames+=coaches[i].getName()+",";
             i++;
             sub = sub.substring(index + 1);
             Log.e("sub", sub);
@@ -233,7 +243,13 @@ public class FragmentProgram extends Fragment{
             Log.e("Index", index + "");
 
 
-
+        }
+        if (type.equals("User"))
+        {
+        SharedPreferences.Editor editorr =  this.getActivity().getSharedPreferences("Coaches", MODE_PRIVATE).edit();
+        editorr.putString("coachesnames",coachesnames);
+        editorr.putString("username",username);
+        editorr.apply();
         }
         //coachesList.add(coach);
 

@@ -18,8 +18,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Settings extends AppCompatActivity {
 
-    CheckBox cbsettingsphone,cbsettingsservice;
-    boolean service=true,phone=false;
+    CheckBox cbsettingsphone;
+    boolean phone=false;
     String Phone="";
     DatabaseReference databasePhone;
     String type,username;
@@ -29,9 +29,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         setTitle("הגדרות");
         cbsettingsphone=(CheckBox)findViewById(R.id.cbsettingsphone);
-        cbsettingsservice=(CheckBox)findViewById(R.id.cbsettingsservice);
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        service = prefs.getBoolean("service",true);
         phone = prefs.getBoolean("phone",false);
 
         Intent intent = getIntent();
@@ -64,10 +62,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        if (service)
-        {
-            cbsettingsservice.setChecked(true);
-        }
+
         if (phone)
         {
             cbsettingsphone.setChecked(true);
@@ -76,15 +71,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void SaveSettings(View view) {
-            if (cbsettingsservice.isChecked())
-            {
-                service=true;
 
-            }
-            else
-            {
-                service=false;
-            }
             if (cbsettingsphone.isChecked())
             {
                 if (Phone.charAt(0)!='=')
@@ -108,7 +95,6 @@ public class Settings extends AppCompatActivity {
                 phone=false;
             }
             SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-            editor.putBoolean("service",service);
             editor.putBoolean("phone", phone);
             editor.apply();
     }

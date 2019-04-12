@@ -42,14 +42,14 @@ import static java.lang.Thread.sleep;
 
 public class FragmentSearch extends Fragment implements View.OnClickListener {
     DatabaseReference databaseReference;
-    String CoachProfiles = "",UserProfiles ="", HelpString = "";
+    String CoachProfiles = "",HelpString = "";
     TextView fragtv;
     Boolean FirstOnClick = true,AcceptDialog=true;
     ListView listView;
     DataSnapshot dataSnap;
     Coach coachedittext;
     ArrayList<Coach> coachesList2;
-    Coach[] coaches = new Coach[100];
+    Coach[] coaches;
     int i = 0;
     int ii = 1;
     AlertDialog.Builder adb;
@@ -79,11 +79,12 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
                 dataSnap = dataSnapshot;
                 if (dataSnapshot.hasChild("CoachNames")) {
+                    coaches=new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
                     CoachProfiles = dataSnapshot.child("CoachNames").getValue().toString();
                 }
-                UserProfiles = dataSnapshot.child("UserNames").getValue().toString();
 
                 //fragtv.setText(CoachProfiles+"");
                 // i++;
@@ -163,9 +164,9 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 //HelpString=CoachProfiles;
                 Log.e("FULL",HelpString);
                 coachhelp = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))));
-                if (coachhelp.getName().indexOf(stringCoachSearch)!=-1)
+                if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                 {
-                    if (coachhelp.getName().equals(stringCoachSearch))
+                    if (coachhelp.getName().toLowerCase().equals(stringCoachSearch))
                     {
                         if (burnfat)
                         {
@@ -302,9 +303,9 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 {
                     Log.e("1","5");
                     coachhelp = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-                    if (coachhelp.getName().indexOf(stringCoachSearch)!=-1)
+                    if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                     {
-                        if (coachhelp.getName().equals(stringCoachSearch))
+                        if (coachhelp.getName().toLowerCase().equals(stringCoachSearch))
                         {
                             if (burnfat)
                             {
@@ -651,7 +652,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         street=true;
                     }
                     FirstOnClick=true;
-                    stringCoachSearch = etSearchInListView.getText().toString();
+                    stringCoachSearch = etSearchInListView.getText().toString().toLowerCase();
                     listView.setAdapter(null);
                     RefreshCoach();
                     ii=1;

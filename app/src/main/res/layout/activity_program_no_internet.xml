@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    tools:context=".ProgramNoInternet">
+
+
+
+    <io.github.mthli.knife.KnifeText
+        android:id="@+id/knifenointernet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="top|start"
+        android:scrollbars="vertical"
+        android:background="@android:color/transparent"
+        android:textColor="#FFFF"
+        android:textStyle="bold"
+        app:bulletColor="#FFFF"
+        app:bulletRadius="@dimen/bullet_radius"
+        app:bulletGapWidth="@dimen/bullet_gap_width"
+        app:historyEnable="true"
+        app:historySize="99"
+        app:quoteColor="@color/colorPrimaryDark"
+        app:quoteStripeWidth="@dimen/quote_stripe_width"
+        app:quoteCapWidth="@dimen/quote_gap_width">
+    </io.github.mthli.knife.KnifeText>
+</LinearLayout>

@@ -1,6 +1,7 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -106,7 +107,12 @@ public class ViewProgram extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("Data")){
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());}
+                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
+
+                    SharedPreferences.Editor editor = getSharedPreferences("Programs", MODE_PRIVATE).edit();
+                    editor.putString(receiver+"&"+sender,dataSnapshot.child("Data").getValue().toString());
+                    editor.apply();
+                }
                 knife.getLinksClickable();
                 knife.setClickable(true);
                 knife.setFocusable(false);

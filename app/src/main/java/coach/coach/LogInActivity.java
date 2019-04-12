@@ -1,6 +1,6 @@
 package coach.coach;
 
-import android.app.ActionBar;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -8,19 +8,28 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.util.SparseArray;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,10 +52,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
@@ -61,6 +72,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
     CheckBox cbAutoLogIn;
     boolean OneTimeSP=true;
+    boolean connected=true;
+    private ConnectivityManager connectivityManager;
     ProgressBar PBlogin;
 
     private DatabaseReference databaseReference;
@@ -69,8 +82,15 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
         setTitle("התחברות");
-
-
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        } else {
+            connected = false;
+        }
+        if (connected) {
+        addAutoStartup();
 
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);
@@ -96,7 +116,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataSnap = dataSnapshot;
 
-                    if (dataSnapshot.hasChild("CoachNames")) {
+                    Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
+                    Log.e("userchild",dataSnapshot.child("UserNames").getChildrenCount() + "");
+
+                if (dataSnapshot.hasChild("CoachNames")) {
                         Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("CoachNames").getValue();
                         CoachNames = objectMap.toString();
                         Log.e("CoachNames", CoachNames);
@@ -129,6 +152,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 }
                 else
                 {
+                    SharedPreferences Programs = getSharedPreferences("Programs", Context.MODE_PRIVATE);
+                    Programs.edit().clear().commit();
+                    SharedPreferences Coaches = getSharedPreferences("Coaches", Context.MODE_PRIVATE);
+                    Coaches.edit().clear().commit();
+
                     editTextEmail.setVisibility(View.VISIBLE);
                     editTextPassword.setVisibility(View.VISIBLE);
                     editTextUserName.setVisibility(View.VISIBLE);
@@ -169,6 +197,13 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         textViewForgotPassword.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);
     }
+        else
+        {
+            Intent intent = new Intent(this,ListProgramNoInternet.class);
+            startActivity(intent);
+            finish();
+        }
+}
     @Override
     public boolean onCreateOptionsMenu (Menu menu)
     {
@@ -414,5 +449,31 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 break; }
     }
 
+    private void addAutoStartup() {
+
+        try {
+            Intent intent = new Intent();
+            String manufacturer = android.os.Build.MANUFACTURER;
+            Toast.makeText(this,"כדי לקבל התראות באפליקציה, צריך לאשר הפעלה אוטומטית",Toast.LENGTH_LONG).show();
+            if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+            } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+            } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+            } else if ("Letv".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity"));
+            } else if ("Honor".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+            }
+
+            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            if  (list.size() > 0) {
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            Log.e("exc" , String.valueOf(e));
+        }
+    }
 
 }

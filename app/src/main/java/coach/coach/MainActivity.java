@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -45,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
     int FragInt=1;
     public Fragment myfragment;
     private DatabaseReference databaseReference;
+    private ConnectivityManager connectivityManager;
     Button button1,button2,button3;
     Boolean SignOut=false;
+    boolean connected=true;
     String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("");
 
+        connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        }
+        else{
+            connected = false;
+     }
+        if (connected){
         intent = getIntent();
         username = intent.getStringExtra("username");
         type = intent.getStringExtra("type");
@@ -124,6 +137,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    else
+        {
+            Intent intent = new Intent(this,ListProgramNoInternet.class);
+            startActivity(intent);
+            finish();
+        }}
     @Override
     public boolean onCreateOptionsMenu (Menu menu)
     {

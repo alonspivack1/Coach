@@ -32,8 +32,8 @@ public class FragmentChat extends Fragment{
 
     DatabaseReference databaseReference;
     DataSnapshot dataSnap;
-    Coach[] coaches = new Coach[100];
-    User[] users = new User[100];
+    Coach[] coaches;
+    User[] users;
     int i =0;
     String username,type,sub,help;
     ArrayList<Coach> coachesList;
@@ -60,6 +60,10 @@ public class FragmentChat extends Fragment{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
+                Log.e("userchild",dataSnapshot.child("UserNames").getChildrenCount() + "");
+                coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+                users = new User[Integer.parseInt(dataSnapshot.child("UserNames").getChildrenCount()+"")];
                 dataSnap = dataSnapshot;
                 //fragtv.setText(CoachProfiles+"");
                 // i++;

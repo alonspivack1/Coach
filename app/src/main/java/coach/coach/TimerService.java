@@ -43,10 +43,9 @@ public class TimerService extends IntentService {
     private DataSnapshot dataSnap=null;
     int IdNotification=1;
     Boolean Sticky=false,FirstLook=true;
-    int WakeUpNotificationcount=0,NotificationSec=86400;
+    int WakeUpNotificationcount=0,NotificationSec=3600;
     private boolean connected,connectedlog;
     private String username;
-    boolean service=true;
     private NotificationManager mNotificationManager;
     NotificationCompat.BigTextStyle bigText;
     PendingIntent pendingIntent;
@@ -79,11 +78,8 @@ public class TimerService extends IntentService {
 
         /*if (service)
         {*/
-        Log.v("timer","service: "+ service);
 
 
-
-        intent=null;
         if (intent==null){
             Sticky=true;
             SharedPreferences prefs = getSharedPreferences("service", MODE_PRIVATE);
@@ -454,7 +450,7 @@ public class TimerService extends IntentService {
 
             }
                 for (int i = 0; i < 1;) {
-                    Log.v("timer", "i = " + i);
+                    Log.v("timer", "null i = " + i);
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
@@ -482,9 +478,40 @@ public class TimerService extends IntentService {
         }}
     }
 
+
     @Override
     public void onDestroy() {
         Log.v("timer", "DESTROY");
-        onStartCommand(null, 0, 0);
+        Sticky=true;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this.getApplicationContext(), "notify_001");
+        Intent ii = new Intent(this.getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+        bigText.setBigContentTitle("הרבה זמן לא נכנסת לאפליקציהDESTROY");
+        bigText.setSummaryText("תזכורת");
+
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setSmallIcon(R.drawable.logo);
+        mBuilder.setContentTitle("Your Title");
+        mBuilder.setContentText("Your text");
+        mBuilder.setPriority(Notification.PRIORITY_MAX);
+        mBuilder.setStyle(bigText);
+
+        mNotificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "YOUR_CHANNEL_ID";
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+        mNotificationManager.notify(0, mBuilder.build());
+       // onStartCommand(null, 0, 0);
     }}
 //}
