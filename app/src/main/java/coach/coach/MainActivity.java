@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public Fragment myfragment;
     private DatabaseReference databaseReference;
     private ConnectivityManager connectivityManager;
-    Button button1,button2,button3;
+    Button button1,button2,button3,button4;
     Boolean SignOut=false;
     boolean connected=true;
     String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
@@ -90,19 +90,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
+        button4 = (Button) findViewById(R.id.button4);
         button3 = (Button) findViewById(R.id.button3);
         button2 = (Button) findViewById(R.id.button2);
         button1 = (Button) findViewById(R.id.button1);
         button1.setVisibility(View.GONE);
         button2.setVisibility(View.GONE);
         button3.setVisibility(View.GONE);
-        final Handler handler = new Handler();
+            button4.setVisibility(View.GONE);
+
+            final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 button1.setVisibility(View.VISIBLE);
                 button2.setVisibility(View.VISIBLE);
+                button4.setVisibility(View.VISIBLE);
                 if (type.equals("User")) {
                     button3.setVisibility(View.VISIBLE);
                 }
@@ -174,8 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (st.equals("קרדיטים"))
         {
-            //intentCredits = new Intent(this, Credits.class);
-            intentCredits = new Intent(this, Alerts.class);
+            intentCredits = new Intent(this, Credits.class);
             startActivity(intentCredits);
         }
         if (st.equals("הגדרות"))
@@ -193,6 +195,13 @@ public class MainActivity extends AppCompatActivity {
         }
         if (st.equals("התנתקות"))
         {
+            SharedPreferences onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
+            int onoff = onoffref.getInt("onoff",0);
+            onoff=onoff+1;
+            SharedPreferences.Editor editorr = getSharedPreferences("TimerService", MODE_PRIVATE).edit();
+            editorr.putInt("onoff",onoff);
+            editorr.apply();
+
             SharedPreferences.Editor editorsevice = getSharedPreferences("service", MODE_PRIVATE).edit();
             editorsevice.putString("username", username);
             editorsevice.putBoolean("signout", true);
@@ -266,6 +275,24 @@ public class MainActivity extends AppCompatActivity {
     }catch (Exception e) {
         System.out.println("An exception!");
     }
+
+    }
+    public void FragmentFourthClick(View view) throws InterruptedException {
+
+        try{
+            if (FragInt != 4) {
+                Thread.sleep(200);
+                FragInt = 4;
+                myfragment = new Alerts();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+            }
+        }catch (Exception e) {
+            System.out.println("An exception!");
+        }
+
 
     }
     public String getUsername() {

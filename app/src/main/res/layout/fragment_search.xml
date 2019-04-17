@@ -6,62 +6,68 @@
     android:textDirection="rtl"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:orientation="horizontal"
         android:layout_gravity="right"
+        android:gravity="right"
         android:layoutDirection="rtl"
         android:textDirection="rtl"
-        android:gravity="right"
+        android:orientation="horizontal"
         android:background="@drawable/background"
         android:minHeight="?attr/actionBarSize">
+
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="צאטים"
             android:layoutDirection="rtl"
             android:textDirection="rtl"
-            android:text="צאטים"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="#FFFF"
             android:background="@android:color/transparent" />
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent" />
+
 
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="תוכנית אישית"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:textColor="#FFFF"
             android:layoutDirection="rtl"
             android:textDirection="rtl"
+            android:textColor="#FFFF"
             android:background="@android:color/transparent" />
 
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent" />
-
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="חיפוש מאמנים"
             android:textSize="20dp"
-            android:textColor="#FFFF"
-            android:background="#FFFF"
             android:layoutDirection="rtl"
             android:textDirection="rtl"
+            android:textColor="#FFFF"
+            android:background="#FFFF"
             android:textStyle="bold" />
-
-
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="התראות"
+            android:textSize="20dp"
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
+            android:textColor="#FFFF"
+            android:background="@android:color/transparent"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

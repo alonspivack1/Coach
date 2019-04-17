@@ -73,6 +73,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     CheckBox cbAutoLogIn;
     boolean OneTimeSP=true;
     boolean connected=true;
+    Menu mymenu;
     private ConnectivityManager connectivityManager;
     ProgressBar PBlogin;
 
@@ -167,6 +168,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     Programs.edit().clear().commit();
                     SharedPreferences Coaches = getSharedPreferences("Coaches", Context.MODE_PRIVATE);
                     Coaches.edit().clear().commit();
+                    SharedPreferences Alerts = getSharedPreferences("Alerts", Context.MODE_PRIVATE);
+                    Alerts.edit().clear().commit();
 
                     editTextEmail.setVisibility(View.VISIBLE);
                     editTextPassword.setVisibility(View.VISIBLE);
@@ -176,6 +179,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     textViewSignup.setVisibility(View.VISIBLE);
                     textViewForgotPassword.setVisibility(View.VISIBLE);
                     PBlogin.setVisibility(View.GONE);
+
+
 
                 }
                 }
@@ -215,14 +220,14 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }
 }
+
     @Override
-    public boolean onCreateOptionsMenu (Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mymenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-
-        return true;
-    }
+                return true;
+        }
 
     public boolean onOptionsItemSelected(MenuItem item) {
 

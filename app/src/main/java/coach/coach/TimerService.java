@@ -95,10 +95,6 @@ public class TimerService extends IntentService {
         SharedPreferences.Editor editorr = getSharedPreferences("TimerService", MODE_PRIVATE).edit();
         editorr.putInt("onoff",onoff);
         editorr.apply();
-            ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
-            ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
-            Log.e("Activity",componentInfo.getPackageName());
 
         /*
         SharedPreferences prefs = getSharedPreferences("TimerService", MODE_PRIVATE);

@@ -42,7 +42,7 @@
             android:layoutDirection="rtl"
             android:textDirection="rtl"
             android:textColor="#FFFF"
-            android:background="#FFFF"/>
+            android:background="@android:color/transparent" />
 
 
         <Button
@@ -65,14 +65,32 @@
             android:layoutDirection="rtl"
             android:textDirection="rtl"
             android:textColor="#FFFF"
-            android:background="@android:color/transparent"
+            android:background="#FFFF"
             android:textStyle="bold" />
 
 
     </LinearLayout>
 
+    <ToggleButton
+        android:id="@+id/tbalert"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textOff="תוכניות אימון"
+        android:textOn="צאטים"
+        android:background="@drawable/background"
+        android:textColor="#FFFF"
+        android:textSize="17dp"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btnclearalert"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="#FFFF"
+        android:textSize="17dp"
+        android:background="@drawable/background"
+        android:text="מחק התראות" />
     <ListView
-        android:id="@+id/programlist"
+        android:id="@+id/alertslist"
         android:layout_width="match_parent"
         android:longClickable="true"
         android:divider="#20000000"
