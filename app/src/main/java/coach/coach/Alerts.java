@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +26,8 @@ public class Alerts extends AppCompatActivity {
     SimpleAdapter adapterprogram,adapterchat;
     HashMap<String,String> item;
     String chat,program;
+    Button btnclearalert;
+    ToggleButton tbalert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +38,10 @@ public class Alerts extends AppCompatActivity {
         Log.e("ALERTS!",alerts.getString("program","null"));
         chat=alerts.getString("chat","null");
         program=alerts.getString("program","null");
-
+        tbalert=(ToggleButton)findViewById(R.id.tbalert);
+        btnclearalert = (Button)findViewById(R.id.btnclearalert);
             alertslist = findViewById(R.id.alertslist);
+
 
             adapterprogram = new SimpleAdapter(this, listprogram, R.layout.twolines,
                 new String[] { "sender","receiver","sendertime","receivertime"},
@@ -84,7 +91,47 @@ public class Alerts extends AppCompatActivity {
             listprogram.add(item);
         }
 
-    }}
+    }
+        tbalert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked)
+                {
+                    alertslist.setAdapter(adapterchat);
+                }
+                else
+                {
+                    alertslist.setAdapter(adapterprogram);
+                }
+            }
+        });
+        btnclearalert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tbalert.isChecked())
+                {
+                    chat="";
+                    listchat.clear();
+                    SharedPreferences.Editor editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                    editor.putString("chat","");
+                    editor.apply();
+                    alertslist.setAdapter(adapterchat);
+
+                }
+                else {
+                    program="";
+                    listprogram.clear();
+                    SharedPreferences.Editor editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
+                    editor.putString("program","");
+                    editor.apply();
+                    alertslist.setAdapter(adapterprogram);
+
+
+                }
+            }
+        });
+    }
     public int countChar(String str, char c)
     {
         int count = 0;

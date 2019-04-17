@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -113,7 +114,7 @@ public class UserProfileMaker extends AppCompatActivity {
                     etuserheight.setText(user.getHeight());
                     etusertime.setText(user.getTime());
                     etuseritem.setText(user.getItem());
-                    double bmi = Double.valueOf(user.getWeight())/((Double.valueOf(user.getHeight())/100)*(Double.valueOf(user.getHeight()))/100);
+                    float bmi = Float.valueOf(user.getWeight())/((Float.valueOf(user.getHeight())/100)*(Float.valueOf(user.getHeight()))/100);
                     tvuserbmi.setText("BMI:"+String.valueOf(bmi));
                     etuserdescription.setText(user.getDescription());
                     if (user.getGender().equals("Female"))
@@ -283,6 +284,8 @@ public class UserProfileMaker extends AppCompatActivity {
                 if (task.isComplete()) {
                     MainActivityIntent.putExtra("username",username);
                     MainActivityIntent.putExtra("type","User");
+                    float bmi = Float.valueOf(etuserweight.getText().toString())/((Float.valueOf(etuserheight.getText().toString())/100)*(Float.valueOf(etuserheight.getText().toString()))/100);
+                    Toast.makeText(getBaseContext(),"הBMI שלך הוא "+bmi,Toast.LENGTH_LONG).show();
                     startActivity(MainActivityIntent);
                     finish();
                 }

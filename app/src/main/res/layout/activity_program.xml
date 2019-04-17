@@ -1,127 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:are="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/background"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark">
 
-
-    <HorizontalScrollView
-        android:id="@+id/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/background"
-        android:scrollbars="none">
-
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-            <ImageButton android:id="@+id/bold"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_bold"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-            <ImageButton android:id="@+id/italic"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_italic"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-            <ImageButton android:id="@+id/underline"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_underline"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-            <ImageButton android:id="@+id/strikethrough"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_strikethrough"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-            <ImageButton android:id="@+id/bullet"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_bullet"
-                android:scaleType="center"
-                android:background="@android:color/transparent"
-                >
-            </ImageButton>
-
-            <ImageButton android:id="@+id/quote"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_format_quote"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-
-            <ImageButton android:id="@+id/undo"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_action_undo"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-            <ImageButton android:id="@+id/redo"
-                android:contentDescription="@null"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_action_redo"
-                android:scaleType="center"
-                android:background="?android:selectableItemBackground">
-            </ImageButton>
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <io.github.mthli.knife.KnifeText
-        android:id="@+id/knife"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/tools"
-        android:paddingTop="16dp"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:paddingRight="16dp"
-        android:paddingEnd="16dp"
-        android:gravity="top|start"
-        android:scrollbars="vertical"
-        android:textColor="#FFFF"
-        android:textStyle="bold"
-        android:background="@android:color/transparent"
-        app:bulletColor="#FFFF"
-        app:bulletRadius="@dimen/bullet_radius"
-        app:bulletGapWidth="@dimen/bullet_gap_width"
-        app:historyEnable="true"
-        app:historySize="99"
-        app:linkColor="@color/blue_500"
-        app:linkUnderline="true"
-        app:quoteColor="@color/colorPrimaryDark"
-        app:quoteStripeWidth="@dimen/quote_stripe_width"
-        app:quoteCapWidth="@dimen/quote_gap_width">
-    </io.github.mthli.knife.KnifeText>
+        android:layout_above="@+id/bottombar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/white">
 
+        <com.chinalwb.are.AREditText
+            android:id="@+id/arEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:textSize="50sp" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="1000">
+
+        <com.chinalwb.are.styles.toolbar.ARE_ToolbarDefault
+            android:id="@+id/areToolbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1000"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical" />
+
+
+
+    </LinearLayout>
 </RelativeLayout>

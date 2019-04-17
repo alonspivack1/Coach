@@ -62,8 +62,24 @@ public class FragmentChat extends Fragment{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
                 Log.e("userchild",dataSnapshot.child("UserNames").getChildrenCount() + "");
-                coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
-                users = new User[Integer.parseInt(dataSnapshot.child("UserNames").getChildrenCount()+"")];
+                try {
+                    Log.e("coachchild??",coaches.length+"");
+
+                }
+                catch (Exception e)
+                {
+                    coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+
+                }
+                try {
+                    Log.e("userchild??",users.length+"");
+
+                }
+                catch (Exception e)
+                {
+                    users = new User[Integer.parseInt(dataSnapshot.child("UserNames").getChildrenCount()+"")];
+
+                }
                 dataSnap = dataSnapshot;
                 //fragtv.setText(CoachProfiles+"");
                 // i++;

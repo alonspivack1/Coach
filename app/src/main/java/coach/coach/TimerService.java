@@ -1,11 +1,13 @@
 package coach.coach;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //Notification
@@ -92,9 +95,10 @@ public class TimerService extends IntentService {
         SharedPreferences.Editor editorr = getSharedPreferences("TimerService", MODE_PRIVATE).edit();
         editorr.putInt("onoff",onoff);
         editorr.apply();
-
-
-
+            ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
+            ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
+            Log.e("Activity",componentInfo.getPackageName());
 
         /*
         SharedPreferences prefs = getSharedPreferences("TimerService", MODE_PRIVATE);
@@ -132,8 +136,8 @@ public class TimerService extends IntentService {
         username = prefs.getString("username","");
         Boolean SignOut = prefs.getBoolean("signout",true);
             SharedPreferences prefss = getSharedPreferences("Alerts", MODE_PRIVATE);
-            SPchat = prefs.getString("chat", "");
-            SPprogram = prefs.getString("program", "");
+            SPchat = prefss.getString("chat", "");
+            SPprogram = prefss.getString("program", "");
 
 
 
@@ -150,7 +154,6 @@ public class TimerService extends IntentService {
             for (int i=0; i<1;)
             {
                     Log.v("timer", "loop");
-
                 while (connected&&i<1){
 
                     if (WakeUpNotificationcount>=NotificationSec)
@@ -195,7 +198,6 @@ public class TimerService extends IntentService {
                         Thread.sleep(1000);
                         Log.v("timer","WakeUpNotifictioncount"+" "+WakeUpNotificationcount);
                         WakeUpNotificationcount++;
-
                         onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
                         if (onoff!=onoffref.getInt("onoff",0))
                         {
@@ -235,7 +237,7 @@ public class TimerService extends IntentService {
                                                 time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                             }
                                             Log.e("time",time);
-                                            SPprogram+="תוכנית האימון עודכנה מהמאמן " + help.substring(0,help.indexOf(","))+"-"+time+",";
+                                            SPprogram="תוכנית האימון עודכנה מהמאמן " + help.substring(0,help.indexOf(","))+"-"+time+","+SPprogram;
                                             SharedPreferences.Editor editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                             editor.putString("program",SPprogram);
                                             editor.apply();
@@ -277,7 +279,7 @@ public class TimerService extends IntentService {
                                                         time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                                     }
                                                     Log.e("time",time);
-                                                    SPprogram+="תוכנית האימון עודכנה מהמאמן " + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                                    SPprogram="תוכנית האימון עודכנה מהמאמן " + help.substring(0, help.indexOf(","))+"-"+time+","+SPprogram;
                                                     editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                                     editor.putString("program",SPprogram);
                                                     editor.apply();
@@ -313,7 +315,7 @@ public class TimerService extends IntentService {
                                                             time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                                         }
                                                         Log.e("time",time);
-                                                        SPprogram+="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+",";
+                                                        SPprogram="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+","+SPprogram;
                                                         editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                                         editor.putString("program",SPprogram);
                                                         editor.apply();
@@ -354,7 +356,7 @@ public class TimerService extends IntentService {
                                                 time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                             }
                                             Log.e("time",time);
-                                            SPprogram+="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+",";
+                                            SPprogram="תוכנית האימון עודכנה מהמאמן " + help+"-"+time+","+SPprogram;
                                             editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                             editor.putString("program",SPprogram);
                                             editor.apply();
@@ -396,7 +398,7 @@ public class TimerService extends IntentService {
                                                 time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                             }
                                             Log.e("time",time);
-                                            SPchat+="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                            SPchat="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+","+SPchat;
                                             editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                             editor.putString("chat",SPchat);
                                             editor.apply();
@@ -434,7 +436,7 @@ public class TimerService extends IntentService {
                                                         time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                                     }
                                                     Log.e("time",time);
-                                                    SPchat+="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+",";
+                                                    SPchat="התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(","))+"-"+time+","+SPchat;
                                                     editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                                     editor.putString("chat",SPchat);
                                                     editor.apply();
@@ -472,7 +474,7 @@ public class TimerService extends IntentService {
                                                             time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                                         }
                                                         Log.e("time",time);
-                                                        SPchat+="התקבלה הודעה חדשה מ" + help+"-"+time+",";
+                                                        SPchat="התקבלה הודעה חדשה מ" + help+"-"+time+","+SPchat;
                                                         editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                                         editor.putString("chat",SPchat);
                                                         editor.apply();
@@ -511,7 +513,7 @@ public class TimerService extends IntentService {
                                                 time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                                             }
                                             Log.e("time",time);
-                                            SPchat+="התקבלה הודעה חדשה מ" + help+"-"+time+",";
+                                            SPchat="התקבלה הודעה חדשה מ" + help+"-"+time+","+SPchat;
                                             editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
                                             editor.putString("chat",SPchat);
                                             editor.apply();
@@ -600,7 +602,6 @@ public class TimerService extends IntentService {
                         Thread.sleep(1000);
                         Log.v("timer","WakeUpNotifictioncount"+" "+WakeUpNotificationcount);
                         WakeUpNotificationcount++;
-
                         onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
                         if (onoff!=onoffref.getInt("onoff",0))
                         {
@@ -671,5 +672,6 @@ public class TimerService extends IntentService {
         mNotificationManager.notify(0, mBuilder.build());*/
        // onStartCommand(null, 0, 0);
     }
+
   }
 //}

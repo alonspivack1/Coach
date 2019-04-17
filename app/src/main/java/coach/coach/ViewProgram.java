@@ -8,19 +8,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RatingBar;
 
+import com.chinalwb.are.render.AreTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import io.github.mthli.knife.KnifeText;
 
 public class ViewProgram extends AppCompatActivity {
     Intent intent;
     String receiver,sender;
     DatabaseReference databaseReference,databaseReference2;
-    private KnifeText knife;
     RatingBar rbViewProgram;
     DataSnapshot dataSnap;
     Boolean RatedInPast=false;
@@ -34,11 +33,10 @@ public class ViewProgram extends AppCompatActivity {
         setContentView(R.layout.activity_view_program);
         rbViewProgram = (RatingBar)findViewById(R.id.rbViewProgram);
         setTitle("תוכנית אישית מהמאמן");
-
+        final AreTextView areTextView = findViewById(R.id.areTextView);
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
-        knife = (KnifeText) findViewById(R.id.knife);
         databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Rating").child(sender);
         databaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,15 +105,12 @@ public class ViewProgram extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("Data")){
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
+                areTextView.fromHtml(dataSnapshot.child("Data").getValue().toString());
 
                     SharedPreferences.Editor editor = getSharedPreferences("Programs", MODE_PRIVATE).edit();
                     editor.putString(receiver+"&"+sender,dataSnapshot.child("Data").getValue().toString());
                     editor.apply();
                 }
-                knife.getLinksClickable();
-                knife.setClickable(true);
-                knife.setFocusable(false);
 
             }
 

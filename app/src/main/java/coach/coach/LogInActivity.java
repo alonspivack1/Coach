@@ -90,7 +90,18 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             connected = false;
         }
         if (connected) {
-        addAutoStartup();
+            SharedPreferences FirstLogIn = getSharedPreferences("FirstLogIn", MODE_PRIVATE);
+            Log.e("FirstLogIn",FirstLogIn.getBoolean("firstlogin",true)+"");
+            if (FirstLogIn.getBoolean("firstlogin",true))
+            {
+                addAutoStartup();
+                SharedPreferences.Editor firstLogIneditor = getSharedPreferences("FirstLogIn", MODE_PRIVATE).edit();
+                firstLogIneditor.putBoolean("firstlogin",false);
+                firstLogIneditor.apply();
+            }
+
+
+
 
         userIntent = new Intent(this,UserProfileMaker.class);
         coachIntent = new Intent(this,CoachProfileMaker.class);

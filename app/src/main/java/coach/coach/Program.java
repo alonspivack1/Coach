@@ -1,41 +1,42 @@
 package coach.coach;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
+import com.chinalwb.are.AREditText;
+import com.chinalwb.are.styles.toolbar.IARE_Toolbar;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentCenter;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentLeft;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentRight;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Bold;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_FontSize;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Hr;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Italic;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Link;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Quote;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Strikethrough;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Subscript;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Superscript;
+import com.chinalwb.are.styles.toolitems.ARE_ToolItem_Underline;
+import com.chinalwb.are.styles.toolitems.IARE_ToolItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import io.github.mthli.knife.KnifeText;
-
-//Notification
-//Notifcation
 
 public class Program extends AppCompatActivity {
+    private IARE_Toolbar mToolbar;
 
-    private KnifeText knife;
+    private AREditText mEditText;
     Intent intent;
     String receiver,sender;
     DatabaseReference databaseReference;
@@ -48,6 +49,8 @@ public class Program extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program);
         setTitle("כתיבת תוכנית");
+        mEditText = this.findViewById(R.id.arEditText);
+
         intent = getIntent();
         receiver=intent.getStringExtra("receiver");
         sender=intent.getStringExtra("sender");
@@ -59,8 +62,7 @@ public class Program extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-                // knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
-                knife.fromHtml(dataSnapshot.child("Data").getValue().toString());
+                mEditText.fromHtml(dataSnapshot.child("Data").getValue().toString());
 
             }
 
@@ -117,175 +119,43 @@ public class Program extends AppCompatActivity {
 
             }
         });
-        knife = (KnifeText) findViewById(R.id.knife);
-        knife.setSelection(knife.getEditableText().length());
 
-        setupBold();
-        setupItalic();
-        setupUnderline();
-        setupStrikethrough();
-        setupBullet();
-        setupQuote();
-        setUpundo();
-        setUpredo();
+        initToolbar();
     }
 
-    private void setupBold() {
-        ImageButton bold = (ImageButton) findViewById(R.id.bold);
+    private void initToolbar() {
+        mToolbar = this.findViewById(R.id.areToolbar);
+        IARE_ToolItem fontSize = new ARE_ToolItem_FontSize();
+        IARE_ToolItem bold = new ARE_ToolItem_Bold();
+        IARE_ToolItem italic = new ARE_ToolItem_Italic();
+        IARE_ToolItem underline = new ARE_ToolItem_Underline();
+        IARE_ToolItem strikethrough = new ARE_ToolItem_Strikethrough();
+        IARE_ToolItem quote = new ARE_ToolItem_Quote();
+        IARE_ToolItem hr = new ARE_ToolItem_Hr();
+        IARE_ToolItem link = new ARE_ToolItem_Link();
+        IARE_ToolItem subscript = new ARE_ToolItem_Subscript();
+        IARE_ToolItem superscript = new ARE_ToolItem_Superscript();
+        IARE_ToolItem left = new ARE_ToolItem_AlignmentLeft();
+        IARE_ToolItem center = new ARE_ToolItem_AlignmentCenter();
+        IARE_ToolItem right = new ARE_ToolItem_AlignmentRight();
+        mToolbar.addToolbarItem(bold);
+        mToolbar.addToolbarItem(italic);
+        mToolbar.addToolbarItem(underline);
+        mToolbar.addToolbarItem(strikethrough);
+        mToolbar.addToolbarItem(quote);
+        mToolbar.addToolbarItem(hr);
+        mToolbar.addToolbarItem(link);
+        mToolbar.addToolbarItem(subscript);
+        mToolbar.addToolbarItem(superscript);
+        mToolbar.addToolbarItem(fontSize);
+        mToolbar.addToolbarItem(left);
+        mToolbar.addToolbarItem(center);
+        mToolbar.addToolbarItem(right);
 
-        bold.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.bold(!knife.contains(KnifeText.FORMAT_BOLD));
-            }
-        });
+        mEditText.setToolbar(mToolbar);
+        mEditText.requestFocus();
 
-        bold.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_bold, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
     }
-
-    private void setupItalic() {
-        ImageButton italic = (ImageButton) findViewById(R.id.italic);
-
-        italic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.italic(!knife.contains(KnifeText.FORMAT_ITALIC));
-            }
-        });
-
-        italic.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_italic, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-    private void setupUnderline() {
-        ImageButton underline = (ImageButton) findViewById(R.id.underline);
-
-        underline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.underline(!knife.contains(KnifeText.FORMAT_UNDERLINED));
-            }
-        });
-
-        underline.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_underline, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-    private void setupStrikethrough() {
-        ImageButton strikethrough = (ImageButton) findViewById(R.id.strikethrough);
-
-        strikethrough.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.strikethrough(!knife.contains(KnifeText.FORMAT_STRIKETHROUGH));
-            }
-        });
-
-        strikethrough.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-    private void setupBullet() {
-        ImageButton bullet = (ImageButton) findViewById(R.id.bullet);
-
-        bullet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.bullet(!knife.contains(KnifeText.FORMAT_BULLET));
-            }
-        });
-
-
-        bullet.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_bullet, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-    private void setupQuote() {
-        ImageButton quote = (ImageButton) findViewById(R.id.quote);
-
-        quote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.quote(!knife.contains(KnifeText.FORMAT_QUOTE));
-            }
-        });
-
-        quote.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_quote, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-    private void setUpundo() {
-        ImageButton undo = (ImageButton) findViewById(R.id.undo);
-
-        undo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.undo();
-            }
-        });
-
-        undo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_undo, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-    private void setUpredo() {
-        ImageButton redo = (ImageButton) findViewById(R.id.redo);
-
-        redo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                knife.redo();
-            }
-        });
-
-        redo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(Program.this, R.string.toast_redo, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-    }
-
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu (Menu menu)
     {
@@ -298,8 +168,8 @@ public class Program extends AppCompatActivity {
 
         String st = item.getTitle().toString();
         if (st.equals("שלח")) {
-            databaseReference.child("Data").setValue(knife.toHtml());
-            knife.fromHtml(knife.toHtml());
+            databaseReference.child("Data").setValue(mEditText.getHtml());
+            mEditText.fromHtml(mEditText.getHtml());
             if (UpdateNotifiction)
             {
                 Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
@@ -318,8 +188,8 @@ public class Program extends AppCompatActivity {
 
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "לחץ שוב על הלחצן חזור כדי לצאת, התוכנית תשמר אוטומטית", Toast.LENGTH_SHORT).show();
-        databaseReference.child("Data").setValue(knife.toHtml());
-        knife.fromHtml(knife.toHtml());
+        databaseReference.child("Data").setValue(mEditText.getHtml());
+        mEditText.fromHtml(mEditText.getHtml());
         if (UpdateNotifiction)
         {
             Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
@@ -336,8 +206,8 @@ public class Program extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint()
     {
-        databaseReference.child("Data").setValue(knife.toHtml());
-        knife.fromHtml(knife.toHtml());
+        databaseReference.child("Data").setValue(mEditText.getHtml());
+        mEditText.fromHtml(mEditText.getHtml());
         if (UpdateNotifiction)
         {
             Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
