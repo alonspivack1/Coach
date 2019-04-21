@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,34 +14,82 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
+/**
+ * Fragment of all Coaches/Users you can chat with.
+ */
 public class FragmentChat extends Fragment{
 
 
+    /**
+     * The Database reference.
+     */
     DatabaseReference databaseReference;
+    /**
+     * The Data snap.
+     */
     DataSnapshot dataSnap;
+    /**
+     * The Coaches.
+     */
     Coach[] coaches;
+    /**
+     * The Users.
+     */
     User[] users;
+    /**
+     * The .
+     */
     int i =0;
-    String username,type,sub,help;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Type.
+     */
+    type, /**
+     * The Sub.
+     */
+    sub, /**
+     * The Help.
+     */
+    help;
+    /**
+     * The Coaches list.
+     */
     ArrayList<Coach> coachesList;
+    /**
+     * The Users list.
+     */
     ArrayList<User> usersList;
+    /**
+     * The List view.
+     */
     ListView listView;
-    String receiver,room;
+    /**
+     * The Receiver.
+     */
+    String receiver, /**
+     * The Room.
+     */
+    room;
+    /**
+     * The Adb.
+     */
     AlertDialog.Builder adb;
+    /**
+     * The Positionadb.
+     */
     int positionadb;
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,16 +103,18 @@ public class FragmentChat extends Fragment{
         MainActivity activity = (MainActivity) getActivity();
         username = activity.getUsername();
         type = activity.getType();
+        Button fragchatSC = (Button)view.findViewById(R.id.fragchatSC);
 
-
+        if (type.equals("Coach"))
+        {
+            fragchatSC.setVisibility(View.GONE);
+        }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
-                Log.e("userchild",dataSnapshot.child("UserNames").getChildrenCount() + "");
                 try {
-                    Log.e("coachchild??",coaches.length+"");
+                    Log.e("coachchild",coaches.length+"");
 
                 }
                 catch (Exception e)
@@ -72,7 +123,7 @@ public class FragmentChat extends Fragment{
 
                 }
                 try {
-                    Log.e("userchild??",users.length+"");
+                    Log.e("userchild",users.length+"");
 
                 }
                 catch (Exception e)
@@ -81,8 +132,6 @@ public class FragmentChat extends Fragment{
 
                 }
                 dataSnap = dataSnapshot;
-                //fragtv.setText(CoachProfiles+"");
-                // i++;
 
 
             }
@@ -114,9 +163,7 @@ public class FragmentChat extends Fragment{
                     ChatIntent.putExtra("room",room);
                     ChatIntent.putExtra("type",type);
                     startActivity(ChatIntent);
-                    Log.e("receiver",receiver);
-                    Log.e("sender",username);
-                    Log.e("room",room);
+
                 }
                 if (type.equals("Coach"))
                 {
@@ -128,9 +175,7 @@ public class FragmentChat extends Fragment{
                     ChatIntent.putExtra("room",room);
                     ChatIntent.putExtra("type",type);
                     startActivity(ChatIntent);
-                    Log.e("receiver",receiver);
-                    Log.e("sender",username);
-                    Log.e("room",room);
+
                 }
             }
         });
@@ -156,6 +201,10 @@ public class FragmentChat extends Fragment{
         return view;
 
     }
+
+    /**
+     * Dialog Check if the user is sure he wants to delete the contact with the coach.
+     */
     public void Dialog(){
         adb = new  AlertDialog.Builder(getActivity());
         adb.setTitle("ביטול קשר");
@@ -176,17 +225,46 @@ public class FragmentChat extends Fragment{
 
                     String UserNameChange = dataSnap.child("UserNames").child(username).getValue().toString();
                     String UpdateUserNameChange = UserNameChange;
-                    Log.e("UpdateUserNameChange", UpdateUserNameChange);
                     UpdateUserNameChange = UpdateUserNameChange.replace("," + coaches[positionadb].getName() + ",", ",");
-                    Log.e("UpdateUserNameChange", UpdateUserNameChange);
                     FirebaseDatabase.getInstance().getReference().child("UserNames").child(username).setValue(UpdateUserNameChange);
 
                     String CoachNameChange = dataSnap.child("CoachNames").child(coaches[positionadb].getName()).getValue().toString();
                     String UpdateCoachNameChange = CoachNameChange;
-                    Log.e("UpdateCoachNameChange", UpdateCoachNameChange);
                     UpdateCoachNameChange = UpdateCoachNameChange.replace("," + username + ",", ",");
-                    Log.e("UpdateCoachNameChange", UpdateCoachNameChange);
                     FirebaseDatabase.getInstance().getReference().child("CoachNames").child(coaches[positionadb].getName()).setValue(UpdateCoachNameChange);
+
+
+
+
+                    try {
+                        SharedPreferences Coaches = getActivity().getSharedPreferences("Coaches", MODE_PRIVATE);
+                        String updatecoachesnames =Coaches.getString("coachesnames","");
+
+                        updatecoachesnames=","+updatecoachesnames;
+                        String coachdelete=coaches[positionadb].getName();
+                        int help = updatecoachesnames.indexOf(","+coachdelete+",");
+                        updatecoachesnames=updatecoachesnames.substring(0,help)+updatecoachesnames.substring(help+1+coachdelete.length());
+                        updatecoachesnames=updatecoachesnames.substring(1);
+                        SharedPreferences.Editor editorcoaches =  getActivity().getSharedPreferences("Coaches", MODE_PRIVATE).edit();
+                        editorcoaches.putString("coachesnames",updatecoachesnames);
+                        editorcoaches.apply();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+
+                    try {
+                        String room = username+"&"+coaches[positionadb].getName();
+                        SharedPreferences.Editor editorprograms =  getActivity().getSharedPreferences("Programs", MODE_PRIVATE).edit();
+                        editorprograms.remove(room);
+                        editorprograms.apply();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
 
                     getActivity().finish();
                     getActivity().overridePendingTransition(0, 0);
@@ -201,16 +279,12 @@ public class FragmentChat extends Fragment{
 
                     String CoachNameChange = dataSnap.child("CoachNames").child(username).getValue().toString();
                     String UpdateCoachNameChange = CoachNameChange;
-                    Log.e("UpdateCoachNameChange", UpdateCoachNameChange);
                     UpdateCoachNameChange = UpdateCoachNameChange.replace("," + users[positionadb].getName() + ",", ",");
-                    Log.e("UpdateCoachNameChange", UpdateCoachNameChange);
                     FirebaseDatabase.getInstance().getReference().child("CoachNames").child(username).setValue(UpdateCoachNameChange);
 
                     String UserNameChange = dataSnap.child("UserNames").child(users[positionadb].getName()).getValue().toString();
                     String UpdateUserNameChange = UserNameChange;
-                    Log.e("UpdateUserNameChange", UpdateUserNameChange);
                     UpdateUserNameChange = UpdateUserNameChange.replace("," + username + ",", ",");
-                    Log.e("UpdateUserNameChange", UpdateUserNameChange);
                     FirebaseDatabase.getInstance().getReference().child("UserNames").child(users[positionadb].getName()).setValue(UpdateUserNameChange);
 
                     getActivity().finish();
@@ -233,86 +307,48 @@ public class FragmentChat extends Fragment{
         adb.show();
     }
 
+    /**
+     * Refreshes all coaches that have contact with them.
+     */
     public void UserRefreshProgramlist(){
-        Log.e("Program",dataSnap.child("UserNames").child(username).getValue().toString());
-
-        //Coach coach = new Coach("pp","{{StudyPlace}=באר שבע, {Professionalization}=,שריפת שומנים,אימוני כוח בחדר כושר,אימוני כוח בסטרייט,אימונים בבית,שיפור מרחק בריצות,שיפור מהירות בריצות,, {Age}=26, {CoachTime}=שנתיים, {Gender}=Male, {Description}=אין מה לתאר}");
         help =dataSnap.child("UserNames").child(username).getValue().toString();
-        sub = help.substring((help.indexOf(","+username+","))+2+username.length(),help.length());
-        Log.e("ProgramFull",sub);
-
-
+        sub = help.substring((help.indexOf(","+username+","))+2+username.length());
         int index = sub.indexOf(",");
-        Log.e("Index",index+"");
-        Log.e("sub", sub);
-
 
         while (index >= 0) {
 
-            Log.e("Name", sub.substring(0, index));
             coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)));
             coachesList.add(coaches[i]);
             i++;
             sub = sub.substring(index + 1);
-            Log.e("sub", sub);
             index = sub.indexOf(",");
-            Log.e("Index", index + "");
-
-
 
         }
-        //coachesList.add(coach);
-
 
         CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
 
         listView.setAdapter(adapter);
     }
+
+    /**
+     * Refreshes all users that have contact with them.
+     */
     public void CoachRefreshProgramlist(){
 
-        Log.e("Program",dataSnap.child("CoachNames").child(username).getValue().toString());
 
-        //Coach coach = new Coach("pp","{{StudyPlace}=באר שבע, {Professionalization}=,שריפת שומנים,אימוני כוח בחדר כושר,אימוני כוח בסטרייט,אימונים בבית,שיפור מרחק בריצות,שיפור מהירות בריצות,, {Age}=26, {CoachTime}=שנתיים, {Gender}=Male, {Description}=אין מה לתאר}");
         help =dataSnap.child("CoachNames").child(username).getValue().toString();
         sub = help.substring((help.indexOf(","+username+","))+2+username.length(),help.length());
-        Log.e("ProgramFull",sub);
 
 
         int index = sub.indexOf(",");
-        Log.e("Index",index+"");
-        Log.e("sub", sub);
         while (index >= 0) {
-
-            Log.e("Name", sub.substring(0, index));
             users[i] = new User(sub.substring(0, index),dataSnap.child("ProfileUser").child(sub.substring(0, index)));
-            Log.e("USER!","Name:"+sub.substring(0, index));
-            Log.e("USER!","User:"+dataSnap.child("ProfileUser").child(sub.substring(0, index)).getValue().toString());
-            Log.e("Name",users[i].getName());
-            Log.e("Height",users[i].getHeight());
-            Log.e("Gender",users[i].getGender());
-            Log.e("Weight",users[i].getWeight());
-            Log.e("Description",users[i].getDescription());
-            Log.e("Time",users[i].getTime());
-            Log.e("Item",users[i].getItem());
-            Log.e("Age",users[i].getAge());
-            Log.e("Goal",users[i].getGoal());
-            Log.e("Details",users[i].getDetails().toString());
-
             usersList.add(users[i]);
             i++;
             sub = sub.substring(index + 1);
-            Log.e("sub", sub);
             index = sub.indexOf(",");
-            Log.e("Index", index + "");
-
-
-
         }
-        //coachesList.add(coach);
-
-
         UserListAdapter adapter = new UserListAdapter(getActivity(), R.layout.customlayoutuserprofile, usersList);
-
         listView.setAdapter(adapter);
     }
 }

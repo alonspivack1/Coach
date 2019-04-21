@@ -1,30 +1,21 @@
 package coach.coach;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -32,43 +23,187 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
-
-import static java.lang.Thread.sleep;
 
 
+/**
+ * Fragment just for Users - Fragment to search a Coach.
+ */
 public class FragmentSearch extends Fragment implements View.OnClickListener {
+    /**
+     * The Database reference.
+     */
     DatabaseReference databaseReference;
-    String CoachProfiles = "",HelpString = "";
-    TextView fragtv;
-    Boolean FirstOnClick = true,AcceptDialog=true;
+    /**
+     * The Coach profiles.
+     */
+    String CoachProfiles = "", /**
+     * The Help string.
+     */
+    HelpString = "";
+    /**
+     * The First on click.
+     */
+    Boolean FirstOnClick = true, /**
+     * The Accept dialog.
+     */
+    AcceptDialog=true;
+    /**
+     * The List view.
+     */
     ListView listView;
+    /**
+     * The Data snap.
+     */
     DataSnapshot dataSnap;
-    Coach coachedittext;
+    /**
+     * The Coaches list 2.
+     */
     ArrayList<Coach> coachesList2;
+    /**
+     * The Coaches.
+     */
     Coach[] coaches;
+    /**
+     * The .
+     */
     int i = 0;
+    /**
+     * The Ii.
+     */
     int ii = 1;
+    /**
+     * The Time.
+     */
     String time="";
+    /**
+     * The Adb.
+     */
     AlertDialog.Builder adb;
+    /**
+     * The Positionadb.
+     */
     int positionadb=0;
-    String username,type,UserCoachCheack;
-    DatabaseReference reference,reference2,reference3,reference4;
-    Button SearchInListView,ResetSearchInListView;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Type.
+     */
+    type, /**
+     * The User coach cheack.
+     */
+    UserCoachCheack;
+    /**
+     * The Reference.
+     */
+    DatabaseReference reference, /**
+     * The Reference 2.
+     */
+    reference2, /**
+     * The Reference 3.
+     */
+    reference3, /**
+     * The Reference 4.
+     */
+    reference4, /**
+     * The Reference notification.
+     */
+    referenceNotification;
+    /**
+     * The Search in list view.
+     */
+    Button SearchInListView, /**
+     * The Reset search in list view.
+     */
+    ResetSearchInListView;
+    /**
+     * The Et search in list view.
+     */
     EditText etSearchInListView;
+    /**
+     * The String coach search.
+     */
     String stringCoachSearch;
+    /**
+     * The Takecoach.
+     */
     boolean takecoach=false;
+    /**
+     * The Adapter.
+     */
     CoachListAdapter adapter;
+    /**
+     * The Coaches list.
+     */
     ArrayList<Coach> coachesList;
+    /**
+     * The Coachhelp.
+     */
     Coach coachhelp;
-    CheckBox cbsearchburnfat,cbsearchdistance,cbsearchgym,cbsearchhome,cbsearchspeed,cbsearchstreet;
-    boolean burnfat=false,distance=false,gym=false,home=false,speed=false,street=false;
-    String Burnfat="שריפת שומנים",Distance="שיפור מרחק בריצות",Gym="אימוני כוח בחדר כושר",Home="אימונים בבית",Speed="שיפור מהירות בריצות",Street="אימוני כוח בסטרייט";
+    /**
+     * The Cbsearchburnfat.
+     */
+    CheckBox cbsearchburnfat, /**
+     * The Cbsearchdistance.
+     */
+    cbsearchdistance, /**
+     * The Cbsearchgym.
+     */
+    cbsearchgym, /**
+     * The Cbsearchhome.
+     */
+    cbsearchhome, /**
+     * The Cbsearchspeed.
+     */
+    cbsearchspeed, /**
+     * The Cbsearchstreet.
+     */
+    cbsearchstreet;
+    /**
+     * The Burnfat.
+     */
+    boolean burnfat=false, /**
+     * The Distance.
+     */
+    distance=false, /**
+     * The Gym.
+     */
+    gym=false, /**
+     * The Home.
+     */
+    home=false, /**
+     * The Speed.
+     */
+    speed=false, /**
+     * The Street.
+     */
+    street=false;
+    /**
+     * The Burnfat.
+     */
+    String Burnfat="שריפת שומנים", /**
+     * The Distance.
+     */
+    Distance="שיפור מרחק בריצות", /**
+     * The Gym.
+     */
+    Gym="אימוני כוח בחדר כושר", /**
+     * The Home.
+     */
+    Home="אימונים בבית", /**
+     * The Speed.
+     */
+    Speed="שיפור מהירות בריצות", /**
+     * The Street.
+     */
+    Street="אימוני כוח בסטרייט";
 
+    /**
+     * The C bcoachcheack.
+     */
     boolean CBcoachcheack=true;
 
 
@@ -76,20 +211,26 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
-
+        referenceNotification = FirebaseDatabase.getInstance().getReference().child("Notification");
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("coachchild",dataSnapshot.child("CoachNames").getChildrenCount() + "");
                 dataSnap = dataSnapshot;
                 if (dataSnapshot.hasChild("CoachNames")) {
-                    coaches=new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+                    try {
+                        Log.e("coachchild",coaches.length+"");
+
+                    }
+                    catch (Exception e)
+                    {
+                        coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+
+                    }
                     CoachProfiles = dataSnapshot.child("CoachNames").getValue().toString();
                 }
 
-                //fragtv.setText(CoachProfiles+"");
-                // i++;
+
 
 
             }
@@ -124,9 +265,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 positionadb=position;
-                Log.e("age: ", coaches[position].getAge()+"         "+dataSnap.child("CoachNames").child(coaches[position].getName()).getValue().toString());
                 Dialog();
-                Log.e("username",username);
             }
         });
 
@@ -152,19 +291,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
 
     private void RefreshCoach() {
-        Log.e("1","0");
         if (FirstOnClick){
             HelpString=CoachProfiles;
-            Log.e("HelpString","HelpString="+HelpString);
-            Log.e("CoachProfiles","CoachProfiles="+CoachProfiles);
-            Log.e("CoachProfiles2","CoachProfiles2="+dataSnap.child("CoachNames").getValue().toString());
-            Log.e("1","1");
-            Log.e("1","2");
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
                 FirstOnClick=false;
-                //HelpString=CoachProfiles;
-                Log.e("FULL",HelpString);
                 coachhelp = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))));
                 if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                 {
@@ -172,7 +303,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                     {
                         if (burnfat)
                         {
-                            Log.e("CBCBCOACH","burnfat"+burnfat);
 
                             if (coachhelp.getProfessionalization().indexOf(Burnfat)==-1)
                             {
@@ -181,7 +311,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (distance)
                         {
-                            Log.e("CBCBCOACH","distance"+distance);
                             if (coachhelp.getProfessionalization().indexOf(Distance)==-1)
                             {
                                 CBcoachcheack=false;
@@ -189,7 +318,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (gym)
                         {
-                            Log.e("CBCBCOACH","gym"+gym);
                             if (coachhelp.getProfessionalization().indexOf(Gym)==-1)
                             {
                                 CBcoachcheack=false;
@@ -197,7 +325,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (home)
                         {
-                            Log.e("CBCBCOACH","home"+home);
                             if (coachhelp.getProfessionalization().indexOf(Home)==-1)
                             {
                                 CBcoachcheack=false;
@@ -205,7 +332,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (speed)
                         {
-                            Log.e("CBCBCOACH","speed"+speed);
                             if (coachhelp.getProfessionalization().indexOf(Speed)==-1)
                             {
                                 CBcoachcheack=false;
@@ -213,7 +339,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (street)
                         {
-                            Log.e("CBCBCOACH","street"+street);
                             if (coachhelp.getProfessionalization().indexOf(Street)==-1)
                             {
                                 CBcoachcheack=false;
@@ -272,9 +397,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                         }
                         if (CBcoachcheack) {
                             coaches[ii] = coachhelp;
-                            Log.e("Answer", HelpString.substring(1, HelpString.indexOf("=")));
                             ii++;
-                            Log.e("Dealits", dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))).getValue().toString());
                         }
                         else {
                             CBcoachcheack=true;
@@ -283,7 +406,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 }
 
             }
-                //  coaches[0] = new Coach("coach","1","1","1","1","1");
 
 
             else
@@ -294,16 +416,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         while (HelpString.indexOf(", ")!=-1)
         {
 
-            Log.e("1","3");
-            if (((HelpString.indexOf(", ")!=-1)&&(ii<coaches.length)))//i<coaches.length&&
+            if (((HelpString.indexOf(", ")!=-1)&&(ii<coaches.length)))
             {
-                Log.e("1","4");
                 HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
-                Log.e("FULL",HelpString);
-                Log.e("1",UserCoachCheack);
                 if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                 {
-                    Log.e("1","5");
                     coachhelp = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
                     if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                     {
@@ -405,9 +522,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                             }
                             if (CBcoachcheack) {
                                 coaches[ii] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-                                Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
                                 ii++;
-                                Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
                             }
                             else {
                                 CBcoachcheack=true;
@@ -422,7 +537,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             }
         }
         if (HelpString.indexOf(", ")==-1){
-            Log.e("Array","Start");
             coachesList2 = new ArrayList<>();
             if (takecoach)
             {
@@ -430,8 +544,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 for (int j=1; j<ii; j++)
                 {
                     coachesList2.add(coaches[j]);
-                    Log.e("NAME",coaches[j].getName());
-                    Log.e("NUMBER",String.valueOf(j));
+
 
                 }
             }
@@ -439,11 +552,8 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             {
                 for (int j=1; j<ii; j++)
                 {
-                    Log.e("ABC!J",j+"");
-                    Log.e("ABC!ii",ii+"");
 
                     coachesList2.add(coaches[j]);
-                    Log.e("NAME",coaches[j].getName());
 
                 }
             }
@@ -451,16 +561,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
             adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList2);
             listView.setAdapter(adapter);
-            Log.e("NUMBERS",""+ii);
-            if (coaches[0]==null)
-            {
-                Log.e("NUMBERS","NULL!");
-            }
-            else
-            {
-                Log.e("NUMBERS",coaches[0].getName());
 
-            }
 
 
             return;
@@ -469,25 +570,15 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
     private void RefreshCoaches() {
 
-        Log.e("1","0");
         if (FirstOnClick){
             HelpString=CoachProfiles;
-            Log.e("HelpString","HelpString="+HelpString);
-            Log.e("CoachProfiles","CoachProfiles="+CoachProfiles);
-            Log.e("CoachProfiles2","CoachProfiles2="+dataSnap.child("CoachNames").getValue().toString());
-            Log.e("1","1");
-            Log.e("1","2");
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
-                FirstOnClick=false;
-                //HelpString=CoachProfiles;
-                Log.e("FULL",HelpString);
-                coaches[i] = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))));
-                //  coaches[0] = new Coach("coach","1","1","1","1","1");
-                Log.e("Answer",HelpString.substring(1,HelpString.indexOf("=")));
+                FirstOnClick = false;
+                coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))));
                 i++;
 
-                Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());}
+            }
             else
             {
                 FirstOnClick=false;
@@ -496,24 +587,16 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         while (HelpString.indexOf(", ")!=-1)
         {
 
-                Log.e("1","3");
-                if (((HelpString.indexOf(", ")!=-1)&&(i<coaches.length)))//i<coaches.length&&
+                if (((HelpString.indexOf(", ")!=-1)&&(i<coaches.length)))
                 {
-                    Log.e("1","4");
                     HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
-                    Log.e("FULL",HelpString);
-                    Log.e("1",UserCoachCheack);
                     if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                     {
-                        Log.e("1","5");
                         coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-                        // coaches[1] = new Coach("pp","1","1","1","1","1");
-                        Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
 
                         i++;
 
 
-                        Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
                     }
 
 
@@ -521,7 +604,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 }
             }
         if (HelpString.indexOf(", ")==-1){
-            Log.e("Array","Start");
             coachesList = new ArrayList<>();
             for (int j=0; j<i; j++)
             {
@@ -535,6 +617,9 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     }
 
 
+    /**
+     * Dialog Check if the user is sure he wants to contact the coach.
+     */
     public void Dialog()
     {if (AcceptDialog){
         adb = new  AlertDialog.Builder(getActivity());
@@ -565,50 +650,48 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 {
                     time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
                 }
-                Log.e("time",time);
-
 
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("sender",username);
                 hashMap.put("receiver",coaches[positionadb].getName());
                 hashMap.put("message","נשלחה בקשת קשר");
                 hashMap.put("time",time);
-
-                //.child(username+"&"+(coaches[positionadb].getName())
-                reference3.child(username+"&"+(coaches[positionadb].getName())).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                final String CoachName=coaches[positionadb].getName();
+                reference3.child(username+"&"+(CoachName)).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()) {
-                            reference3.child(username+"&"+(coaches[positionadb].getName())).child("num").child("num").setValue(2);
-                            reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            String htmlnewprogram="<ul><li><blockquote><b><i><u><del>&#1492;&#1502;&#1488;&#1502;&#1503; &#1506;&#1491;&#1497;&#1497;&#1503; &#1500;&#1488; &#1513;&#1500;&#1495; </del></u></i></b><b><i><u><del><u>&#1514;&#1493;&#1499;&#1504;&#1497;&#1514;</u></del></u></i></b></blockquote></li></ul>";
-                            hashMap.put("Data",htmlnewprogram);
-                            //.child(username+"&"+(coaches[positionadb].getName())
-                            reference4.child(username+"&"+(coaches[positionadb].getName())).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isComplete()) {
+                                public void run() {
+                                    referenceNotification.child(CoachName).child("ProgramAlarm").setValue(username);
+                                    reference3.child(username+"&"+CoachName).child("num").child("num").setValue(2);
+                                    reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
+                                    HashMap<String, String> hashMap = new HashMap<>();
+                                    String htmlnewprogram="<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">​</span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><i><b><u><span style=\"text-decoration:line-through;\">המאמן שלך עדין לא עדכן את התוכנית אימון שלך</span></u></b></i></span></u></i></b></p>\n</body></html>";
+                                    hashMap.put("Data",htmlnewprogram);
+                                    reference4.child(username+"&"+CoachName).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isComplete()) {
 
-                                        getActivity().finish();
-                                        getActivity().overridePendingTransition(0, 0);
-                                        startActivity(getActivity().getIntent());
-                                        getActivity().overridePendingTransition(0, 0);
+                                                getActivity().finish();
+                                                getActivity().overridePendingTransition(0, 0);
+                                                startActivity(getActivity().getIntent());
+                                                getActivity().overridePendingTransition(0, 0);
 
-                                        Log.e("SendFriend","SendFriend");
-                                    }
+                                                Log.e("SendFriend","SendFriend");
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            }, 100);
+
                         }
                     }
                 });
 
-                   /* getActivity().finish();
-                    getActivity().overridePendingTransition(0, 0);
-                    startActivity(getActivity().getIntent());
-                    getActivity().overridePendingTransition(0, 0);
-
-                    Log.e("SendFriend","SendFriend");*/
 
             }
         });
@@ -678,74 +761,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 listView.setAdapter(adapter);
                 break;
         }
-        /*switch (v.getId()) {
-            case R.id.button:
-                Log.e("1","0");
-                if (FirstOnClick){
-                HelpString=CoachProfiles;
-                    Log.e("1","1");}
-                while (HelpString.indexOf(", ")!=-1)
-                {
-                if (FirstOnClick)
-                {
-                    Log.e("1","2");
-                    UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
-                    if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
-                    FirstOnClick=false;
-                    //HelpString=CoachProfiles;
-                    Log.e("FULL",HelpString);
-                    coaches[i] = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());
-                  //  coaches[0] = new Coach("coach","1","1","1","1","1");
-                    Log.e("Answer",HelpString.substring(1,HelpString.indexOf("=")));
-                    i++;
-
-                    Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))).getValue().toString());}
-                    else
-                        {
-                            FirstOnClick=false;
-                        }
-                }
-                else
-                {
-                    Log.e("1","3");
-                if (((HelpString.indexOf(", ")!=-1)))//i<coaches.length&&
-                {
-                    Log.e("1","4");
-                    HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
-                    Log.e("FULL",HelpString);
-                    Log.e("1",UserCoachCheack);
-                    if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
-                    {
-                        Log.e("1","5");
-                        coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
-                        // coaches[1] = new Coach("pp","1","1","1","1","1");
-                        Log.e("Answer",HelpString.substring(0,HelpString.indexOf("=")));
-
-                        i++;
-
-
-                        Log.e("Dealits",dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))).getValue().toString());
-                    }
-
-
-
-                }
-                }}
-                if (HelpString.indexOf(", ")==-1){
-                Log.e("Array","Start");
-                ArrayList<Coach> coachesList = new ArrayList<>();
-                for (int j=0; j<i; j++)
-                {
-                    coachesList.add(coaches[j]);
-                }
-
-                CoachListAdapter adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
-                listView.setAdapter(adapter);
-                return;
-            }
-                break;
-
-        }*/
     }
 
 }

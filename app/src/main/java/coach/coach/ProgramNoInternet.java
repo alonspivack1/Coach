@@ -4,24 +4,29 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import com.chinalwb.are.render.AreTextView;
 
+/**
+ * Activity just for Users - see the training programs that the coach have create for you - in a state without internet.
+ */
 public class ProgramNoInternet extends AppCompatActivity {
 
+    /**
+     * The Room.
+     */
     String room="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_program_no_internet);
+        setTitle("תוכנית אימון - ללא אינטרנט");
         AreTextView arenointernet = (AreTextView)findViewById(R.id.arenointernet);
         Intent intent = getIntent();
         room = intent.getStringExtra("room");
-        Log.e("room",room);
 
         SharedPreferences Programs = getSharedPreferences("Programs", MODE_PRIVATE);
-        final String data = Programs.getString(room,"<ul><li><blockquote><b><i><u><del>&#1492;&#1502;&#1488;&#1502;&#1503; &#1506;&#1491;&#1497;&#1497;&#1503; &#1500;&#1488; &#1513;&#1500;&#1495; </del></u></i></b><b><i><u><del><u>&#1514;&#1493;&#1499;&#1504;&#1497;&#1514;</u></del></u></i></b></blockquote></li></ul>");
+        final String data = Programs.getString(room,"<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">​</span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><i><b><u><span style=\"text-decoration:line-through;\">המאמן שלך עדין לא עדכן את התוכנית אימון שלך</span></u></b></i></span></u></i></b></p>\n</body></html>");
         arenointernet.fromHtml(data);
 
 

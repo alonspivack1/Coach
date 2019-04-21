@@ -3,6 +3,9 @@ package coach.coach;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Credits.
+ */
 public class Credits extends AppCompatActivity {
 
     @Override

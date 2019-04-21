@@ -1,72 +1,127 @@
 package coach.coach;
 
-import android.app.Notification;
-import android.content.Context;
+
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/*
-*       Calendar cal = Calendar.getInstance();
-        int minute = cal.get(Calendar.MINUTE);
-        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-        String time = String.valueOf(hourofday)+":"+String.valueOf(minute);
-        Log.e("time",time);
-*/
+/**
+ * Room of the chat.
+ */
 public class Chat extends AppCompatActivity {
+    /**
+     * The Intent.
+     */
     Intent intent;
-    String receiver,sender,room,type;
+    /**
+     * The Receiver.
+     */
+    String receiver,
+    /**
+     * The Sender.
+     */
+    sender,
+    /**
+     * The Room.
+     */
+    room,
+    /**
+     * The Type.
+     */
+    type;
+    /**
+     * The Chatlvmessages.
+     */
     ListView chatlvmessages;
+    /**
+     * The Adapter.
+     */
     SimpleAdapter adapter;
+    /**
+     * The Item.
+     */
     HashMap<String,String> item;
+    /**
+     * The List.
+     */
     ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
-    DatabaseReference databaseReference,ChatReference,databasePhone;
+    /**
+     * The Database reference.
+     */
+    DatabaseReference databaseReference,
+    /**
+     * The Chat reference.
+     */
+    ChatReference,
+    /**
+     * The Database phone.
+     */
+    databasePhone;
+    /**
+     * The Data snap.
+     */
     DataSnapshot dataSnap;
+    /**
+     * The First refresh.
+     */
     Boolean FirstRefresh=true;
+    /**
+     * The Et message text.
+     */
     EditText etMessageText;
+    /**
+     * The Message string.
+     */
     String MessageString;
+    /**
+     * The Time.
+     */
     String time="";
+    /**
+     * The Message num.
+     */
     int MessageNum;
+    /**
+     * The Notification chat.
+     */
     String NotificationChat="";
+    /**
+     * The Chatbuttonsend.
+     */
     ImageButton chatbuttonsend;
+    /**
+     * The Flagint.
+     */
     int FLAGINT=1;
+    /**
+     * The Update notifiction.
+     */
     Boolean UpdateNotifiction;
+    /**
+     * The Phone.
+     */
     String Phone="";
+    /**
+     * The Reference.
+     */
     DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notification");
 
 
@@ -91,8 +146,7 @@ public class Chat extends AppCompatActivity {
         chatlvmessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatlvmessages.setStackFromBottom(true);
 
-       /* TextView textView = (TextView)findViewById(R.id.receivemessage);
-        textView.setHint("asdfasdfasdfasdfsd");*/
+
        if (type.equals("User"))
        {
            databasePhone = FirebaseDatabase.getInstance().getReference().child("CoachNames");
@@ -106,9 +160,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.e("PHONEE",dataSnapshot.toString());
                 Phone = dataSnapshot.child(receiver).getValue().toString();
-                Log.e("PHONEE",Phone);
                 Phone=Phone.substring(0,Phone.indexOf(","));
 
             }
@@ -129,7 +181,6 @@ public class Chat extends AppCompatActivity {
                 if (dataSnapshot.hasChild("num")) { //TODO שלא יקרוס אחרי מחיקת קשר
                     MessageString = dataSnapshot.child("num").getValue().toString();
                     MessageString = MessageString.substring(5, MessageString.length() - 1);
-                    Log.e("MessageString", MessageString);
                     MessageNum = Integer.parseInt(MessageString);
 
                 if (FirstRefresh){
@@ -142,35 +193,6 @@ public class Chat extends AppCompatActivity {
                 else{ //TODO כדי שאם הקשר יגמר ואז יחזור האפליקציה לא תקרוס בגלל שהצאט התחיל עם הבוליאן לא מאותחל לtrue
                     FirstRefresh=true;
                 }
-                    /*if (FLAGINT%2!=0){
-                        try
-                        {
-                            Thread.sleep(400);
-                            RefreshMessages();
-                            FLAGINT++;
-                        }
-                        catch(InterruptedException ex)
-                        {
-                            Thread.currentThread().interrupt();
-                        }}**
-
-
-                   /* if (FirstRefresh){
-                        MessageNumNow=MessageNum;
-                    }*/
-                    /*if (FirstRefresh)
-                    {
-                        /*String j =dataSnapshot.child(room).child("25").getValue().toString();
-                        Log.e("datasnap",j);
-                        Log.e("datasnapm=",j.substring(9,j.length()-21-receiver.length()-sender.length()));
-                        Log.e("datasnapr=",j.substring(j.length()-10-receiver.length()-sender.length(),j.lastIndexOf(",")));
-                        Log.e("datasnaps=",j.substring(j.lastIndexOf(",")+9,j.length()-1));
-                        MessageString = dataSnapshot.child(room).child("num").getValue().toString();
-                    MessageString = MessageString.substring(5,MessageString.length()-1);
-                    Log.e("MessageString",MessageString);
-                    MessageNum = Integer.parseInt(MessageString);
-                        RefreshMessages();
-                    }*/
             }
 
             @Override
@@ -182,41 +204,28 @@ public class Chat extends AppCompatActivity {
         Reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.v("NotificationChat","1");
                 if (dataSnapshot.hasChild("Chat"))
                 {
-                    Log.v("NotificationChat","2");
-
                     NotificationChat=dataSnapshot.child("Chat").getValue().toString();
                     if ((NotificationChat).indexOf(sender+",")!=-1)
                     {
-                        Log.v("NotificationChat","3");
-
                         if (((NotificationChat).indexOf(","+sender+",")!=-1)||((NotificationChat).indexOf(sender+",")==0))
                         {
-                            Log.v("NotificationChat","4");
-
                             UpdateNotifiction=false;
 
                         }
                         else{
-                            Log.v("NotificationChat","5");
-
                             UpdateNotifiction=true;
 
                         }
                     }
                     else
                     {
-                        Log.v("NotificationChat","6");
-
                         UpdateNotifiction=true;
 
                     }
                 }
                 else {
-                    Log.v("NotificationChat","7");
-
                     UpdateNotifiction=true;
                 }
 
@@ -243,6 +252,9 @@ public class Chat extends AppCompatActivity {
 
     }
 
+    /**
+     * Refreshing messages since entered to activity.
+     */
     public void Refresh()
     {
         FLAGINT++;
@@ -256,82 +268,26 @@ public class Chat extends AppCompatActivity {
 
             if (mesasgesender.equals(sender))
             {
-                Log.e("Time","3");
                 item.put("sender",messagedata);
-               // item.put("receiver","");
-              //  item.put("receivertime","");
+
                 item.put("sendertime"," "+mesasgetime+" ");
                 list.add(item);
             }
             else {
-                Log.e("Time","4");
                 item.put("receiver",messagedata);
-              //  item.put("sender","");
                 item.put("receivertime"," "+mesasgetime+" ");
 
-               // item.put("sendertime","");
 
-                list.add(item);
-            }
-            /*item = new HashMap<String,String>();
-                String messagedata =dataSnap.child(String.valueOf(i+1)).child("message").getValue().toString();
-                String mesasgesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
-                if (mesasgesender.equals(sender))
-                {
-                    Log.e("Time","3");
-                    item.put("sender",messagedata);
-                    item.put("receiver","");
-                    list.add(item);
-                }
-                else {
-                    Log.e("Time","4");
-                    item.put("receiver",messagedata);
-                    item.put("sender","");
-                    list.add(item);
-                }*/
-        /*    if (Emulator){
-        Log.e("Refresh","num="+MessageNum);
-            item = new HashMap<String,String>();
-            String messagedata =dataSnap.child(String.valueOf(MessageNum)).getValue().toString();
-            if ((messagedata.substring(messagedata.lastIndexOf(",")+9,messagedata.length()-1)).equals(sender))
-            {
-                Log.e("Time","3");
-                item.put("sender",messagedata.substring(9,messagedata.length()-21-receiver.length()-sender.length()));
-                item.put("receiver","");
-                list.add(item);
-            }
-            else {
-                Log.e("Time","4");
-                item.put("receiver",messagedata.substring(9,messagedata.length()-21-receiver.length()-sender.length()));
-                item.put("sender","");
                 list.add(item);
             }
 
         }
-        else
-            {
-                item = new HashMap<String,String>();
-                String messagedata =dataSnap.child(String.valueOf(MessageNum)).getValue().toString();
-                if ((messagedata.substring(10,messagedata.indexOf(","))).equals(receiver))
-                {
-                    Log.e("Time","3");
-                    item.put("receiver","");
-                    item.put("sender",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
-                    list.add(item);
-
-                }
-                else {
-                    Log.e("Time","4");
-                    item.put("sender","");
-                    item.put("receiver",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
-                    list.add(item);
-                }
-            }*/
-        }
-        //chatlvmessages.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Refresh all the history of the chat.
+     */
     public void RefreshMessages()
     {
         if (FirstRefresh){
@@ -344,7 +300,6 @@ public class Chat extends AppCompatActivity {
                 String mesasgetime =dataSnap.child(String.valueOf(i+1)).child("time").getValue().toString();
                 if (mesasgesender.equals(sender))
                 {
-                    Log.e("Time","3");
                     item.put("sender",messagedata);
                     item.put("receiver","");
                     item.put("receivertime","");
@@ -352,7 +307,6 @@ public class Chat extends AppCompatActivity {
                     list.add(item);
                 }
                 else {
-                    Log.e("Time","4");
                     item.put("receiver",messagedata);
                     item.put("sender","");
                     item.put("receivertime"," "+mesasgetime+" ");
@@ -363,61 +317,6 @@ public class Chat extends AppCompatActivity {
             }
             chatlvmessages.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            /*if (Emulator){
-            for (int i=0; i<MessageNum-1; i++)
-            {
-                item = new HashMap<String,String>();
-                String messagedata =dataSnap.child(String.valueOf(i+1)).getValue().toString();
-                Log.e("ItemInfoMessagedata1",messagedata);
-                Log.e("ItemInfoSender1",messagedata.substring(messagedata.lastIndexOf(",")+9,messagedata.length()-1));
-                Log.e("ItemInfoMessage1",messagedata.substring(9,messagedata.length()-21-receiver.length()-sender.length()));
-                if ((messagedata.substring(messagedata.lastIndexOf(",")+9,messagedata.length()-1)).equals(sender))
-                {
-                    Log.e("Time","3");
-                    item.put("sender",messagedata.substring(9,messagedata.length()-21-receiver.length()-sender.length()));
-                    item.put("receiver","");
-                    list.add(item);
-                }
-                else {
-                    Log.e("Time","4");
-                    item.put("receiver",messagedata.substring(9,messagedata.length()-21-receiver.length()-sender.length()));
-                    item.put("sender","");
-                    list.add(item);
-                }
-
-            }
-            chatlvmessages.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-            else{
-                for (int i=0; i<MessageNum-1; i++)
-                {
-                    item = new HashMap<String,String>();
-
-                    String messagedata =dataSnap.child(String.valueOf(i+1)).getValue().toString();
-                    Log.e("ItemInfoMessagedata2",messagedata);
-                    Log.e("ItemInfoReciver2",messagedata.substring(10,messagedata.indexOf(",")));
-                    Log.e("ItemInfoMessage2",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
-
-                    if ((messagedata.substring(10,messagedata.indexOf(","))).equals(receiver))
-                    {
-                        Log.e("Time","3");
-                        item.put("receiver","");
-                        item.put("sender",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
-                        list.add(item);
-
-                    }
-                    else {
-                        Log.e("Time","4");
-                        item.put("sender","");
-                        item.put("receiver",messagedata.substring(receiver.length()+sender.length()+29,messagedata.length()-1));
-                        list.add(item);
-                    }
-
-                }
-                chatlvmessages.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-        }*/
 
         }
 
@@ -435,7 +334,6 @@ public class Chat extends AppCompatActivity {
         {
             time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
         }
-        Log.e("time",time);
 
         HashMap<String, String> newmessage = new HashMap<>();
         newmessage.put("sender",sender);
@@ -451,23 +349,7 @@ public class Chat extends AppCompatActivity {
         {
             Reference.child("Chat").setValue(NotificationChat+sender+",");
         }
-        /*ChatReference.child(room).child(""+MessageNum).setValue(newmessage).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isComplete()){
-                    MessageNum++;
-                    ChatReference.child(room).child("num").child("num").setValue(MessageNum);
-                    chatlvmessages.setSelection(MessageNum);
-                    item = new HashMap<String,String>();
-                    item.put( "sender", message);
-                    item.put( "receiver", "");
-                    list.add( item) ;
-                    adapter.notifyDataSetChanged();
 
-
-
-                }
-            }});*/
         etMessageText.setEnabled(false);
         chatbuttonsend.setEnabled(false);
         final Handler handler = new Handler();
@@ -481,6 +363,11 @@ public class Chat extends AppCompatActivity {
     }
 
 
+    /**
+     * Send message.
+     *
+     * @param view the view
+     */
     public void SendMessage(View view) {
         if (!etMessageText.getText().toString().equals("")) {
             Message(sender, receiver, etMessageText.getText().toString());

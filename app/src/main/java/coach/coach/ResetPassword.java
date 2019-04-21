@@ -9,21 +9,29 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Reset password - send the password to the email if Coach or User forgot his password.
+ */
 public class ResetPassword extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * The Edit text forgot email.
+     */
     EditText editTextForgotEmail;
+    /**
+     * The Email.
+     */
     String email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-        setTitle("שחזור סיסמה");
+        setTitle("איפוס סיסמה");
 
         editTextForgotEmail=(EditText)findViewById(R.id.editTextForgotEmail);
         findViewById(R.id.textViewBackToLogIn).setOnClickListener(this);
@@ -58,6 +66,12 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+    /**
+     * Reset user password.
+     *
+     * @param email the email of the User/Coach
+     */
     public void resetUserPassword(String email){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final ProgressDialog progressDialog = new ProgressDialog(ResetPassword.this);
@@ -81,7 +95,6 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

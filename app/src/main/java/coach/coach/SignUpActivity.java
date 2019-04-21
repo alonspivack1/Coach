@@ -4,23 +4,15 @@ package coach.coach;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.gsm.SmsManager;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,9 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -46,30 +36,116 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+/**
+ * The Sign up activity.
+ */
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * The Progress bar.
+     */
     ProgressBar progressBar;
-    EditText editTextEmail, editTextPassword,editTextUser,etPhoneNo,etCode;
+    /**
+     * The Edit text email.
+     */
+    EditText editTextEmail, /**
+     * The Edit text password.
+     */
+    editTextPassword, /**
+     * The Edit text user.
+     */
+    editTextUser, /**
+     * The Et phone no.
+     */
+    etPhoneNo;
+    /**
+     * The Sm sbtn.
+     */
     Button SMSbtn;
-    DatabaseReference reference,reference2,reference3;
-    int numflag1,numflag2,numflag3,numflag4;
+    /**
+     * The Reference.
+     */
+    DatabaseReference reference, /**
+     * The Reference 2.
+     */
+    reference2, /**
+     * The Reference 3.
+     */
+    reference3;
+    /**
+     * The Numflag 1.
+     */
+    int numflag1, /**
+     * The Numflag 2.
+     */
+    numflag2, /**
+     * The Numflag 3.
+     */
+    numflag3, /**
+     * The Numflag 4.
+     */
+    numflag4;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference,databaseReference2;
-    String CoachAnswer="",UserAnswer="";
+    /**
+     * The Coach answer.
+     */
+    String CoachAnswer="", /**
+     * The User answer.
+     */
+    UserAnswer="";
+    /**
+     * The Rn.
+     */
     Random rn;
-    Intent LogInIntent,UserIntent,CoachIntent,intentCredits;
+    /**
+     * The Log in intent.
+     */
+    Intent LogInIntent, /**
+     * The User intent.
+     */
+    UserIntent, /**
+     * The Coach intent.
+     */
+    CoachIntent, /**
+     * The Intent credits.
+     */
+    intentCredits;
+    /**
+     * The Code int.
+     */
     int codeInt;
+    /**
+     * The Sms num.
+     */
     String smsNum;
+    /**
+     * The Code string.
+     */
     String codeString="";
+    /**
+     * The Spinner.
+     */
     Spinner spinner;
+    /**
+     * The Codeet.
+     */
     EditText codeet;
-    String username,password,email;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Password.
+     */
+    password, /**
+     * The Email.
+     */
+    email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,8 +215,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if (dataSnapshot.hasChild("UserNames")) {
                     Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("UserNames").getValue();
                 UserAnswer = objectMap.toString();}
-               // Log.e("Coach:",CoachAnswer);
-             //   Log.e("User:",UserAnswer);
+
 
             }
 
@@ -277,8 +352,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 else
                 {
-                  Log.e("Wrong","Worng code");
-                  //TODO לשנות לטוסט
+                    Toast.makeText(getBaseContext(),"הקוד לא נכון",Toast.LENGTH_LONG).show();
+
                 }
             }
 
@@ -288,6 +363,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         alertDialog.show();
     }
 
+    /**
+     * Start sign up.
+     */
     public void StartSignUp()
     {
 
@@ -312,20 +390,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
                     }
 
-                    //  reference2.child(username).setValue(smsNum);
-                    //  HashMap<String, String> hashMap2 = new HashMap<>();
-                    //    hashMap2.put(username,"");
-                    //reference2.setValue(hashMap2).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    /*reference2.child(username).setValue(smsNum).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        task.isComplete();
-                        startActivity(LogInIntent);
-                        finish();
 
-
-                    }
-                });*/
                     if (spinner.getSelectedItem().toString().equals("מתאמן"))
                     {
                         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
@@ -340,7 +405,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         hashMap.put("Description", "0");
                         hashMap.put("Image", "0");
 
-                        //   hashMap.put("username",username);
                         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -368,8 +432,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         HashMap<String, String> hashMap2 = new HashMap<>();
                         hashMap2.put("RatersNumber",""+0 );
                         hashMap2.put("Rating", ""+0);
-                        reference3.setValue(hashMap2);//TODO לבדוק אם צריך להוסיף oncompletelistener
-                        //   hashMap.put("username",username);
+                        reference3.setValue(hashMap2);
                         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -404,6 +467,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
 
+    /**
+     * Send code to the phone - to verify the phone
+     *
+     * @param view the view
+     */
     public void sendcode(View view) {
         smsNum = etPhoneNo.getText().toString();
         if (smsNum.length()>0)
@@ -416,8 +484,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     {
                             codeInt=rn.nextInt(90000)+10000;
                             codeString="" + codeInt;
-                            Log.e("smsNum",smsNum);
-                            Log.e("codeString",codeString);
                             sendSMS(smsNum, codeString);
                     }
                     else {
@@ -458,11 +524,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 {
                     Toast.makeText(this, "אמת את מספר הטלפון שלך",Toast.LENGTH_LONG).show();
                 }
-                //Log.e("keys",spinner.getSelectedItem().toString());
                 break;
 
             case R.id.textViewLogin:
-               // Log.e("keys",Answer);
                 startActivity(LogInIntent);
                 finish();
                 break;
@@ -474,16 +538,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         switch (requestCode) {
             case 1: {
 
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+
                 } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+
                     startActivity(LogInIntent);
                     finish();
                     Toast.makeText(SignUpActivity.this, "כדי להירשם אתה צריך לאשר גישה להודעות", Toast.LENGTH_LONG).show();
@@ -491,8 +552,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+
         }
     }
 

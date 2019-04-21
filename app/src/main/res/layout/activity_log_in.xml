@@ -123,7 +123,7 @@ tools:context=".LogInActivity">
 
             android:textSize="18dp"
             android:textColor="@color/colorText"
-            android:text="שחזור סיסמה"
+            android:text="איפוס סיסמה"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 

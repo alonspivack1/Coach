@@ -3,29 +3,24 @@ package coach.coach;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
-/**
- * Created by User on 3/14/2017.
- */
 
+/**
+ * make list of Coaches
+ */
 public class CoachListAdapter extends ArrayAdapter<Coach> {
 
     private static final String TAG = "CoachListAdapter";
@@ -38,21 +33,61 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
 
     private static class ViewHolder {
 
+        /**
+         * The Tvlistname.
+         */
         TextView tvlistname;
+        /**
+         * The Tvlistage.
+         */
         TextView tvlistage;
+        /**
+         * The Tvlisttime.
+         */
         TextView tvlisttime;
+        /**
+         * The Tvlistwhere.
+         */
         TextView tvlistwhere;
+        /**
+         * The Tvlistprofessionalization.
+         */
         TextView tvlistprofessionalization;
+        /**
+         * The Tvlistdescription.
+         */
         TextView tvlistdescription;
+        /**
+         * The Tvlistgender.
+         */
         TextView tvlistgender;
+        /**
+         * The Rblistrate.
+         */
         RatingBar rblistrate;
+        /**
+         * The Database reference.
+         */
         DatabaseReference databaseReference;
+        /**
+         * The Tvlistrate.
+         */
         TextView tvlistrate;
+        /**
+         * The Ivlistimage.
+         */
         ImageView ivlistimage;
 
     }
 
 
+    /**
+     * Instantiates a new Coach list adapter.
+     *
+     * @param context  the context
+     * @param resource the resource
+     * @param objects  the Coach Array
+     */
     public CoachListAdapter(Context context, int resource, ArrayList<Coach> objects) {
         super(context, resource, objects);
         mContext = context;
@@ -66,18 +101,10 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
 
 
         String name = getItem(position).getName();
-        String age = getItem(position).getAge();
-        String time = getItem(position).getTime();
-        String where = getItem(position).getWhere();
-        String professionalization = getItem(position).getProfessionalization();
-        String description = getItem(position).getDescription();
-        String gender = getItem(position).getGender();
         DataSnapshot details =getItem(position).getDetails();
-        Bitmap image = getItem(position).getImage();
         Coach coach = new Coach(name,details);
 
 
-        //Coach coach = new Coach(name,age,time,where,professionalization,description);
         final View result;
 
         final ViewHolder holder;
@@ -111,9 +138,7 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
 
         lastPosition = position;
 
-       /* holder.name.setText(person.getName());
-        holder.birthday.setText(person.getBirthday());
-        holder.sex.setText(person.getSex());*/
+
         holder.tvlistname.setText("שם: "+coach.getName());
         holder.tvlistage.setText("גיל: " + coach.getAge());
         holder.tvlisttime.setText("ותק באימון: "+coach.getTime());

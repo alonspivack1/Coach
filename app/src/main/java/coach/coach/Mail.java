@@ -2,19 +2,27 @@ package coach.coach;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Send mail to the App developer.
+ */
 public class Mail extends AppCompatActivity {
-     EditText mEditTextSubject;
-     EditText mEditTextMessage;
-     Button buttonSend;
+    /**
+     * The M edit text subject.
+     */
+    EditText mEditTextSubject;
+    /**
+     * The M edit text message.
+     */
+    EditText mEditTextMessage;
+    /**
+     * The Button send.
+     */
+    Button buttonSend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -207,7 +207,7 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:onClick="UserSend"
-                android:text="send" />
+                android:text="שלח" />
 
 
         </LinearLayout>

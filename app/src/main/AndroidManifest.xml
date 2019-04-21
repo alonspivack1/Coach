@@ -15,7 +15,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Alerts"></activity>
+        <activity android:name=".FragmentAlerts"></activity>
         <activity android:name=".ListProgramNoInternet" />
         <activity android:name=".ProgramNoInternet" />
         <activity android:name=".Settings" />
@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".TransferFragment" />
+        <activity android:name=".FragmentTransfer" />
         <activity android:name=".CoachProfileMaker" />
         <activity android:name=".UserProfileMaker" />
         <activity android:name=".MainActivity" />
@@ -45,7 +45,7 @@
 
 
         <service
-            android:name=".TimerService"
+            android:name=".BackgroundService"
             android:exported="false" />
     </application>
 

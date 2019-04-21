@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RatingBar;
-
 import com.chinalwb.are.render.AreTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,15 +15,47 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+/**
+ * Activity just for Users - View on the training program.
+ */
 public class ViewProgram extends AppCompatActivity {
+    /**
+     * The Intent.
+     */
     Intent intent;
-    String receiver,sender;
-    DatabaseReference databaseReference,databaseReference2;
+    /**
+     * The Receiver.
+     */
+    String receiver, /**
+     * The Sender.
+     */
+    sender;
+    /**
+     * The Database reference.
+     */
+    DatabaseReference databaseReference, /**
+     * The Database reference 2.
+     */
+    databaseReference2;
+    /**
+     * The Rb view program.
+     */
     RatingBar rbViewProgram;
-    DataSnapshot dataSnap;
+    /**
+     * The Rated in past.
+     */
     Boolean RatedInPast=false;
+    /**
+     * The Raters number.
+     */
     int RatersNumber=0;
+    /**
+     * The Rating.
+     */
     float Rating=0;
+    /**
+     * The Rate.
+     */
     float Rate=0;
 
     @Override
@@ -41,10 +72,7 @@ public class ViewProgram extends AppCompatActivity {
         databaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("DataSnapInsideString",dataSnapshot.toString());
-                Log.e("DataSnapInsideData",dataSnapshot.getValue().toString());
-                Log.e("Receiver",receiver);
-                Log.e("Sender",sender);
+
 
                 if (!RatedInPast)
                 {if (dataSnapshot.hasChild("RatersNames"))
@@ -75,7 +103,6 @@ public class ViewProgram extends AppCompatActivity {
                 if (!RatedInPast)
                 {
                     RatedInPast=true;
-                    Log.e("RatersNumber","Start");
                     databaseReference2.child("RatersNumber").setValue(RatersNumber+1);
 
                 }
@@ -86,25 +113,13 @@ public class ViewProgram extends AppCompatActivity {
 
             }
         });
-        /*Log.e("DataSnapInsideString",dataSnap.toString());
-        Log.e("DataSnapInsideData",dataSnap.getValue().toString());
-        Log.e("Receiver",receiver);
-        Log.e("Sender",sender);
-
-        if (dataSnap.hasChild("RatersNames"))
-        {
-            if (dataSnap.child("RatersNames").hasChild(receiver))
-            {
-                rbViewProgram.setNumStars(Integer.parseInt(dataSnap.child("RatersNames").child(receiver).getValue().toString()));
-            }
-        }*/
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProgramRoom").child(receiver+"&"+sender);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("Data")){
-                Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
+                Log.e("Text",dataSnapshot.child("Data").getValue().toString());
                 areTextView.fromHtml(dataSnapshot.child("Data").getValue().toString());
 
                     SharedPreferences.Editor editor = getSharedPreferences("Programs", MODE_PRIVATE).edit();

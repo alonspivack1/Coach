@@ -2,8 +2,6 @@ package coach.coach;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -11,15 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Switch;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -27,28 +21,90 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import static java.lang.Thread.sleep;
-
+/**
+ * Activity just for Coaches - Coach profile maker.
+ */
 public class CoachProfileMaker extends AppCompatActivity {
 
-    EditText etcoachage,etcoachwhere,etcoachtime,etcoachdescription;
-    CheckBox cbcoachburnfat,cbcoachgym,cbcoachstreet,cbcoachhome,cbcoachdistance,cbcoachspeed;
-    Intent intent,MainActivityIntent;
+    /**
+     * The Etcoachage.
+     */
+    EditText etcoachage, /**
+     * The Etcoachwhere.
+     */
+    etcoachwhere, /**
+     * The Etcoachtime.
+     */
+    etcoachtime, /**
+     * The Etcoachdescription.
+     */
+    etcoachdescription;
+    /**
+     * The Cbcoachburnfat.
+     */
+    CheckBox cbcoachburnfat, /**
+     * The Cbcoachgym.
+     */
+    cbcoachgym, /**
+     * The Cbcoachstreet.
+     */
+    cbcoachstreet, /**
+     * The Cbcoachhome.
+     */
+    cbcoachhome, /**
+     * The Cbcoachdistance.
+     */
+    cbcoachdistance, /**
+     * The Cbcoachspeed.
+     */
+    cbcoachspeed;
+    /**
+     * The Intent.
+     */
+    Intent intent, /**
+     * The Main activity intent.
+     */
+    MainActivityIntent;
+    /**
+     * The Reference.
+     */
     DatabaseReference reference;
-    String username,Professionalization=",",Gender;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Professionalization.
+     */
+    Professionalization=",", /**
+     * The Gender.
+     */
+    Gender;
+    /**
+     * The Data snap.
+     */
     DataSnapshot dataSnap;
+    /**
+     * The Switchcoachgender.
+     */
     Switch switchcoachgender;
     private DatabaseReference databaseReference;
+    /**
+     * The Ivcoachimage.
+     */
     ImageView ivcoachimage;
     private static int RESULT_LOAD_IMAGE = 1;
+    /**
+     * The Image string.
+     */
     String ImageString="0";
+    /**
+     * The Bitmap.
+     */
     Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +159,7 @@ public class CoachProfileMaker extends AppCompatActivity {
                 if (!coach.getAge().equals("0"))
                 {
                     ivcoachimage.setImageBitmap(coach.getImage());
+                    ImageString = BitmapToString(coach.getImage());
                     etcoachage.setText(coach.getAge());
                     etcoachwhere.setText(coach.getWhere());
                     etcoachtime.setText(coach.getTime());
@@ -143,6 +200,10 @@ public class CoachProfileMaker extends AppCompatActivity {
         }, 1000);
     }
 
+    /**
+     * Update Coach profile.
+     * @param view the view
+     */
     public void CoachSend(View view) {
         if (etcoachage.getText().toString().length()==0||etcoachage.getText().toString().equals("0"))
         {
@@ -260,6 +321,12 @@ public class CoachProfileMaker extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Change coach profile image.
+     *
+     * @param view the view
+     */
     public void ChangeCoachImage(View view) {
         Intent getImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getImageIntent .setType("image/*");
@@ -276,11 +343,18 @@ public class CoachProfileMaker extends AppCompatActivity {
             }
             bitmap=getResizedBitmap(bitmap,200);
             ImageString = BitmapToString(bitmap);
-            Log.e("Bitmap", ImageString);
             ivcoachimage.setImageBitmap(bitmap);
 
         }
     }
+
+    /**
+     * Gets resized bitmap.
+     *
+     * @param image   the image
+     * @param maxSize the max size
+     * @return the resized bitmap
+     */
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -296,6 +370,13 @@ public class CoachProfileMaker extends AppCompatActivity {
 
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
+
+    /**
+     * Bitmap to string.
+     *
+     * @param bitmap image
+     * @return the string value of the image
+     */
     public static String BitmapToString(Bitmap bitmap) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

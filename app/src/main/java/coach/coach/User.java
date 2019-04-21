@@ -3,10 +3,11 @@ package coach.coach;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 
+/**
+ * Create new User.
+ */
 public class User {
     private String name;
     private String age;
@@ -20,6 +21,12 @@ public class User {
     private Bitmap image;
     private DataSnapshot details;
 
+    /**
+     * Instantiates a new User.
+     *
+     * @param name         the name of the user.
+     * @param dataSnapshot the data snapshot of the user.
+     */
     public User (String name,DataSnapshot dataSnapshot)
     {
         this.name = name;
@@ -29,51 +36,38 @@ public class User {
         this.time = dataSnapshot.child("PracticeTime").getValue().toString();
         this.item = dataSnapshot.child("Equipment").getValue().toString();
         this.description = dataSnapshot.child("Description").getValue().toString();
-        this.goal = dataSnapshot.child("Goal").getValue().toString();
+        this.goal = dataSnapshot.child("Goal").getValue().toString().substring(1);
         this.gender = dataSnapshot.child("Gender").getValue().toString();
         this.image = StringToBitmap(dataSnapshot.child("Image").getValue().toString());
         this.details = dataSnapshot;
 
 
     }
-/*
-    public User(String name, String detailss)
-    {
-        this.name = name;
-        this.details = detailss.substring(0,detailss.length()-1)+", {{";
-        Log.e("details",details);
 
-        Log.e("height",details.substring(details.indexOf("{Height}=")+9,details.indexOf(", {",details.indexOf("{Height}=")+9)));
-        this.height = details.substring(details.indexOf("{Height}=")+9,details.indexOf(", {",details.indexOf("{Height}=")+9));
 
-        Log.e("gender",details.substring(details.indexOf("{Gender}=")+9,details.indexOf(", {",details.indexOf("{Gender}=")+9)));
-        this.gender = details.substring(details.indexOf("{Gender}=")+9,details.indexOf(", {",details.indexOf("{Gender}=")+9));
-
-        Log.e("description",details.substring(details.indexOf("{Description}=")+14,details.indexOf(", {",details.indexOf("{Description}=")+14)));
-        this.description = details.substring(details.indexOf("{Description}=")+14,details.indexOf(", {",details.indexOf("{Description}=")+14));
-
-        Log.e("weight",details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9)));
-        this.weight = details.substring(details.indexOf("{Weight}=")+9,details.indexOf(", {",details.indexOf("{Weight}=")+9));
-
-        Log.e("time",  this.time = details.substring(details.indexOf("{PracticeTime}=")+15,details.indexOf(", {",details.indexOf("{PracticeTime}=")+15)));
-        this.time = details.substring(details.indexOf("{PracticeTime}=")+15,details.indexOf(", {",details.indexOf("{PracticeTime}=")+15));
-
-        Log.e("item",details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12)));
-        this.item = details.substring(details.indexOf("{Equipment}=")+12,details.indexOf(", {",details.indexOf("{Equipment}=")+12));
-
-        Log.e("age",details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6)));
-        this.age = details.substring(details.indexOf("{Age}=")+6,details.indexOf(", {",details.indexOf("{Age}=")+6));
-
-        Log.e("goal",details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8)));
-        this.goal = details.substring(details.indexOf("{Goal}=")+8,details.indexOf(", {",details.indexOf("{Goal}=")+8));
-    }*/
-
+    /**
+     * Gets name.
+     *
+     * @return the name of the user.
+     */
     public  String getName() {
         return this.name;
     }
+
+    /**
+     * Get height.
+     *
+     * @return the height of the user.
+     */
     public String getHeight(){
         return this.height;
     }
+
+    /**
+     * Gets gender.
+     *
+     * @return the gender of the user.
+     */
     public  String getGender() {
         if (this.gender.equals("Male"))
         {
@@ -84,28 +78,75 @@ public class User {
             return "נקבה";
         }
     }
+
+    /**
+     * Get weight.
+     *
+     * @return the weight of the user.
+     */
     public String getWeight(){
         return this.weight;
     }
+
+    /**
+     * Gets description.
+     *
+     * @return the description of the user.
+     */
     public String getDescription() {
         return this.description;
     }
+
+    /**
+     * Gets time.
+     *
+     * @return How many time the user is practicing
+     */
     public String getTime() {
         return this.time;
     }
+
+    /**
+     * Get items.
+     *
+     * @return the training equipment the user has at home
+     */
     public String getItem(){
         return this.item;
     }
+
+    /**
+     * Gets image.
+     *
+     * @return the profile image of the user.
+     */
     public Bitmap getImage() {
         return this.image;
     }
+
+    /**
+     * Gets age.
+     *
+     * @return the age of the user.
+     */
     public String getAge() {
         return this.age;
     }
+
+    /**
+     * Get goal.
+     *
+     * @return the goal of the user.
+     */
     public String getGoal(){
         return this.goal;
     }
 
+    /**
+     * Gets details.
+     *
+     * @return the data snapshot of the user.
+     */
     public DataSnapshot getDetails()
     {
         return this.details;

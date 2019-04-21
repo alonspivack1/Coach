@@ -1,33 +1,25 @@
 package coach.coach;
 
 
-import android.app.ActionBar;
-import android.app.Activity;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
-import com.google.android.gms.flags.Flag;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,23 +27,82 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Main activity - the "home" activity of the application.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    Intent intent,intentSettings,intentUpdateProfile,intentCredits,intentMail;
-    String username,type,CoachProfiles="";
-    TextView fragchat,fragtv;
+    /**
+     * The Intent.
+     */
+    Intent intent, /**
+     * The Intent settings.
+     */
+    intentSettings, /**
+     * The Intent update profile.
+     */
+    intentUpdateProfile, /**
+     * The Intent credits.
+     */
+    intentCredits, /**
+     * The Intent mail.
+     */
+    intentMail;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Type.
+     */
+    type;
+    /**
+     * The Fragchat.
+     */
+    TextView fragchat;
+    /**
+     * The Frag int.
+     */
     int FragInt=1;
+    /**
+     * The Myfragment.
+     */
     public Fragment myfragment;
     private DatabaseReference databaseReference;
     private ConnectivityManager connectivityManager;
-    Button button1,button2,button3,button4;
+    /**
+     * The Button 1.
+     */
+    Button button1, /**
+     * The Button 2.
+     */
+    button2, /**
+     * The Button 3.
+     */
+    button3, /**
+     * The Button 4.
+     */
+    button4;
+    /**
+     * The Sign out.
+     */
     Boolean SignOut=false;
+    /**
+     * The Connected.
+     */
     boolean connected=true;
-    String SPusername="nousername",SPtype="notype",SPemail="noemail",SPpassword="nopassword";
+    /**
+     * The S pusername.
+     */
+    String SPusername="nousername", /**
+     * The S ptype.
+     */
+    SPtype="notype", /**
+     * The S pemail.
+     */
+    SPemail="noemail", /**
+     * The S ppassword.
+     */
+    SPpassword="nopassword";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         if ((!SPusername.equals("nousername"))&&(!SPtype.equals("notype"))&&(!SPemail.equals("noemail"))&&(!SPpassword.equals("nopassword")))
         {
 
-            Intent service = new Intent(this,TimerService.class);
+            Intent service = new Intent(this,BackgroundService.class);
             SharedPreferences.Editor editor = getSharedPreferences("service", MODE_PRIVATE).edit();
             editor.putString("username", username);
             editor.putBoolean("signout", false);
@@ -113,17 +164,22 @@ public class MainActivity extends AppCompatActivity {
         }, 1100);
 
 
-       /* if (type.equals("Coach")){
 
-            databaseReference = FirebaseDatabase.getInstance().getReference();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("UserNames");
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.child("ProfileCoach").getValue();
-                    CoachProfiles = objectMap.toString();
-                    //fragtv.setText(CoachProfiles+"");
-                  // i++;
+                    if (type.equals("User"))
+                    {
+                        String data = dataSnapshot.child(username).getValue().toString();
+                        int CoachesNumber = countChar(data,',')-3;
+                        if (CoachesNumber>6)
+                        {
+                            button3.setEnabled(false);
+                        }
+
+                    }
 
 
                 }
@@ -134,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        }*/
-        //if (type.equals("User")) {}
+
         fragchat = (TextView) findViewById(R.id.fragchat);
 
 
@@ -195,10 +250,10 @@ public class MainActivity extends AppCompatActivity {
         }
         if (st.equals("התנתקות"))
         {
-            SharedPreferences onoffref = getSharedPreferences("TimerService", MODE_PRIVATE);
+            SharedPreferences onoffref = getSharedPreferences("BackgroundService", MODE_PRIVATE);
             int onoff = onoffref.getInt("onoff",0);
             onoff=onoff+1;
-            SharedPreferences.Editor editorr = getSharedPreferences("TimerService", MODE_PRIVATE).edit();
+            SharedPreferences.Editor editorr = getSharedPreferences("BackgroundService", MODE_PRIVATE).edit();
             editorr.putInt("onoff",onoff);
             editorr.apply();
 
@@ -215,12 +270,19 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             SignOut=true;
             FirebaseAuth.getInstance().signOut();
+            this.finish();
             finish();
             startActivity(new Intent(this,LogInActivity.class));
         }
         return true;
     }
-    public void FragmentOneClick(View view) throws InterruptedException {
+
+    /**
+     * move to chat fragment.
+     *
+     * @param view the view
+     */
+    public void FragmentOneClick(View view) {
         try {
         if (FragInt != 1) {
             Thread.sleep(200);
@@ -239,7 +301,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void FragmentTwoClick(View view) throws InterruptedException {
+
+    /**
+     * move to program fragment.
+     *
+     * @param view the view
+     */
+    public void FragmentTwoClick(View view) {
 
         try{
         if (FragInt != 2) {
@@ -258,7 +326,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void FragmentThirdClick(View view) throws InterruptedException {
+    /**
+     * move to search fragment.
+     * @param view the view
+     */
+    public void FragmentThirdClick(View view) {
         try{
             if (FragInt != 3) {
             if (type.equals("User")) {
@@ -277,13 +349,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     }
-    public void FragmentFourthClick(View view) throws InterruptedException {
+
+    /**
+     * move to alerts fragment.
+     *
+     * @param view the view
+     */
+    public void FragmentFourthClick(View view){
 
         try{
             if (FragInt != 4) {
                 Thread.sleep(200);
                 FragInt = 4;
-                myfragment = new Alerts();
+                myfragment = new FragmentAlerts();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_switch, myfragment);
@@ -295,49 +373,43 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Gets username.
+     *
+     * @return the username.
+     */
     public String getUsername() {
         return username;
     }
+
+    /**
+     * Gets type.
+     *
+     * @return the type - Coach or User.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Count char int.
+     *
+     * @param str The string for testing.
+     * @param c   the char test.
+     * @return The number of times the parameter c appears in the str string.
+     */
+    public int countChar(String str, char c)
+    {
+        int count = 0;
 
-  /*
-    public void ABC(View view) {
-       // Toast.makeText(this,"Answer: "+CoachProfiles,Toast.LENGTH_LONG).show();
-        fragtv.setText(CoachProfiles);
-    }
-*/
-   /* @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnfragchat:
-                myfragment = new ();
-
-                fm = getFragmentManager();
-                fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-
-                break;
-
-            case R.id.btnfragprogram:
-                myfragment = new FragmentProgram();
-
-                fm = getFragmentManager();
-                fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-                break;
-            case R.id.btnfragsearch:
-                myfragment = new FragmentSearch();
-
-                fm = getFragmentManager();
-                fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-                break;
+        for(int i=0; i < str.length(); i++)
+        {    if(str.charAt(i) == c)
+            count++;
         }
-    }*/
+
+        return count;
+    }
+
+
 }

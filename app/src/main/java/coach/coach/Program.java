@@ -33,17 +33,48 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+/**
+ * Activity just for Coaches - create training program to user.
+ */
 public class Program extends AppCompatActivity {
     private IARE_Toolbar mToolbar;
 
     private AREditText mEditText;
+    /**
+     * The Intent.
+     */
     Intent intent;
-    String receiver,sender;
+    /**
+     * The Receiver.
+     */
+    String receiver, /**
+     * The Sender.
+     */
+    sender;
+    /**
+     * The Database reference.
+     */
     DatabaseReference databaseReference;
+    /**
+     * The Reference.
+     */
     DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notification");
+    /**
+     * The Update notifiction.
+     */
     Boolean UpdateNotifiction=false;
+    /**
+     * The Notification program alarm.
+     */
     String NotificationProgramAlarm="";
+    /**
+     * The Double back to exit pressed once.
+     */
     boolean doubleBackToExitPressedOnce = false;
+    /**
+     * The Auto save.
+     */
+    boolean AutoSave=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +89,18 @@ public class Program extends AppCompatActivity {
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProgramRoom").child(receiver+"&"+sender);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("KnifeText",dataSnapshot.child("Data").getValue().toString());
-                mEditText.fromHtml(dataSnapshot.child("Data").getValue().toString());
+                try{
+                    Log.e("Text",dataSnapshot.child("Data").getValue().toString());
+                    mEditText.fromHtml(dataSnapshot.child("Data").getValue().toString());
+
+                }
+                catch (Exception e)
+                {
+
+                }
 
             }
 
@@ -74,41 +112,28 @@ public class Program extends AppCompatActivity {
         Reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.v("NotificationProgram","1");
                 if (dataSnapshot.hasChild("ProgramAlarm"))
                 {
-                    Log.v("NotificationProgram","2");
-
                     NotificationProgramAlarm=dataSnapshot.child("ProgramAlarm").getValue().toString();
                     if ((NotificationProgramAlarm).indexOf(sender+",")!=-1)
                     {
-                        Log.v("NotificationProgram","3");
-
                         if (((NotificationProgramAlarm).indexOf(","+sender+",")!=-1)||((NotificationProgramAlarm).indexOf(sender+",")==0))
                         {
-                            Log.v("NotificationProgram","4");
-
                             UpdateNotifiction=false;
 
                         }
                         else{
-                            Log.v("NotificationProgram","5");
-
                             UpdateNotifiction=true;
 
                         }
                     }
                     else
                     {
-                        Log.v("NotificationProgram","6");
-
                         UpdateNotifiction=true;
 
                     }
                 }
                 else {
-                    Log.v("NotificationProgram","7");
-
                     UpdateNotifiction=true;
                 }
 
@@ -168,10 +193,12 @@ public class Program extends AppCompatActivity {
 
         String st = item.getTitle().toString();
         if (st.equals("שלח")) {
+            AutoSave=false;
             databaseReference.child("Data").setValue(mEditText.getHtml());
-            mEditText.fromHtml(mEditText.getHtml());
             if (UpdateNotifiction)
+
             {
+
                 Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
             }
             }
@@ -181,39 +208,42 @@ public class Program extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+        if (AutoSave) {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
         }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "לחץ שוב על הלחצן חזור כדי לצאת, התוכנית תשמר אוטומטית", Toast.LENGTH_SHORT).show();
-        databaseReference.child("Data").setValue(mEditText.getHtml());
-        mEditText.fromHtml(mEditText.getHtml());
-        if (UpdateNotifiction)
-        {
-            Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
-        }
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "לחץ שוב על הלחצן חזור כדי לצאת, התוכנית תשמר אוטומטית", Toast.LENGTH_SHORT).show();
+            databaseReference.child("Data").setValue(mEditText.getHtml());
+            if (UpdateNotifiction) {
+                Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm + sender + ",");
             }
-        }, 2000);
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
+        else {
+            super.onBackPressed();
+
+        }
     }
 
     @Override
     protected void onUserLeaveHint()
     {
+        if (AutoSave){
         databaseReference.child("Data").setValue(mEditText.getHtml());
-        mEditText.fromHtml(mEditText.getHtml());
         if (UpdateNotifiction)
         {
             Reference.child("ProgramAlarm").setValue(NotificationProgramAlarm+sender+",");
         }
         Toast.makeText(this, "השינויים נשמרו אוטמטית", Toast.LENGTH_SHORT).show();
         Log.d("onUserLeaveHint","Home button pressed");
-    }
+    }}
 
 }

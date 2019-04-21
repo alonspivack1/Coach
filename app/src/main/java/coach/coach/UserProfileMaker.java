@@ -2,7 +2,6 @@ package coach.coach;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -10,48 +9,115 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 
+/**
+ * Activity just for Users - User profile maker.
+ */
 public class UserProfileMaker extends AppCompatActivity {
 
-    EditText etuserage,etuserweight,etuserheight,etusertime,etuseritem,etuserdescription;
-    CheckBox cbuserburnfat,cbusergym,cbuserstreet,cbuserhome,cbuserdistance,cbuserspeed;
+    /**
+     * The Etuserage.
+     */
+    EditText etuserage, /**
+     * The Etuserweight.
+     */
+    etuserweight, /**
+     * The Etuserheight.
+     */
+    etuserheight, /**
+     * The Etusertime.
+     */
+    etusertime, /**
+     * The Etuseritem.
+     */
+    etuseritem, /**
+     * The Etuserdescription.
+     */
+    etuserdescription;
+    /**
+     * The Cbuserburnfat.
+     */
+    CheckBox cbuserburnfat, /**
+     * The Cbusergym.
+     */
+    cbusergym, /**
+     * The Cbuserstreet.
+     */
+    cbuserstreet, /**
+     * The Cbuserhome.
+     */
+    cbuserhome, /**
+     * The Cbuserdistance.
+     */
+    cbuserdistance, /**
+     * The Cbuserspeed.
+     */
+    cbuserspeed;
+    /**
+     * The Reference.
+     */
     DatabaseReference reference;
     private DatabaseReference databaseReference;
-    Intent intent,MainActivityIntent;
-    String username,Goal=",",Gender;
+    /**
+     * The Intent.
+     */
+    Intent intent, /**
+     * The Main activity intent.
+     */
+    MainActivityIntent;
+    /**
+     * The Username.
+     */
+    String username, /**
+     * The Goal.
+     */
+    Goal=",", /**
+     * The Gender.
+     */
+    Gender;
+    /**
+     * The Tvuserbmi.
+     */
     TextView tvuserbmi;
+    /**
+     * The Data snap.
+     */
     DataSnapshot dataSnap;
+    /**
+     * The Switchusergender.
+     */
     Switch switchusergender;
+    /**
+     * The Ivuserimage.
+     */
     ImageView ivuserimage;
     private static int RESULT_LOAD_IMAGE = 1;
+    /**
+     * The Image string.
+     */
     String ImageString="0";
+    /**
+     * The Bitmap.
+     */
     Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +175,7 @@ public class UserProfileMaker extends AppCompatActivity {
                 if (!user.getAge().equals("0"))
                 {
                     ivuserimage.setImageBitmap(user.getImage());
+                    ImageString = BitmapToString(user.getImage());
                     etuserage.setText(user.getAge());
                     etuserweight.setText(user.getWeight());
                     etuserheight.setText(user.getHeight());
@@ -153,6 +220,10 @@ public class UserProfileMaker extends AppCompatActivity {
     }
 
 
+    /**
+     * Update User profile.
+     * @param view the view
+     */
     public void UserSend(View view) {
         if (etuserage.getText().toString().length()==0||etuserage.getText().toString().equals("0"))
         {
@@ -293,6 +364,11 @@ public class UserProfileMaker extends AppCompatActivity {
         });
     }
 
+    /**
+     * Change user profile image.
+     *
+     * @param view the view
+     */
     public void ChangeUserImage(View view) {
         Intent getImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getImageIntent .setType("image/*");
@@ -309,11 +385,18 @@ public class UserProfileMaker extends AppCompatActivity {
             }
             bitmap=getResizedBitmap(bitmap,200);
             ImageString = BitmapToString(bitmap);
-            Log.e("Bitmap", ImageString);
             ivuserimage.setImageBitmap(bitmap);
 
         }
     }
+
+    /**
+     * Gets resized bitmap.
+     *
+     * @param image   the image
+     * @param maxSize the max size
+     * @return the resized bitmap
+     */
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -329,6 +412,13 @@ public class UserProfileMaker extends AppCompatActivity {
 
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
+
+    /**
+     * Bitmap to string.
+     *
+     * @param bitmap image
+     * @return the string value of the image
+     */
     public static String BitmapToString(Bitmap bitmap) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

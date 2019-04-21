@@ -1,27 +1,42 @@
 package coach.coach;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Settings of the Application
+ */
 public class Settings extends AppCompatActivity {
 
+    /**
+     * The Cbsettingsphone.
+     */
     CheckBox cbsettingsphone;
+    /**
+     * The Phone.
+     */
     String Phone="";
+    /**
+     * The Database phone.
+     */
     DatabaseReference databasePhone;
-    String type,username;
+    /**
+     * The Type.
+     */
+    String type, /**
+     * The Username.
+     */
+    username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +63,6 @@ public class Settings extends AppCompatActivity {
 
 
                 Phone = dataSnapshot.getValue().toString();
-                Log.e("PHONE",Phone);
 
 
             }
@@ -67,15 +81,18 @@ public class Settings extends AppCompatActivity {
 
     }
 
+    /**
+     * Save settings.
+     *
+     * @param view the view
+     */
     public void SaveSettings(View view) {
 
             if (cbsettingsphone.isChecked())
             {
                 if (Phone.charAt(0)!='=')
                 {
-                    Log.e("PHONEB",Phone);
                     Phone = "="+Phone;
-                    Log.e("PHONEA",Phone);
 
                     databasePhone.setValue(Phone);
                 }
@@ -83,9 +100,7 @@ public class Settings extends AppCompatActivity {
             else {
                 if (Phone.charAt(0)=='=')
                 {
-                    Log.e("PHONEB",Phone);
                     Phone=Phone.substring(1);
-                    Log.e("PHONEA",Phone);
                     databasePhone.setValue(Phone);
                 }
             }

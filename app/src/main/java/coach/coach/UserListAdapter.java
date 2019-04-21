@@ -1,7 +1,6 @@
 package coach.coach;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,26 +13,10 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+
 /**
- * Created by User on 3/14/2017.
+ * make list of Users
  */
-/*
-        android:id="@+id/usertvlistname"
-
-        android:id="@+id/usertvlistage"
-
-        android:id="@+id/usertvlistgender"
-
-        android:id="@+id/usertvlisttime"
-
-        android:id="@+id/usertvlistitem"
-
-        android:id="@+id/usertvlistgoal"
-
-        android:id="@+id/usertvlistdescription"
-
-*/
-
 public class UserListAdapter extends ArrayAdapter<User> {
 
     private static final String TAG = "UserListAdapter";
@@ -45,20 +28,57 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
     private static class ViewHolder {
 
+        /**
+         * The Usertvlistname.
+         */
         TextView usertvlistname;
+        /**
+         * The Usertvlistage.
+         */
         TextView usertvlistage;
+        /**
+         * The Usertvlistgender.
+         */
         TextView usertvlistgender;
+        /**
+         * The Usertvlisttime.
+         */
         TextView usertvlisttime;
+        /**
+         * The Usertvlistitem.
+         */
         TextView usertvlistitem;
+        /**
+         * The Usertvlistgoal.
+         */
         TextView usertvlistgoal;
+        /**
+         * The Usertvlistdescription.
+         */
         TextView usertvlistdescription;
+        /**
+         * The Usertvlistheight.
+         */
         TextView usertvlistheight;
+        /**
+         * The Usertvlistweight.
+         */
         TextView usertvlistweight;
+        /**
+         * The Userivlistimage.
+         */
         ImageView userivlistimage;
 
     }
 
 
+    /**
+     * Instantiates a new User list adapter.
+     *
+     * @param context  the context
+     * @param resource the resource
+     * @param objects  the User Array
+     */
     public UserListAdapter(Context context, int resource, ArrayList<User> objects) {
         super(context, resource, objects);
         mContext = context;
@@ -72,7 +92,6 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
         String name = getItem(position).getName();
         DataSnapshot details =getItem(position).getDetails();
-        Bitmap image = getItem(position).getImage();
 
 
 

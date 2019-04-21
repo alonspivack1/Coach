@@ -87,7 +87,7 @@
 
     <fragment
         android:id="@+id/fragment_switch"
-        android:name="coach.coach.TransferFragment"
+        android:name="coach.coach.FragmentTransfer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

@@ -2,17 +2,12 @@ package coach.coach;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.Base64;
-import android.util.Log;
-import android.widget.RatingBar;
-
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Create new Coach.
+ */
 public class Coach {
     private String name;
     private String age;
@@ -24,6 +19,12 @@ public class Coach {
     private Bitmap image;
     private DataSnapshot details;
 
+    /**
+     * Instantiates a new Coach.
+     *
+     * @param name         the name of the coach
+     * @param dataSnapshot the data snapshot of the coach
+     */
     public Coach (String name,DataSnapshot dataSnapshot)
     {
         this.name = name;
@@ -31,7 +32,7 @@ public class Coach {
         this.time = dataSnapshot.child("CoachTime").getValue().toString();
         this.where = dataSnapshot.child("StudyPlace").getValue().toString();
         this.description = dataSnapshot.child("Description").getValue().toString();
-        this.professionalization = dataSnapshot.child("Professionalization").getValue().toString();
+        this.professionalization = dataSnapshot.child("Professionalization").getValue().toString().substring(1);
         this.gender = dataSnapshot.child("Gender").getValue().toString();
         this.image = StringToBitmap(dataSnapshot.child("Image").getValue().toString());
         this.details = dataSnapshot;
@@ -39,69 +40,85 @@ public class Coach {
 
     }
 
-    /*
-    public Coach(String name,String detailss) {
 
-        Log.e("detailss", detailss);
-        this.details = detailss.substring(0, detailss.length() - 1) + ", {{";
-        Log.e("details", details);
-        this.name = name;
-        Log.e("where", details.substring(details.indexOf("{StudyPlace}=") + 13, details.indexOf(", {", details.indexOf("{StudyPlace}=") + 13)));
-        //this.where = details.substring(details.indexOf("{StudyPlace}=")+13,details.indexOf(", {",details.indexOf("{StudyPlace}=")+13));
-        this.where = details.substring(details.indexOf("{StudyPlace}=") + 13, details.indexOf(", {", details.indexOf("{StudyPlace}=") + 13));
-        Log.e("professionalization", details.substring(details.indexOf("{Professionalization}=") + 23, details.indexOf(", {", details.indexOf("{Professionalization}=") + 23)));
-        this.professionalization = details.substring(details.indexOf("{Professionalization}=") + 23, (details.indexOf(", {", details.indexOf("{Professionalization}=") + 23)));
-        Log.e("age", details.substring(details.indexOf("{Age}=") + 6, details.indexOf(", {", details.indexOf("{Age}=") + 6)));
-        this.age = details.substring(details.indexOf("{Age}=") + 6, details.indexOf(", {", details.indexOf("{Age}=") + 6));
-        Log.e("time", details.substring(details.indexOf("{CoachTime}=") + 12, details.indexOf(", {", details.indexOf("{CoachTime}=") + 12)));
-        this.time = details.substring(details.indexOf("{CoachTime}=") + 12, details.indexOf(", {", details.indexOf("{CoachTime}=") + 12));
-        Log.e("gender", details.substring(details.indexOf("{Gender}=") + 9, details.indexOf(", {", details.indexOf("{Gender}=") + 9)));
-        this.gender = details.substring(details.indexOf("{Gender}=") + 9, details.indexOf(", {", details.indexOf("{Gender}=") + 9));
-        Log.e("description", details.substring(details.indexOf("{Description}=") + 14, (details.indexOf(", {", details.indexOf("{Description}=") + 14))));
-        this.description = details.substring(details.indexOf("{Description}=") + 14, (details.indexOf(", {", details.indexOf("{Description}=") + 14)));
-
-*/
-        /*Log.e("where",details.substring(answer[0]+1,details.indexOf(", {Pro")));
-        this.where = details.substring(answer[0]+1,details.indexOf(", {Pro"));
-        Log.e("professionalization",details.substring(answer[1]+2,details.indexOf(", {Age")-1));
-        this.professionalization = details.substring(answer[1]+2,details.indexOf(", {Age")-1);
-        Log.e("age",details.substring(answer[2]+1,details.indexOf(", {Coa")));
-        this.age = details.substring(answer[2]+1,details.indexOf(", {Coa"));
-        Log.e("time",details.substring(answer[3]+1,details.indexOf(", {Gen")));
-        this.time = details.substring(answer[3]+1,details.indexOf(", {Gen"));
-        this.gender = details.substring(answer[4]+1,details.indexOf(", {Des"));
-        this.description = details.substring(answer[5]+1,details.length()-1);*/
-        //this.description = details.substring(answer[5]+1,details.indexOf(details.length()-2));
-        //this.description = details.substring(answer[5]+1,details.indexOf("}"));
-    //}
-
+    /**
+     * Gets name.
+     *
+     * @return the name of the coach.
+     */
     public  String getName() {
         return this.name;
     }
 
+    /**
+     * Gets age.
+     *
+     * @return the age of the coach.
+     */
     public String getAge() {
         return this.age;
     }
+
+    /**
+     * Gets time.
+     *
+     * @return the amount of time the coach trains.
+     */
     public String getTime() {
         return this.time;
     }
+
+    /**
+     * Gets where.
+     *
+     * @return Where the coach learned to train.
+     */
     public String getWhere() {
         return this.where;
     }
+
+    /**
+     * Gets description.
+     *
+     * @return the description about the coach.
+     */
     public String getDescription() {
         return this.description;
     }
+
+    /**
+     * Gets professionalization.
+     *
+     * @return the professionalism of the coach.
+     */
     public String getProfessionalization() {
         return this.professionalization;
     }
+
+    /**
+     * Gets details.
+     *
+     * @return the datasnapshot of the coach.
+     */
     public DataSnapshot getDetails()
     {
         return this.details;
     }
+
+    /**
+     * Gets image.
+     *
+     * @return the profile image of the coach.
+     */
     public Bitmap getImage() {
         return this.image;
     }
 
+    /**
+     * Gets gender.
+     *
+     * @return the gender of the coach.
+     */
     public  String getGender() {
         if (this.gender.equals("Male"))
         {

@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class TransferFragment extends Fragment {
+/**
+ * Transfer fragment from Log-In to Main .
+ */
+public class FragmentTransfer extends Fragment {
 
 
 
@@ -27,6 +30,9 @@ public class TransferFragment extends Fragment {
     }
 
 
+    /**
+     * intent to MainActivity.
+     */
     public void Transfer(){
         Fragment myfragment = new FragmentChat();
         FragmentManager fm = getFragmentManager();
