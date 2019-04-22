@@ -11,4 +11,5 @@
     <string name="toast_quote">ציטוט</string>
     <string name="toast_redo">בצע שוב</string>
     <string name="toast_undo">לבטל</string>
+
 </resources>
