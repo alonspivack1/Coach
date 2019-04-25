@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +32,10 @@ public class Chat extends AppCompatActivity {
      * The Intent.
      */
     Intent intent;
+    /**
+     * The Last date massage.
+     */
+    String lastdatemassage="";
     /**
      * The Receiver.
      */
@@ -240,8 +245,8 @@ public class Chat extends AppCompatActivity {
 
         adapter = new SimpleAdapter(this, list,
                 R.layout.twolines,
-                new String[] { "sender","receiver","sendertime","receivertime"},
-                new int[] {R.id.sendmessage, R.id.receivemessage,R.id.sendertime,R.id.receivetime});
+                new String[] { "sender","receiver","sendertime","receivertime","datemassage"},
+                new int[] {R.id.sendmessage, R.id.receivemessage,R.id.sendertime,R.id.receivetime,R.id.datemessage});
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -265,17 +270,29 @@ public class Chat extends AppCompatActivity {
             String messagedata =dataSnap.child(String.valueOf(MessageNum)).child("message").getValue().toString();
             String mesasgesender =dataSnap.child(String.valueOf(MessageNum)).child("sender").getValue().toString();
             String mesasgetime =dataSnap.child(String.valueOf(MessageNum)).child("time").getValue().toString();
+            String messagedate = dataSnap.child(String.valueOf(MessageNum)).child("date").getValue().toString();
+            if (lastdatemassage.equals(messagedate))
+            {
+                messagedate="";
+            }
+            else {
+                lastdatemassage=messagedate;
+                messagedate=" "+messagedate+" ";
 
+            }
             if (mesasgesender.equals(sender))
             {
+                item.put("datemassage",messagedate);
                 item.put("sender",messagedata);
 
-                item.put("sendertime"," "+mesasgetime+" ");
+                item.put("sendertime",mesasgetime);
+
                 list.add(item);
             }
             else {
+                item.put("datemassage","");
                 item.put("receiver",messagedata);
-                item.put("receivertime"," "+mesasgetime+" ");
+                item.put("receivertime",mesasgetime);
 
 
                 list.add(item);
@@ -296,21 +313,33 @@ public class Chat extends AppCompatActivity {
             {
                 item = new HashMap<String,String>();
                 String messagedata =dataSnap.child(String.valueOf(i+1)).child("message").getValue().toString();
-                String mesasgesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
-                String mesasgetime =dataSnap.child(String.valueOf(i+1)).child("time").getValue().toString();
-                if (mesasgesender.equals(sender))
+                String messagesender = dataSnap.child(String.valueOf(i+1)).child("sender").getValue().toString();
+                String messagetime =dataSnap.child(String.valueOf(i+1)).child("time").getValue().toString();
+                String messagedate = dataSnap.child(String.valueOf(i+1)).child("date").getValue().toString();
+                if (lastdatemassage.equals(messagedate))
+                {
+                    messagedate="";
+                }
+                else {
+                    lastdatemassage=messagedate;
+                    messagedate=" "+messagedate+" ";
+                }
+
+                if (messagesender.equals(sender))
                 {
                     item.put("sender",messagedata);
                     item.put("receiver","");
                     item.put("receivertime","");
-                    item.put("sendertime"," "+mesasgetime+" ");
+                    item.put("sendertime"," "+messagetime+" ");
+                    item.put("datemassage",messagedate);
                     list.add(item);
                 }
                 else {
                     item.put("receiver",messagedata);
                     item.put("sender","");
-                    item.put("receivertime"," "+mesasgetime+" ");
+                    item.put("receivertime"," "+messagetime+" ");
                     item.put("sendertime","");
+                    item.put("datemassage",messagedate);
                     list.add(item);
                 }
 
@@ -324,19 +353,17 @@ public class Chat extends AppCompatActivity {
     }
     private void Message(String sender, String receiver, final String message) {
         etMessageText.setText("");
-
         Calendar cal = Calendar.getInstance();
         int minute = cal.get(Calendar.MINUTE);
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-        /*int month = cal.get(Calendar.MONTH);
+        int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);*/
+        int year = cal.get(Calendar.YEAR);
+        String date = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
         if (minute>=10){
-           // time = " "+String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year)+String.valueOf(hourofday)+":"+String.valueOf(minute)+" ";
             time = " "+String.valueOf(hourofday)+":"+String.valueOf(minute)+" ";}
         else
         {
-           // time = " "+String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year)+" "+String.valueOf(hourofday)+":0"+String.valueOf(minute)+" ";
             time =" "+String.valueOf(hourofday)+":0"+String.valueOf(minute)+" ";
         }
 
@@ -345,6 +372,7 @@ public class Chat extends AppCompatActivity {
         newmessage.put("receiver",receiver);
         newmessage.put("message",message);
         newmessage.put("time",time);
+        newmessage.put("date",date);
 
 
         ChatReference.child(room).child(""+MessageNum).setValue(newmessage);

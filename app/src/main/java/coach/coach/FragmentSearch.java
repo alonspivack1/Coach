@@ -644,6 +644,10 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 Calendar cal = Calendar.getInstance();
                 int minute = cal.get(Calendar.MINUTE);
                 int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                int year = cal.get(Calendar.YEAR);
+                String date = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
                 if (minute>=10){
                     time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
                 else
@@ -656,6 +660,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 hashMap.put("receiver",coaches[positionadb].getName());
                 hashMap.put("message","נשלחה בקשת קשר");
                 hashMap.put("time",time);
+                hashMap.put("date",date);
                 final String CoachName=coaches[positionadb].getName();
                 reference3.child(username+"&"+(CoachName)).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

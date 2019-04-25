@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -409,6 +410,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isComplete()) {
+                                        SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
+                                        editor.putString("username", username);
+                                        editor.putString("type", "User");
+                                        editor.putString("email", email);
+                                        editor.putString("password", password);
+                                        editor.apply();
                                     UserIntent.putExtra("username",username+"");
                                     startActivity(UserIntent);
                                     finish();
@@ -437,6 +444,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isComplete()) {
+                                    SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
+                                    editor.putString("username", username);
+                                    editor.putString("type", "Coach");
+                                    editor.putString("email", email);
+                                    editor.putString("password", password);
+                                    editor.apply();
                                     CoachIntent.putExtra("username",username);
                                     startActivity(CoachIntent);
                                     finish();
