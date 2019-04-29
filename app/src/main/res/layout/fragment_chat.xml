@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
+    android:background="@drawable/backgroundman"
     android:textDirection="rtl"
     android:orientation="vertical">
 
@@ -14,8 +15,7 @@
         android:layoutDirection="rtl"
         android:textDirection="rtl"
         android:orientation="horizontal"
-        android:background="@drawable/background"
-        android:minHeight="?attr/actionBarSize">
+        android:background="#000">
 
 
         <Button
@@ -76,7 +76,6 @@
         android:id="@+id/chatlist"
         android:layout_width="match_parent"
         android:divider="#20000000"
-        android:background="@drawable/background"
         android:dividerHeight="10dp"
         android:longClickable="true"
         android:layout_height="match_parent" />

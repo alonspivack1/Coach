@@ -5,6 +5,7 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
+    android:background="@drawable/backgroundman"
     tools:context=".SignUpActivity">
 
 
@@ -23,11 +24,28 @@ android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:textColor="@color/colorText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:text="מאמן"/>
+            <Switch
+                android:id="@+id/switchsignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:theme="@style/SCBSwitch" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:text="מתאמן"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextUser"
@@ -81,7 +99,7 @@ android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="sendcode"
-                android:background="@drawable/background"
+                android:background="@drawable/reddark"
                 android:textStyle="bold"
                 android:textColor="#FFFF"
                 android:textSize="18dp"
@@ -97,7 +115,7 @@ android:orientation="vertical"
             android:layout_gravity="center"
             android:layout_margin="7dp"
             android:text="הרשמה"
-            android:background="@drawable/background"
+            android:background="@drawable/reddark"
             android:textSize="18dp"
             android:textStyle="bold"
             android:textColor="#FFFF"

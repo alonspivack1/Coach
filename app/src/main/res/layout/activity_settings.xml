@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@drawable/backgroundman"
     tools:context=".Settings">
 
     <TextView
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:textColor="@color/colorText"
+        android:buttonTint="#A71A1A"
         android:layoutDirection="rtl"
         android:text="להציג את מספר הפלאפון בצאט" />
     <Space
@@ -41,7 +43,7 @@
         android:gravity="center"
         android:onClick="SaveSettings"
         android:textAllCaps="false"
-        android:background="@drawable/background"
+        android:background="@drawable/reddark"
         android:text="שמור שינויים" />
 
 </LinearLayout>

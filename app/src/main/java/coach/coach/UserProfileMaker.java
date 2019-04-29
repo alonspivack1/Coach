@@ -184,7 +184,7 @@ public class UserProfileMaker extends AppCompatActivity {
                     float bmi = Float.valueOf(user.getWeight())/((Float.valueOf(user.getHeight())/100)*(Float.valueOf(user.getHeight()))/100);
                     tvuserbmi.setText("BMI:"+String.valueOf(bmi));
                     etuserdescription.setText(user.getDescription());
-                    if (user.getGender().equals("Female"))
+                    if (user.getGender().equals("נקבה"))
                     {
                         switchusergender.setChecked(false);
                     }
@@ -326,11 +326,11 @@ public class UserProfileMaker extends AppCompatActivity {
 
         if (switchusergender.isChecked())
         {
-            Gender = "Male";
+            Gender = "זכר";
 
         }
         else {
-            Gender ="Female";
+            Gender ="נקבה";
         }
 
         if (Goal.length()==0)

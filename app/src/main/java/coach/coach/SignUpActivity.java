@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -129,10 +130,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
      * The Code string.
      */
     String codeString="";
-    /**
-     * The Spinner.
-     */
-    Spinner spinner;
+
     /**
      * The Codeet.
      */
@@ -147,6 +145,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
      * The Email.
      */
     email;
+    Switch switchsignup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,20 +165,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextUser = (EditText)findViewById(R.id.editTextUser);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-
+        switchsignup = (Switch)findViewById(R.id.switchsignup);
         UserIntent = new Intent(this,UserProfileMaker.class);
         CoachIntent = new Intent(this,CoachProfileMaker.class);
 
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-        String[] SpinnerStrings = new String[3];
-        SpinnerStrings[0]="סוג המשתמש";
-        SpinnerStrings[1]="מתאמן";
-        SpinnerStrings[2]="מאמן";
 
-        ArrayAdapter<String>SpinnerAdapter = new ArrayAdapter<String>(SignUpActivity.this,android.R.layout.simple_list_item_1,SpinnerStrings);
-        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(SpinnerAdapter);
+
 
         SMSbtn = (Button) findViewById(R.id.btnSendSMS);
         etPhoneNo = (EditText) findViewById(R.id.etPhoneNo);
@@ -325,11 +317,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        if (spinner.getSelectedItem().toString().equals("סוג המשתמש"))
-        {
-            Toast.makeText(this,"בחר סוג המשתמש",Toast.LENGTH_LONG).show();
-            return;
-        }
+
         if (codeString.equals(""))
         {
             etPhoneNo.setError("לא נשלח קוד");
@@ -379,20 +367,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     String userid = firebaseUser.getUid();
-                    if (spinner.getSelectedItem().toString().equals("מתאמן"))
+                    if (switchsignup.isChecked())
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("UserNames");
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
 
                     }
-                    if (spinner.getSelectedItem().toString().equals("מאמן"))
+                    else
                     {
                         reference2 = FirebaseDatabase.getInstance().getReference("CoachNames");
                         reference2.child(username).setValue(smsNum+","+userid+","+username+",");
                     }
 
 
-                    if (spinner.getSelectedItem().toString().equals("מתאמן"))
+                    if (switchsignup.isChecked())
                     {
                         reference = FirebaseDatabase.getInstance().getReference("ProfileUser").child(username);
                         HashMap<String, String> hashMap = new HashMap<>();
@@ -402,7 +390,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         hashMap.put("PracticeTime", "0");
                         hashMap.put("Goal",",");
                         hashMap.put("Equipment", "0");
-                        hashMap.put("Gender","Male" );
+                        hashMap.put("Gender","זכר" );
                         hashMap.put("Description", "0");
                         hashMap.put("Image", "0");
 
@@ -431,7 +419,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         hashMap.put("StudyPlace","0" );
                         hashMap.put("Professionalization","," );
                         hashMap.put("Description", "0");
-                        hashMap.put("Gender","Male" );
+                        hashMap.put("Gender","זכר" );
                         hashMap.put("CoachTime", "0");
                         hashMap.put("Image", "0");
 

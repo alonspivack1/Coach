@@ -2,6 +2,8 @@ package coach.coach;
 
 
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -18,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -177,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                         if (CoachesNumber>6)
                         {
                             button3.setEnabled(false);
+                            Toast.makeText(getBaseContext(),"אתה לא יכול לשלוח עוד בקשות קשר למאמנים, אי אפשר להיות בקשר עם יותר מ6 מאמנים",Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -190,8 +196,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-
-        fragchat = (TextView) findViewById(R.id.fragchat);
 
 
     }
@@ -210,8 +214,6 @@ public class MainActivity extends AppCompatActivity {
         menu.add("עדכון פרופיל");
         menu.add("שליחת מייל למפתח");
         menu.add("הגדרות");
-
-
         return true;
     }
 
@@ -412,4 +414,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void menuuu(View view) {
+        this.openOptionsMenu();
+    }
+    @Override
+    public void openOptionsMenu()
+    {
+        android.support.v7.widget.Toolbar mActionBar = (android.support.v7.widget.Toolbar) getActionBar(getWindow().getDecorView());
+        mActionBar.showOverflowMenu();
+    }
+    public static ViewGroup getActionBar(View view)
+    {
+        try
+        {
+            if (view instanceof ViewGroup)
+            {
+                ViewGroup viewGroup = (ViewGroup) view;
+
+                if (viewGroup instanceof android.support.v7.widget.Toolbar)
+                {
+                    return viewGroup;
+                }
+
+                for (int i = 0; i < viewGroup.getChildCount(); i++)
+                {
+                    ViewGroup actionBar = getActionBar(viewGroup.getChildAt(i));
+
+                    if (actionBar != null)
+                    {
+                        return actionBar;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

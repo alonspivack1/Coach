@@ -84,7 +84,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     coachIntent, /**
      * The Main activity intent.
      */
-    MainActivityIntent, /**
+    MainActivityIntent,intentManual, /**
      * The Intent credits.
      */
     intentCredits;
@@ -166,7 +166,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         final TextView textViewSignup = (TextView)findViewById(R.id.textViewSignup);
         final TextView textViewForgotPassword = (TextView)findViewById(R.id.textViewForgotPassword);
-        final Button buttonLogin = (Button)findViewById(R.id.buttonLogin);
+            final TextView textViewManual = (TextView)findViewById(R.id.textViewManual);
+
+            final Button buttonLogin = (Button)findViewById(R.id.buttonLogin);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -201,6 +204,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     buttonLogin.setVisibility(View.GONE);
                     textViewSignup.setVisibility(View.GONE);
                     textViewForgotPassword.setVisibility(View.GONE);
+                    textViewManual.setVisibility(View.GONE);
                     AutoLogIn();
                     PBlogin.setVisibility(View.GONE);
 
@@ -221,6 +225,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     buttonLogin.setVisibility(View.VISIBLE);
                     textViewSignup.setVisibility(View.VISIBLE);
                     textViewForgotPassword.setVisibility(View.VISIBLE);
+                    textViewManual.setVisibility(View.VISIBLE);
                     PBlogin.setVisibility(View.GONE);
 
 
@@ -238,6 +243,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         textViewSignup.setOnClickListener(this);
         textViewForgotPassword.setOnClickListener(this);
+        textViewManual.setOnClickListener(this);
         buttonLogin.setOnClickListener(this);
     }
         else
@@ -449,8 +455,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             case R.id.buttonLogin:
                 userLogin();
                 break;
-            case R.id.textViewForgotPassword:
+            case R.id.textViewManual:
+                intentManual = new Intent(this, Manual.class);
+                startActivity(intentManual);
+                break;
 
+            case R.id.textViewForgotPassword:
                 startActivity(new Intent(this, ResetPassword.class));
                 finish();
                 break; }

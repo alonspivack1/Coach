@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background"
+    android:background="#000"
     tools:context=".ViewProgram">
 
 
@@ -15,6 +15,7 @@
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_gravity="center"
         android:progressTint="@color/RatingBarColor"
+        android:progressBackgroundTint="@color/RatingBarColoroff"
         android:isIndicator="false"
         />
 

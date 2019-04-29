@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@drawable/backgroundman">
 
-    <TextView
-        android:id="@+id/fragchat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/background"
-        android:layoutDirection="rtl"
-        android:textDirection="rtl"
-        android:gravity="center"
-        android:text="אקטיביטי מעבר"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        android:textStyle="bold" />
 
-</LinearLayout>
+    <ProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

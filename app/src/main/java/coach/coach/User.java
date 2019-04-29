@@ -69,14 +69,7 @@ public class User {
      * @return the gender of the user.
      */
     public  String getGender() {
-        if (this.gender.equals("Male"))
-        {
-            return "זכר";
-        }
-        else
-        {
-            return "נקבה";
-        }
+        return this.gender;
     }
 
     /**

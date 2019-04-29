@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/backgroundman"
     tools:context=".UserProfileMaker">
 
     <ScrollView
@@ -142,6 +143,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:textColor="@color/colorText"
+                android:buttonTint="#A71A1A"
                 android:layoutDirection="rtl"
                 android:text="שריפת שומנים" />
 
@@ -152,6 +154,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:textColor="@color/colorText"
+                android:buttonTint="#A71A1A"
                 android:layoutDirection="rtl"
                 android:text="אימוני כוח בחדר כושר" />
 
@@ -163,6 +166,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:textColor="@color/colorText"
+                android:buttonTint="#A71A1A"
                 android:layoutDirection="rtl"
                 android:text="אימוני כוח בסטרייט" />
 
@@ -171,6 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:buttonTint="#A71A1A"
                 android:layout_weight="1"
                 android:layoutDirection="rtl"
                 android:textColor="@color/colorText"
@@ -180,6 +185,7 @@
                 android:id="@+id/cbuserdistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="#A71A1A"
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:textColor="@color/colorText"
@@ -192,6 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="1"
+                android:buttonTint="#A71A1A"
                 android:layoutDirection="rtl"
                 android:textColor="@color/colorText"
                 android:text="שיפור מהירות בריצות" />
@@ -202,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/background"
+                android:background="@drawable/reddark"
                 android:textColor="#FFFF"
                 android:textStyle="bold"
                 android:textSize="18dp"

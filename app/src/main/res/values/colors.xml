@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#021B9E</color>
+    <color name="colorPrimary">#AC0303</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#020480</color>
-    <color name="colorMessageSender">#48D565</color>
+    <color name="colorAccent">#800202</color>
+    <color name="colorMessageSender">#D80505</color>
     <color name="colorMessageReceive">#CFCDCD</color>
     <color name="colorTextSender">#F0FFFFFF</color>
     <color name="colorTextReceive">#000000</color>
-    <color name="blue_200">#FF90CAF9</color>
-    <color name="blue_500">#FF2196F3</color>
-    <color name="blue_700">#FF1976D2</color>
-    <color name="RatingBarColor">#FFF100</color>
-    <color name="colorHint">#D0000DFF</color>
-    <color name="colorText">#002AFF</color>
+    <color name="RatingBarColor">#FF0000</color>
+    <color name="RatingBarColoroff">#B6B6B6</color>
+    <color name="colorHint">#D0A70606</color>
+    <color name="colorText">#FF0000</color>
     <color name="colorTextDate">#000000</color>
     <color name="colorMessageDate">#93CAF1</color>
+    <color name="colorTextARE">#FF0000</color>
 
 
 

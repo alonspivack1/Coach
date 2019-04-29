@@ -120,14 +120,7 @@ public class Coach {
      * @return the gender of the coach.
      */
     public  String getGender() {
-        if (this.gender.equals("Male"))
-        {
-            return "זכר";
-        }
-        else
-        {
-            return "נקבה";
-        }
+     return this.gender;
     }
     private static Bitmap StringToBitmap(String encodedString) {
         if (encodedString.equals("0"))

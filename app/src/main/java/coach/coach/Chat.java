@@ -1,12 +1,14 @@
 package coach.coach;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,10 +29,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+
 /**
  * Room of the chat.
  */
 public class Chat extends AppCompatActivity {
+    EditText etMessageText;
     /**
      * The Intent.
      */
@@ -35,7 +42,7 @@ public class Chat extends AppCompatActivity {
     /**
      * The Last date massage.
      */
-    String lastdatemassage="";
+    String lastdatemassage = "";
     /**
      * The Receiver.
      */
@@ -63,11 +70,11 @@ public class Chat extends AppCompatActivity {
     /**
      * The Item.
      */
-    HashMap<String,String> item;
+    HashMap<String, String> item;
     /**
      * The List.
      */
-    ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     /**
      * The Database reference.
      */
@@ -87,11 +94,10 @@ public class Chat extends AppCompatActivity {
     /**
      * The First refresh.
      */
-    Boolean FirstRefresh=true;
+    Boolean FirstRefresh = true;
     /**
      * The Et message text.
      */
-    EditText etMessageText;
     /**
      * The Message string.
      */
@@ -99,7 +105,7 @@ public class Chat extends AppCompatActivity {
     /**
      * The Time.
      */
-    String time="";
+    String time = "";
     /**
      * The Message num.
      */
@@ -107,7 +113,7 @@ public class Chat extends AppCompatActivity {
     /**
      * The Notification chat.
      */
-    String NotificationChat="";
+    String NotificationChat = "";
     /**
      * The Chatbuttonsend.
      */
@@ -115,7 +121,7 @@ public class Chat extends AppCompatActivity {
     /**
      * The Flagint.
      */
-    int FLAGINT=1;
+    int FLAGINT = 1;
     /**
      * The Update notifiction.
      */
@@ -123,11 +129,11 @@ public class Chat extends AppCompatActivity {
     /**
      * The Phone.
      */
-    String Phone="";
+    String Phone = "";
     /**
      * The Reference.
      */
-    DatabaseReference Reference=FirebaseDatabase.getInstance().getReference().child("Notification");
+    DatabaseReference Reference = FirebaseDatabase.getInstance().getReference().child("Notification");
 
 
     @Override
@@ -138,19 +144,19 @@ public class Chat extends AppCompatActivity {
 
 
         intent = getIntent();
-        receiver=intent.getStringExtra("receiver");
-        sender=intent.getStringExtra("sender");
-        room=intent.getStringExtra("room");
-        type=intent.getStringExtra("type");
+        receiver = intent.getStringExtra("receiver");
+        sender = intent.getStringExtra("sender");
+        room = intent.getStringExtra("room");
+        type = intent.getStringExtra("type");
 
         Reference = Reference.child(receiver);
 
-        chatbuttonsend = (ImageButton)findViewById(R.id.chatbuttonsend);
-        etMessageText = (EditText)findViewById(R.id.etMessageText);
-        chatlvmessages = (ListView)findViewById(R.id.chatlvmessages);
+        chatbuttonsend = (ImageButton) findViewById(R.id.chatbuttonsend);
+        chatlvmessages = (ListView) findViewById(R.id.chatlvmessages);
         chatlvmessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatlvmessages.setStackFromBottom(true);
 
+        etMessageText = (EditText) findViewById(R.id.etMessageText);
 
        if (type.equals("User"))
        {
@@ -253,6 +259,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void run() {
                 RefreshMessages(); } }, 100);
+        chatlvmessages.setStackFromBottom(true);
 
 
     }
@@ -357,6 +364,7 @@ public class Chat extends AppCompatActivity {
         int minute = cal.get(Calendar.MINUTE);
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
         int month = cal.get(Calendar.MONTH);
+        month++;
         int day = cal.get(Calendar.DAY_OF_MONTH);
         int year = cal.get(Calendar.YEAR);
         String date = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
@@ -403,7 +411,20 @@ public class Chat extends AppCompatActivity {
      */
     public void SendMessage(View view) {
         if (!etMessageText.getText().toString().equals("")) {
-            Message(sender, receiver, etMessageText.getText().toString());
+            ConnectivityManager connectivityManager;
+            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                Message(sender, receiver, etMessageText.getText().toString());
+
+            }
+            else {
+                Toast.makeText(getBaseContext(),"אין חיבור לאינטרנט, ההודעה לא נשלחה",Toast.LENGTH_LONG).show();
+            }
+
+
+
+
 
         }
     }

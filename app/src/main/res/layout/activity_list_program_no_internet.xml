@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
     android:textDirection="rtl"
-    android:background="@drawable/background"
+    android:background="@drawable/backgroundman"
     android:orientation="vertical">
 
     <ImageButton
@@ -20,6 +20,5 @@
         android:longClickable="true"
         android:divider="#20000000"
         android:dividerHeight="10dp"
-        android:background="@drawable/background"
         android:layout_height="match_parent" />
 </LinearLayout>

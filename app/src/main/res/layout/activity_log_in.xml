@@ -5,6 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
+android:background="@drawable/backgroundman"
 tools:context=".LogInActivity">
 
 
@@ -67,14 +68,14 @@ tools:context=".LogInActivity">
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="7dp"
-            android:background="@drawable/background"
+            android:background="@drawable/reddark"
             android:text="התחברות"
             android:textColor="#FFFF"
             android:textSize="20dp"
             android:textStyle="bold"
             android:visibility="gone"
-
             android:textAllCaps="false" />
+
         <ProgressBar
             android:id="@+id/PBlogin"
             android:layout_width="match_parent"
@@ -84,7 +85,7 @@ tools:context=".LogInActivity">
         <CheckBox
             android:id="@+id/cbAutoLogIn"
             android:visibility="gone"
-
+            android:buttonTint="#A71A1A"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
@@ -120,10 +121,21 @@ tools:context=".LogInActivity">
             android:padding="15dp"
             android:textStyle="bold"
             android:visibility="gone"
-
             android:textSize="18dp"
             android:textColor="@color/colorText"
             android:text="איפוס סיסמה"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        <TextView
+            android:id="@+id/textViewManual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textSize="18dp"
+            android:textColor="@color/colorText"
+            android:text="מדריך למשתמש"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 

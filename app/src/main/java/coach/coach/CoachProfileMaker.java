@@ -164,7 +164,7 @@ public class CoachProfileMaker extends AppCompatActivity {
                     etcoachwhere.setText(coach.getWhere());
                     etcoachtime.setText(coach.getTime());
                     etcoachdescription.setText(coach.getDescription());
-                    if (coach.getGender().equals("Female"))
+                    if (coach.getGender().equals("נקבה"))
                     {
                         switchcoachgender.setChecked(false);
                     }
@@ -287,11 +287,11 @@ public class CoachProfileMaker extends AppCompatActivity {
 
         if (switchcoachgender.isChecked())
         {
-            Gender = "Male";
+            Gender ="זכר";
 
         }
         else {
-            Gender ="Female";
+            Gender ="נקבה";
         }
         if (Professionalization.length()==0)
         {

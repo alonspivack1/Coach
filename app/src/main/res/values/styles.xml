@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
         <item name="android:actionMenuTextColor">@color/colorTextSender</item>
         <item name="android:layout_gravity">right</item>
         <item name="actionBarSize">45dip</item>
@@ -13,11 +14,14 @@
     </style>
 
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">#0073FF</item>
+        <item name="colorControlActivated">#FF0000</item>
 
         <item name="colorSwitchThumbNormal">#f1f1f1
         </item>
 
-        <item name="android:colorForeground">#0057FF</item>
+        <item name="android:colorForeground">#FF0000</item>
+    </style>
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">#FF0000</item>
     </style>
 </resources>

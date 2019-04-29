@@ -1,7 +1,10 @@
 package coach.coach;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -16,6 +19,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -264,8 +269,17 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                positionadb=position;
-                Dialog();
+                ConnectivityManager connectivityManager;
+                connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                    positionadb=position;
+                    Dialog();
+                }
+                else {
+                    Toast.makeText(getActivity(),"אין חיבור לאינטרנט",Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -645,6 +659,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 int minute = cal.get(Calendar.MINUTE);
                 int hourofday = cal.get(Calendar.HOUR_OF_DAY);
                 int month = cal.get(Calendar.MONTH);
+                month++;
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 int year = cal.get(Calendar.YEAR);
                 String date = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
@@ -674,7 +689,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                                     reference3.child(username+"&"+CoachName).child("num").child("num").setValue(2);
                                     reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
                                     HashMap<String, String> hashMap = new HashMap<>();
-                                    String htmlnewprogram="<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">​</span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><i><b><u><span style=\"text-decoration:line-through;\">המאמן שלך עדין לא עדכן את התוכנית אימון שלך</span></u></b></i></span></u></i></b></p>\n</body></html>";
+                                    String htmlnewprogram="<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">המאמן עדין לא עדכן את התוכנית אימון </span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><u>שלך</u></span></u></i></b></p>\n</body></html>";
                                     hashMap.put("Data",htmlnewprogram);
                                     reference4.child(username+"&"+CoachName).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

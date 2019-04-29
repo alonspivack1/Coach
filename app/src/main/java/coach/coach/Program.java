@@ -1,6 +1,7 @@
 package coach.coach;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.chinalwb.are.AREditText;
 import com.chinalwb.are.styles.toolbar.IARE_Toolbar;
+import android.support.annotation.ColorInt;
+import android.text.style.ForegroundColorSpan;
 import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentCenter;
 import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentLeft;
 import com.chinalwb.are.styles.toolitems.ARE_ToolItem_AlignmentRight;
@@ -178,7 +181,8 @@ public class Program extends AppCompatActivity {
         mToolbar.addToolbarItem(right);
 
         mEditText.setToolbar(mToolbar);
-        mEditText.requestFocus();
+        mEditText.setTextColor(getResources().getColor(R.color.colorTextARE));
+        mEditText.setBackgroundResource(R.drawable.backgroundman);
 
     }
     @Override

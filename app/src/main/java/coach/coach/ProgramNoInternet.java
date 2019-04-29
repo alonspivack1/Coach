@@ -24,9 +24,10 @@ public class ProgramNoInternet extends AppCompatActivity {
         AreTextView arenointernet = (AreTextView)findViewById(R.id.arenointernet);
         Intent intent = getIntent();
         room = intent.getStringExtra("room");
-
+        arenointernet.setTextColor(getResources().getColor(R.color.colorTextARE));
+        arenointernet.setBackgroundResource(R.drawable.backgroundman);
         SharedPreferences Programs = getSharedPreferences("Programs", MODE_PRIVATE);
-        final String data = Programs.getString(room,"<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">​</span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><i><b><u><span style=\"text-decoration:line-through;\">המאמן שלך עדין לא עדכן את התוכנית אימון שלך</span></u></b></i></span></u></i></b></p>\n</body></html>");
+        final String data = Programs.getString(room,"<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">המאמן עדין לא עדכן את התוכנית אימון </span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><u>שלך</u></span></u></i></b></p>\n</body></html>");
         arenointernet.fromHtml(data);
 
 

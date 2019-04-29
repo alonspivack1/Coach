@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/backgroundman"
     android:padding="16dp"
     tools:context=".Mail">
 
@@ -61,7 +62,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:textAllCaps="false"
-        android:background="@drawable/background"
+        android:background="@drawable/reddark"
         android:text="שלח מייל" />
 
 </LinearLayout>

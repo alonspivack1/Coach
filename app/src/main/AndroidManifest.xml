@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FragmentAlerts"></activity>
+        <activity android:name=".Manual"></activity>
+        <activity android:name=".FragmentAlerts" />
         <activity android:name=".ListProgramNoInternet" />
         <activity android:name=".ProgramNoInternet" />
         <activity android:name=".Settings" />
@@ -42,7 +43,6 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".FragmentProgram" />
         <activity android:name=".FragmentSearch" />
-
 
         <service
             android:name=".BackgroundService"
