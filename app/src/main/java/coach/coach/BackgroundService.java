@@ -21,8 +21,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * The service saves alerts, sends a notification and sends a notification if the user has not logged in a day.
@@ -192,7 +197,8 @@ public class BackgroundService extends IntentService {
                             mNotificationManager.createNotificationChannel(channel);
                             mBuilder.setChannelId(channelId);
                         }
-                        mNotificationManager.notify(0, mBuilder.build());
+                            mBuilder.setAutoCancel(true);
+                            mNotificationManager.notify(0, mBuilder.build());
                     }
                     }
                     try {
@@ -232,14 +238,8 @@ public class BackgroundService extends IntentService {
                                         if (help.indexOf(",") != -1) {
 
 
-                                            Calendar cal = Calendar.getInstance();
-                                            int minute = cal.get(Calendar.MINUTE);
-                                            int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                            if (minute >= 10) {
-                                                time = String.valueOf(hourofday) + ":" + String.valueOf(minute);
-                                            } else {
-                                                time = String.valueOf(hourofday) + ":0" + String.valueOf(minute);
-                                            }
+
+                                            time = getTime();
                                             if (!help.substring(0, help.indexOf(",")).equals("")) {
                                                 SPprogram = help.substring(0, help.indexOf(",")) + "-" + time + "," + SPprogram;
                                                 SharedPreferences.Editor editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
@@ -253,7 +253,6 @@ public class BackgroundService extends IntentService {
                                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                             bigText.setBigContentTitle(StringAlertText);
-                                            Log.e("FIRST","1");
 
                                             bigText.setSummaryText(StringAlertTitle);
                                             mBuilder.setContentIntent(pendingIntent);
@@ -267,7 +266,8 @@ public class BackgroundService extends IntentService {
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);
                                             }
-                                            mNotificationManager.notify(1, mBuilder.build());
+                                                mBuilder.setAutoCancel(true);
+                                                mNotificationManager.notify(1, mBuilder.build());
                                         }
 
 
@@ -277,14 +277,8 @@ public class BackgroundService extends IntentService {
                                                 help = help.substring(help.indexOf(",") + 1);
                                                 if (help.indexOf(",") != -1) {
 
-                                                    cal = Calendar.getInstance();
-                                                    minute = cal.get(Calendar.MINUTE);
-                                                    hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                                    if (minute >= 10) {
-                                                        time = String.valueOf(hourofday) + ":" + String.valueOf(minute);
-                                                    } else {
-                                                        time = String.valueOf(hourofday) + ":0" + String.valueOf(minute);
-                                                    }
+                                                    time = getTime();
+
                                                     if (!help.substring(0, help.indexOf(",")).equals("")) {
                                                         SPprogram = help.substring(0, help.indexOf(",")) + "-" + time + "," + SPprogram;
                                                         editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
@@ -298,7 +292,6 @@ public class BackgroundService extends IntentService {
                                                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                                         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                                     bigText.setBigContentTitle(StringAlertText);
-                                                        Log.e("FIRST","2");
                                                         bigText.setSummaryText(StringAlertTitle);
                                                     mBuilder.setContentIntent(pendingIntent);
                                                     mBuilder.setSmallIcon(R.drawable.logo);
@@ -311,21 +304,15 @@ public class BackgroundService extends IntentService {
                                                         mNotificationManager.createNotificationChannel(channel);
                                                         mBuilder.setChannelId(channelId);
                                                     }
-                                                    mNotificationManager.notify(1, mBuilder.build());
+                                                        mBuilder.setAutoCancel(true);
+                                                        mNotificationManager.notify(1, mBuilder.build());
                                                 }
                                                 }
                                                 else {
                                                     if (!help.equals("")) {
 
-                                                        cal = Calendar.getInstance();
-                                                        minute = cal.get(Calendar.MINUTE);
-                                                        hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                                        if (minute>=10){
-                                                            time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
-                                                        else
-                                                        {
-                                                            time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
-                                                        }
+                                                        time = getTime();
+
                                                         if (!help.equals("")) {
                                                             SPprogram = help + "-" + time + "," + SPprogram;
                                                             editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
@@ -340,7 +327,6 @@ public class BackgroundService extends IntentService {
                                                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                                             bigText.setBigContentTitle(StringAlertText);
-                                                            Log.e("FIRST","3");
 
                                                             bigText.setSummaryText(StringAlertTitle);
                                                         mBuilder.setContentIntent(pendingIntent);
@@ -354,7 +340,8 @@ public class BackgroundService extends IntentService {
                                                             mNotificationManager.createNotificationChannel(channel);
                                                             mBuilder.setChannelId(channelId);
                                                         }
-                                                        mNotificationManager.notify(1, mBuilder.build());
+                                                            mBuilder.setAutoCancel(true);
+                                                            mNotificationManager.notify(1, mBuilder.build());
                                                     }}
 
                                                 }
@@ -363,15 +350,8 @@ public class BackgroundService extends IntentService {
                                             FirebaseDatabase.getInstance().getReference().child("Notification").child(username).child("ProgramAlarm").setValue("");
 
                                         } else {
-                                            cal = Calendar.getInstance();
-                                            minute = cal.get(Calendar.MINUTE);
-                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                            if (minute>=10){
-                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
-                                            else
-                                            {
-                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
-                                            }
+                                            time = getTime();
+
                                             if (!help.equals("")) {
                                                 SPprogram = help + "-" + time + "," + SPprogram;
                                                 editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
@@ -385,7 +365,6 @@ public class BackgroundService extends IntentService {
                                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                             bigText.setBigContentTitle(StringAlertText);
-                                                Log.e("FIRST","4");
 
                                                 bigText.setSummaryText(StringAlertTitle);
                                             mBuilder.setContentIntent(pendingIntent);
@@ -399,7 +378,8 @@ public class BackgroundService extends IntentService {
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);
                                             }
-                                            mNotificationManager.notify(1, mBuilder.build());
+                                                mBuilder.setAutoCancel(true);
+                                                mNotificationManager.notify(1, mBuilder.build());
                                         }}
                                         FirebaseDatabase.getInstance().getReference().child("Notification").child(username).child("ProgramAlarm").setValue("");
                                         }
@@ -409,15 +389,8 @@ public class BackgroundService extends IntentService {
                                         String help = dataSnapshot.child("Chat").getValue().toString();
                                         if (help.indexOf(",") != -1) {
 
-                                            cal = Calendar.getInstance();
-                                            minute = cal.get(Calendar.MINUTE);
-                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                            if (minute>=10){
-                                                time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
-                                            else
-                                            {
-                                                time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
-                                            }
+                                            time = getTime();
+
                                             if (!help.substring(0, help.indexOf(",")).equals("")) {
                                                 SPchat = "התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(",")) + "-" + time + "," + SPchat;
                                                 editor = getSharedPreferences("Alerts", MODE_PRIVATE).edit();
@@ -432,7 +405,6 @@ public class BackgroundService extends IntentService {
                                                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                                 NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                                 bigText.setBigContentTitle(StringAlertText);
-                                                Log.e("FIRST","5");
 
                                                 bigText.setSummaryText(StringAlertTitle);
                                                 mBuilder.setContentIntent(pendingIntent);
@@ -446,21 +418,15 @@ public class BackgroundService extends IntentService {
                                                     mNotificationManager.createNotificationChannel(channel);
                                                     mBuilder.setChannelId(channelId);
                                                 }
+                                                mBuilder.setAutoCancel(true);
                                                 mNotificationManager.notify(1, mBuilder.build());
                                             }
                                             while (help.indexOf(",") != -1) {
                                                 help = help.substring(help.indexOf(",") + 1);
                                                 if (help.indexOf(",") != -1) {
 
-                                                    cal = Calendar.getInstance();
-                                                    minute = cal.get(Calendar.MINUTE);
-                                                    hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                                    if (minute>=10){
-                                                        time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
-                                                    else
-                                                    {
-                                                        time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
-                                                    }
+                                                    time = getTime();
+
                                                     if (!help.substring(0, help.indexOf(",")).equals("")) {
 
                                                         SPchat = "התקבלה הודעה חדשה מ" + help.substring(0, help.indexOf(",")) + "-" + time + "," + SPchat;
@@ -474,7 +440,6 @@ public class BackgroundService extends IntentService {
                                                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                                         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                                         bigText.setBigContentTitle(StringAlertText);
-                                                        Log.e("FIRST","6");
 
                                                         bigText.setSummaryText(StringAlertTitle);
                                                     mBuilder.setContentIntent(pendingIntent);
@@ -488,20 +453,14 @@ public class BackgroundService extends IntentService {
                                                         mNotificationManager.createNotificationChannel(channel);
                                                         mBuilder.setChannelId(channelId);
                                                     }
-                                                    mNotificationManager.notify(1, mBuilder.build());}
+                                                        mBuilder.setAutoCancel(true);
+                                                        mNotificationManager.notify(1, mBuilder.build());}
                                                 } else {
                                                     if (!help.equals("")) {
 
 
-                                                        cal = Calendar.getInstance();
-                                                        minute = cal.get(Calendar.MINUTE);
-                                                        hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                                        if (minute>=10){
-                                                            time = String.valueOf(hourofday)+":"+String.valueOf(minute);}
-                                                        else
-                                                        {
-                                                            time = String.valueOf(hourofday)+":0"+String.valueOf(minute);
-                                                        }
+                                                        time = getTime();
+
                                                         if (!help.equals("")) {
 
                                                             SPchat = "התקבלה הודעה חדשה מ" + help + "-" + time + "," + SPchat;
@@ -516,7 +475,6 @@ public class BackgroundService extends IntentService {
                                                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                                             bigText.setBigContentTitle(StringAlertText);
-                                                            Log.e("FIRST","7");
 
                                                             bigText.setSummaryText(StringAlertTitle);
                                                         mBuilder.setContentIntent(pendingIntent);
@@ -530,21 +488,16 @@ public class BackgroundService extends IntentService {
                                                             mNotificationManager.createNotificationChannel(channel);
                                                             mBuilder.setChannelId(channelId);
                                                         }
-                                                        mNotificationManager.notify(1, mBuilder.build());}
+                                                            mBuilder.setAutoCancel(true);
+                                                            mNotificationManager.notify(1, mBuilder.build());}
                                                     }
                                                 }
 
                                             }
                                         } else {
 
-                                            cal = Calendar.getInstance();
-                                            minute = cal.get(Calendar.MINUTE);
-                                            hourofday = cal.get(Calendar.HOUR_OF_DAY);
-                                            if (minute >= 10) {
-                                                time = String.valueOf(hourofday) + ":" + String.valueOf(minute);
-                                            } else {
-                                                time = String.valueOf(hourofday) + ":0" + String.valueOf(minute);
-                                            }
+                                            time = getTime();
+
                                             if (!help.equals("")) {
 
                                                 SPchat = "התקבלה הודעה חדשה מ" + help + "-" + time + "," + SPchat;
@@ -559,7 +512,6 @@ public class BackgroundService extends IntentService {
                                             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
                                             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
                                             bigText.setBigContentTitle(StringAlertText);
-                                                Log.e("FIRST","8");
                                                 bigText.setSummaryText(StringAlertTitle);
                                             mBuilder.setContentIntent(pendingIntent);
                                             mBuilder.setSmallIcon(R.drawable.logo);
@@ -572,7 +524,8 @@ public class BackgroundService extends IntentService {
                                                 mNotificationManager.createNotificationChannel(channel);
                                                 mBuilder.setChannelId(channelId);
                                             }
-                                            mNotificationManager.notify(1, mBuilder.build());}
+                                                mBuilder.setAutoCancel(true);
+                                                mNotificationManager.notify(1, mBuilder.build());}
                                             }
 
                                         }
@@ -621,8 +574,8 @@ public class BackgroundService extends IntentService {
                             mNotificationManager.createNotificationChannel(channel);
                             mBuilder.setChannelId(channelId);
                         }
-
-                        mNotificationManager.notify(0, mBuilder.build());}
+                            mBuilder.setAutoCancel(true);
+                            mNotificationManager.notify(0, mBuilder.build());}
 
 
                     }
@@ -681,5 +634,23 @@ public class BackgroundService extends IntentService {
         Log.v("service", "Destroy");
         onStartCommand(null,0,0);
     }
+    public String getTime()
+    {   String timenow="";
+        Calendar cal = Calendar.getInstance();
+        int minute = cal.get(Calendar.MINUTE);
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        int month = cal.get(Calendar.MONTH);
+        month++;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String date = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
+        if (minute >= 10) {
+            timenow = date+" "+String.valueOf(hourofday) + ":" + String.valueOf(minute);
+        } else {
+            timenow = date+" "+String.valueOf(hourofday) + ":0" + String.valueOf(minute);
+        }
+        return timenow;
+    }
+}
 
-  }
+

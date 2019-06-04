@@ -98,4 +98,10 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intentlogin = new Intent(this,LogInActivity.class);
+        startActivity(intentlogin);
+    }
 }

@@ -240,6 +240,7 @@ public class Program extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint()
     {
+        mEditText.fromHtml("String");
         if (AutoSave){
         databaseReference.child("Data").setValue(mEditText.getHtml());
         if (UpdateNotifiction)

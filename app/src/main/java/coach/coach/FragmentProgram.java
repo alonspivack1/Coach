@@ -107,11 +107,7 @@ public class FragmentProgram extends Fragment{
         MainActivity activity = (MainActivity) getActivity();
         username = activity.getUsername();
         type = activity.getType();
-        Button fragprogramSC = (Button)view.findViewById(R.id.fragprogramSC);
-        if (type.equals("Coach"))
-        {
-            fragprogramSC.setVisibility(View.GONE);
-        }
+
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -214,9 +210,9 @@ public class FragmentProgram extends Fragment{
         adb = new  AlertDialog.Builder(getActivity());
         adb.setTitle("ביטול קשר");
         if (type.equals("User")){
-            adb.setMessage("האם אתה לבטל קשר עם המאמן: "+coaches[positionadb].getName());}
+            adb.setMessage("האם אתה רוצה לבטל קשר עם המאמן: "+coaches[positionadb].getName());}
         else
-        {adb.setMessage("האם אתה לבטל קשר עם המתאמן: "+users[positionadb].getName());}
+        {adb.setMessage("האם אתה רוצה לבטל קשר עם המתאמן: "+users[positionadb].getName());}
 
         adb.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
@@ -325,7 +321,7 @@ public class FragmentProgram extends Fragment{
 
         while (index >= 0) {
 
-            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)));
+            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)),dataSnap.child("Rating").child(sub.substring(0, index)));
             coachesList.add(coaches[i]);
             coachesnames+=coaches[i].getName()+",";
             i++;

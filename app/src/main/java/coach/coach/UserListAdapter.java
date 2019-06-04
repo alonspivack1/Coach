@@ -1,6 +1,8 @@
 package coach.coach;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +63,10 @@ public class UserListAdapter extends ArrayAdapter<User> {
          */
         TextView usertvlistheight;
         /**
+         * The Usertvlistbmi.
+         */
+        TextView usertvlistbmi;
+        /**
          * The Usertvlistweight.
          */
         TextView usertvlistweight;
@@ -109,6 +115,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
             holder.usertvlistgender = (TextView)convertView.findViewById(R.id.usertvlistgender);
             holder.usertvlistweight = (TextView) convertView.findViewById(R.id.usertvlistweight);
             holder.usertvlistheight = (TextView) convertView.findViewById(R.id.usertvlistheight);
+            holder.usertvlistbmi = (TextView) convertView.findViewById(R.id.usertvlistbmi);
             holder.usertvlisttime = (TextView) convertView.findViewById(R.id.usertvlisttime);
             holder.usertvlistitem = (TextView) convertView.findViewById(R.id.usertvlistitem);
             holder.usertvlistgoal = (TextView) convertView.findViewById(R.id.usertvlistgoal);
@@ -135,16 +142,18 @@ public class UserListAdapter extends ArrayAdapter<User> {
         holder.usertvlistgender.setText("מין: "+user.getGender());
         holder.usertvlistweight.setText("משקל: "+user.getWeight());
         holder.usertvlistheight.setText("גובה: "+user.getHeight());
+        holder.usertvlistbmi.setText("מדד גוף: "+user.getBMI());
         holder.usertvlisttime.setText("כמה זמן מתאמן: "+user.getTime());
         holder.usertvlistitem.setText("ציוד בבית: "+user.getItem());
         holder.usertvlistgoal.setText("מטרה: "+user.getGoal());
+
         if (user.getImage()==null)
         {
-            holder.userivlistimage.setImageResource(R.drawable.unimage);
-
+            holder.userivlistimage.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.unimage));
         }
         else {
-            holder.userivlistimage.setImageBitmap(user.getImage());
+            Drawable image = new BitmapDrawable(user.getImage());
+            holder.userivlistimage.setBackgroundDrawable(image);
 
         }
         holder.usertvlistdescription.setText("תיאור קצר: "+user.getDescription());

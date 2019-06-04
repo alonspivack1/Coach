@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -104,6 +106,8 @@ public class Settings extends AppCompatActivity {
                     databasePhone.setValue(Phone);
                 }
             }
+
+        Toast.makeText(this,"ההגדרות נשמרו",Toast.LENGTH_SHORT).show();
     }
 
     @Override

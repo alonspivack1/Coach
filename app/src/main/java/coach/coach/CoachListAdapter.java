@@ -3,6 +3,7 @@ package coach.coach;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,8 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
 
         String name = getItem(position).getName();
         DataSnapshot details =getItem(position).getDetails();
-        Coach coach = new Coach(name,details);
+        DataSnapshot details2 =getItem(position).getDetails2();
+        Coach coach = new Coach(name,details,details2);
 
 
         final View result;
@@ -155,51 +157,10 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
 
         }
         holder.tvlistdescription.setText("תיאור קצר: "+coach.getDescription());
-        holder.databaseReference = FirebaseDatabase.getInstance().getReference().child("Rating").child(name);
-        holder.databaseReference.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        int RatersNumber=Integer.parseInt(dataSnapshot.child("RatersNumber").getValue().toString());
-                        float Rating = Float.valueOf(dataSnapshot.child("Rating").getValue().toString());
-                        Rating = Rating/RatersNumber;
-                        holder.rblistrate.setRating(Rating);
-                        holder.tvlistrate.setText("("+RatersNumber+")");
-                    }
+        holder.rblistrate.setRating(coach.getAvgRating());
+        holder.tvlistrate.setText("("+coach.getRatersNumber()+")");
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        holder.rblistrate.setRating(0);
-                        holder.tvlistrate.setText("(0)");
-
-                    }
-                });
 
         return convertView;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -135,10 +135,15 @@ public class ViewProgram extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("Data")){
-                Log.e("Text",dataSnapshot.child("Data").getValue().toString());
                 try {
                     areTextView.fromHtml(dataSnapshot.child("Data").getValue().toString());
-
+                    Log.e("DATA",dataSnapshot.child("Data").getValue().toString());
+                    if (!(dataSnapshot.child("Data").getValue().toString()).equals("<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">המאמן עדין לא עדכן את התוכנית אימון </span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><u>שלך</u></span></u></i></b></p>\n</body></html>"))
+                    { rbViewProgram.setIsIndicator(false);
+                    }
+                    else {
+                        rbViewProgram.setIsIndicator(true);
+                    }
                 }
                 catch (Exception e)
                 {}

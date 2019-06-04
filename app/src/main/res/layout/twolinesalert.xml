@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl"
+    android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alertmessage"
+            android:textColor="#C7C2C2"
+            android:textSize="18dp"
+            android:maxEms="13"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="התראה נשלחת"
+            />
+
+    <TextView
+        android:id="@+id/alerttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="10:23 1/1/2019"
+        android:maxEms="7"
+
+        android:textColor="#FF0000"
+        android:textSize="18dp" />
+
+</RelativeLayout>

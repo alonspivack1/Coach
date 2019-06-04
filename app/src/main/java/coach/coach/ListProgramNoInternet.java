@@ -3,6 +3,7 @@ package coach.coach;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Activity just for Users - see the list of training programs that the coaches have create for you - in a state without internet.
@@ -49,10 +51,9 @@ public class ListProgramNoInternet extends AppCompatActivity {
         intent = new Intent(this,ProgramNoInternet.class);
         nointenrnetprogramlist = findViewById(R.id.nointenrnetprogramlist);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1);
+                R.layout.textlistnointernet, R.id.textviewnointernet);
         SharedPreferences Coaches = getSharedPreferences("Coaches", MODE_PRIVATE);
         coachesnames =Coaches.getString("coachesnames","");
-
         username =Coaches.getString("username","");
         if (!username.equals(""))
         {

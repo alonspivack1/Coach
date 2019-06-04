@@ -6,71 +6,7 @@
     android:textDirection="rtl"
     android:background="@drawable/backgroundman"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="right"
-        android:gravity="right"
-        android:layoutDirection="rtl"
-        android:textDirection="rtl"
-        android:orientation="horizontal"
-        android:background="#000">
 
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="צאטים"
-            android:layoutDirection="rtl"
-            android:textDirection="rtl"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#FFFF"
-            android:background="@android:color/transparent" />
-
-
-
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="תוכנית אישית"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layoutDirection="rtl"
-            android:textDirection="rtl"
-            android:textColor="#FFFF"
-            android:background="@android:color/transparent" />
-
-
-        <Button
-            android:id="@+id/fragalertsSC"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="חיפוש מאמנים"
-            android:textSize="20dp"
-            android:layoutDirection="rtl"
-            android:textDirection="rtl"
-            android:textColor="#FFFF"
-            android:background="@android:color/transparent"
-            android:textStyle="bold" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="התראות"
-            android:textSize="20dp"
-            android:layoutDirection="rtl"
-            android:textDirection="rtl"
-            android:textColor="#FFFF"
-            android:background="#FFFF"
-            android:textStyle="bold" />
-
-
-    </LinearLayout>
 
     <ToggleButton
         android:id="@+id/tbalert"

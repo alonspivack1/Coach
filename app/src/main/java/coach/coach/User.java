@@ -82,6 +82,40 @@ public class User {
     }
 
     /**
+     * Get BMI.
+     *
+     * @return the bmi of the user.
+     */
+    public String getBMI(){
+        float bmi = Float.valueOf(this.weight)/((Float.valueOf(this.height)/100)*(Float.valueOf(this.height))/100);
+        if (bmi<1000) {
+            String health="";
+            if (bmi <= 18.5) {
+                health="תת משקל";
+            }
+            if (bmi > 18.5 && bmi <= 25) {
+                health="משקל תקין";
+            }
+            if (bmi > 25 && bmi <= 29.9) {
+                health="משקל עודף";
+            }
+            if (bmi>29.9&&bmi<=34.9) {
+                health="השמנה בנונית";
+            }
+            if (bmi>34.9&&bmi<=39.9) {
+                health="השמנה חמורה";
+            }
+            if (bmi>39.9) {
+                health="השמנה חמורה מאוד";
+            }
+            return health;
+        }
+        else {
+            return "";
+        }
+    }
+
+    /**
      * Gets description.
      *
      * @return the description of the user.

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
 /**
  * The Sign up activity.
  */
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class  SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
      * The Progress bar.
@@ -534,11 +535,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
-
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -556,6 +555,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intentlogin = new Intent(this,LogInActivity.class);
+        startActivity(intentlogin);
+    }
 
 }

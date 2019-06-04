@@ -6,6 +6,8 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/backgroundman"
 android:orientation="vertical"
+android:descendantFocusability="beforeDescendants"
+android:focusableInTouchMode="true"
 tools:context=".CoachProfileMaker">
 
 <ScrollView
@@ -33,6 +35,8 @@ tools:context=".CoachProfileMaker">
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorHint"
             android:hint="גיל"
+            android:maxLines="1"
+            android:maxLength="3"
             android:inputType="phone" />
 
 
@@ -68,6 +72,8 @@ tools:context=".CoachProfileMaker">
             android:hint="מקום התמקצעות"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorHint"
+            android:maxLines="1"
+            android:maxLength="25"
             android:inputType="textPersonName" />
 
         <EditText
@@ -77,6 +83,8 @@ tools:context=".CoachProfileMaker">
             android:ems="10"
             android:gravity="right"
             android:hint="ותק באימון"
+            android:maxLines="1"
+            android:maxLength="27"
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorHint"
             android:inputType="textPersonName" />
@@ -90,6 +98,8 @@ tools:context=".CoachProfileMaker">
             android:textColor="@color/colorText"
             android:textColorHint="@color/colorHint"
             android:gravity="right"
+            android:maxLines="4"
+            android:maxLength="148"
             android:hint="תיאור קצר" />
 
 

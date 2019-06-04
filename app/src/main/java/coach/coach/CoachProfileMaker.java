@@ -155,7 +155,7 @@ public class CoachProfileMaker extends AppCompatActivity {
             @Override
             public void run() {
                 Coach coach;
-                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username));;
+                coach = new Coach(username,dataSnap.child("ProfileCoach").child(username),dataSnap.child("Rating").child(username));;
                 if (!coach.getAge().equals("0"))
                 {
                     ivcoachimage.setImageBitmap(coach.getImage());
@@ -197,7 +197,7 @@ public class CoachProfileMaker extends AppCompatActivity {
 
 
             }
-        }, 1000);
+        }, 50);
     }
 
     /**
@@ -367,7 +367,6 @@ public class CoachProfileMaker extends AppCompatActivity {
             height = maxSize;
             width = (int) (height * bitmapRatio);
         }
-
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 

@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:background="@drawable/backgroundman"
     tools:context=".UserProfileMaker">
@@ -33,6 +35,8 @@
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorHint"
                 android:hint="גיל"
+                android:maxLength="3"
+                android:maxLines="1"
                 android:inputType="phone" />
 
             <LinearLayout
@@ -68,6 +72,8 @@
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorHint"
                 android:hint="משקל"
+                android:maxLength="3"
+                android:maxLines="1"
                 android:inputType="phone" />
 
 
@@ -80,6 +86,8 @@
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorHint"
                 android:hint="גובה"
+                android:maxLength="3"
+                android:maxLines="1"
                 android:inputType="phone" />
             <TextView
                 android:id="@+id/tvuserbmi"
@@ -88,8 +96,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
-                android:text="BMI:0" />
+                android:textStyle="bold" />
 
 
             <EditText
@@ -101,6 +108,8 @@
                 android:hint="כמה זמן מתאמן"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorHint"
+                android:maxLength="30"
+                android:maxLines="1"
                 android:inputType="textPersonName" />
 
             <EditText
@@ -111,6 +120,8 @@
                 android:textColorHint="@color/colorHint"
                 android:ems="10"
                 android:gravity="right"
+                android:maxLength="40"
+                android:maxLines="2"
                 android:hint="ציוד בבית" />
 
 
@@ -121,6 +132,8 @@
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorHint"
                 android:ems="10"
+                android:maxLines="4"
+                android:maxLength="148"
                 android:gravity="right"
                 android:hint="תיאור קצר" />
 

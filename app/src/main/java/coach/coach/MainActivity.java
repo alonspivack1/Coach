@@ -10,20 +10,25 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,11 +37,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.TimeZone;
+
 /**
  * Main activity - the "home" activity of the application.
  */
 public class MainActivity extends AppCompatActivity {
 
+    LinearLayout LLayoutmain;
     /**
      * The Intent.
      */
@@ -74,19 +87,7 @@ public class MainActivity extends AppCompatActivity {
     public Fragment myfragment;
     private DatabaseReference databaseReference;
     private ConnectivityManager connectivityManager;
-    /**
-     * The Button 1.
-     */
-    Button button1, /**
-     * The Button 2.
-     */
-    button2, /**
-     * The Button 3.
-     */
-    button3, /**
-     * The Button 4.
-     */
-    button4;
+
     /**
      * The Sign out.
      */
@@ -108,11 +109,17 @@ public class MainActivity extends AppCompatActivity {
      * The S ppassword.
      */
     SPpassword="nopassword";
+    int CoachesNumber=0;
+    Toolbar toolbar;
+    TextView menuchat,menuprogram,menusearch,menualert;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("");
+        getSupportActionBar().hide();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        toolbar.inflateMenu(R.menu.menu_fragment);
 
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
@@ -144,237 +151,46 @@ public class MainActivity extends AppCompatActivity {
             startService(service);
 
         }
-
-
-        button4 = (Button) findViewById(R.id.button4);
-        button3 = (Button) findViewById(R.id.button3);
-        button2 = (Button) findViewById(R.id.button2);
-        button1 = (Button) findViewById(R.id.button1);
-        button1.setVisibility(View.GONE);
-        button2.setVisibility(View.GONE);
-        button3.setVisibility(View.GONE);
-            button4.setVisibility(View.GONE);
-
-            final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                button1.setVisibility(View.VISIBLE);
-                button2.setVisibility(View.VISIBLE);
-                button4.setVisibility(View.VISIBLE);
-                if (type.equals("User")) {
-                    button3.setVisibility(View.VISIBLE);
-                }
+            LLayoutmain = (LinearLayout)findViewById(R.id.LLayoutmain);
+            menuchat = (TextView)findViewById(R.id.menuchat);
+            menuprogram = (TextView)findViewById(R.id.menuprogram);
+            menusearch = (TextView)findViewById(R.id.menusearch);
+            if (type.equals("Coach"))
+            {
+                menusearch.setVisibility(View.GONE);
+                LLayoutmain.setWeightSum(3);
             }
-        }, 1100);
 
+            menualert = (TextView)findViewById(R.id.menualert);
+            menuchat.setTextColor(Color.WHITE);
+            menuprogram.setTextColor(Color.BLACK);
+            menusearch.setTextColor(Color.BLACK);
+            menualert.setTextColor(Color.BLACK);
 
 
             databaseReference = FirebaseDatabase.getInstance().getReference().child("UserNames");
-
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (type.equals("User"))
                     {
                         String data = dataSnapshot.child(username).getValue().toString();
-                        int CoachesNumber = countChar(data,',')-3;
-                        if (CoachesNumber>6)
-                        {
-                            button3.setEnabled(false);
-                            Toast.makeText(getBaseContext(),"אתה לא יכול לשלוח עוד בקשות קשר למאמנים, אי אפשר להיות בקשר עם יותר מ6 מאמנים",Toast.LENGTH_LONG).show();
-                        }
-
-                    }
-
-
-                }
-
+                        CoachesNumber = countChar(data,',')-3;
+                    }}
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-
-    }
+                }});
+        }
     else
         {
             Intent intent = new Intent(this,ListProgramNoInternet.class);
             startActivity(intent);
             finish();
         }}
-    @Override
-    public boolean onCreateOptionsMenu (Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        menu.add("התנתקות");
-        menu.add("עדכון פרופיל");
-        menu.add("שליחת מייל למפתח");
-        menu.add("הגדרות");
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        String st = item.getTitle().toString();
-        if (st.equals("עדכון פרופיל")) {
-            if (type.equals("Coach")) {
-                intentUpdateProfile = new Intent(this, CoachProfileMaker.class);
-                intentUpdateProfile.putExtra("username",username);
-                startActivity(intentUpdateProfile);
-            }
-            if (type.equals("User")) {
-                intentUpdateProfile = new Intent(this, UserProfileMaker.class);
-                intentUpdateProfile.putExtra("username", username);
-                startActivity(intentUpdateProfile);
-            }
-        }
-        if (st.equals("קרדיטים"))
-        {
-            intentCredits = new Intent(this, Credits.class);
-            startActivity(intentCredits);
-        }
-        if (st.equals("הגדרות"))
-        {
-            intentSettings = new Intent(this, Settings.class);
-            intentSettings.putExtra("type",type);
-            intentSettings.putExtra("username",username);
-
-            startActivity(intentSettings);
-        }
-        if (st.equals("שליחת מייל למפתח"))
-        {
-            intentMail = new Intent(this, Mail.class);
-            startActivity(intentMail);
-        }
-        if (st.equals("התנתקות"))
-        {
-            SharedPreferences onoffref = getSharedPreferences("BackgroundService", MODE_PRIVATE);
-            int onoff = onoffref.getInt("onoff",0);
-            onoff=onoff+1;
-            SharedPreferences.Editor editorr = getSharedPreferences("BackgroundService", MODE_PRIVATE).edit();
-            editorr.putInt("onoff",onoff);
-            editorr.apply();
-
-            SharedPreferences.Editor editorsevice = getSharedPreferences("service", MODE_PRIVATE).edit();
-            editorsevice.putString("username", username);
-            editorsevice.putBoolean("signout", true);
-            editorsevice.apply();
-
-            SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
-            editor.putString("username", "nousername");
-            editor.putString("type", "notype");
-            editor.putString("email", "noemail");
-            editor.putString("password", "nopassword");
-            editor.apply();
-            SignOut=true;
-            FirebaseAuth.getInstance().signOut();
-            this.finish();
-            finish();
-            startActivity(new Intent(this,LogInActivity.class));
-        }
-        return true;
-    }
-
-    /**
-     * move to chat fragment.
-     *
-     * @param view the view
-     */
-    public void FragmentOneClick(View view) {
-        try {
-        if (FragInt != 1) {
-            Thread.sleep(200);
-            FragInt = 1;
-            myfragment = new FragmentChat();
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-            fragmentTransaction.commit();
-        }
-    }catch (Exception e) {
-        System.out.println("An exception!");
-    }
 
 
 
 
-    }
-
-    /**
-     * move to program fragment.
-     *
-     * @param view the view
-     */
-    public void FragmentTwoClick(View view) {
-
-        try{
-        if (FragInt != 2) {
-            Thread.sleep(200);
-            FragInt = 2;
-            myfragment = new FragmentProgram();
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-            fragmentTransaction.commit();
-        }
-    }catch (Exception e) {
-        System.out.println("An exception!");
-    }
-
-
-    }
-
-    /**
-     * move to search fragment.
-     * @param view the view
-     */
-    public void FragmentThirdClick(View view) {
-        try{
-            if (FragInt != 3) {
-            if (type.equals("User")) {
-                Thread.sleep(200);
-                FragInt = 3;
-                myfragment = new FragmentSearch();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-
-            }
-        }
-    }catch (Exception e) {
-        System.out.println("An exception!");
-    }
-
-    }
-
-    /**
-     * move to alerts fragment.
-     *
-     * @param view the view
-     */
-    public void FragmentFourthClick(View view){
-
-        try{
-            if (FragInt != 4) {
-                Thread.sleep(200);
-                FragInt = 4;
-                myfragment = new FragmentAlerts();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
-                fragmentTransaction.commit();
-            }
-        }catch (Exception e) {
-            System.out.println("An exception!");
-        }
-
-
-    }
 
     /**
      * Gets username.
@@ -414,44 +230,155 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void menuuu(View view) {
-        this.openOptionsMenu();
+
+
+
+    public void Credits(MenuItem item) {
+        intentCredits = new Intent(this, Credits.class);
+        startActivity(intentCredits);
     }
-    @Override
-    public void openOptionsMenu()
-    {
-        android.support.v7.widget.Toolbar mActionBar = (android.support.v7.widget.Toolbar) getActionBar(getWindow().getDecorView());
-        mActionBar.showOverflowMenu();
+
+    public void Settings(MenuItem item) {
+        intentSettings = new Intent(this, Settings.class);
+        intentSettings.putExtra("type",type);
+        intentSettings.putExtra("username",username);
+        startActivity(intentSettings);
     }
-    public static ViewGroup getActionBar(View view)
-    {
-        try
-        {
-            if (view instanceof ViewGroup)
-            {
-                ViewGroup viewGroup = (ViewGroup) view;
 
-                if (viewGroup instanceof android.support.v7.widget.Toolbar)
-                {
-                    return viewGroup;
-                }
+    public void Mail(MenuItem item) {
+        intentMail = new Intent(this, Mail.class);
+        startActivity(intentMail);
+    }
 
-                for (int i = 0; i < viewGroup.getChildCount(); i++)
-                {
-                    ViewGroup actionBar = getActionBar(viewGroup.getChildAt(i));
+    public void Profile(MenuItem item) {
+            if (type.equals("Coach")) {
+                intentUpdateProfile = new Intent(this, CoachProfileMaker.class);
+                intentUpdateProfile.putExtra("username",username);
+                startActivity(intentUpdateProfile);
+            }
+            if (type.equals("User")) {
+                intentUpdateProfile = new Intent(this, UserProfileMaker.class);
+                intentUpdateProfile.putExtra("username", username);
+                startActivity(intentUpdateProfile);
 
-                    if (actionBar != null)
+        }
+    }
+
+    public void SignOut(MenuItem item) {
+        SharedPreferences onoffref = getSharedPreferences("BackgroundService", MODE_PRIVATE);
+        int onoff = onoffref.getInt("onoff",0);
+        onoff=onoff+1;
+        SharedPreferences.Editor editorr = getSharedPreferences("BackgroundService", MODE_PRIVATE).edit();
+        editorr.putInt("onoff",onoff);
+        editorr.apply();
+
+        SharedPreferences.Editor editorsevice = getSharedPreferences("service", MODE_PRIVATE).edit();
+        editorsevice.putString("username", username);
+        editorsevice.putBoolean("signout", true);
+        editorsevice.apply();
+
+        SharedPreferences.Editor editor = getSharedPreferences("AutoLogIn", MODE_PRIVATE).edit();
+        editor.putString("username", "nousername");
+        editor.putString("type", "notype");
+        editor.putString("email", "noemail");
+        editor.putString("password", "nopassword");
+        editor.apply();
+        SignOut=true;
+        FirebaseAuth.getInstance().signOut();
+        this.finish();
+        finish();
+        startActivity(new Intent(this,LogInActivity.class));
+    }
+
+    public void onClickChat(View view) {
+        try {
+            if (FragInt != 1) {
+                menuchat.setTextColor(Color.WHITE);
+                menuprogram.setTextColor(Color.BLACK);
+                menusearch.setTextColor(Color.BLACK);
+                menualert.setTextColor(Color.BLACK);
+                Thread.sleep(200);
+                FragInt = 1;
+                myfragment = new FragmentChat();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+            }
+        }catch (Exception e) {
+            System.out.println("An exception!");
+        }
+    }
+
+    public void onClickProgram(View view) {
+        try{
+
+            if (FragInt != 2) {
+
+                menuchat.setTextColor(Color.BLACK);
+                menuprogram.setTextColor(Color.WHITE);
+                menusearch.setTextColor(Color.BLACK);
+                menualert.setTextColor(Color.BLACK);
+
+                Thread.sleep(200);
+                FragInt = 2;
+                myfragment = new FragmentProgram();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+            }
+        }catch (Exception e) {
+            System.out.println("An exception!");
+        }
+    }
+
+    public void onClickSearch(View view) {
+        try{
+            if (FragInt != 3) {
+                if (type.equals("User")) {
+                    if (CoachesNumber>6)
                     {
-                        return actionBar;
+                        Toast.makeText(getBaseContext(),"אתה לא יכול לשלוח עוד בקשות קשר למאמנים, אי אפשר להיות בקשר עם יותר מ6 מאמנים",Toast.LENGTH_LONG).show();
                     }
+                    else
+                    {
+                        menuchat.setTextColor(Color.BLACK);
+                        menuprogram.setTextColor(Color.BLACK);
+                        menusearch.setTextColor(Color.WHITE);
+                        menualert.setTextColor(Color.BLACK);
+                        Thread.sleep(200);
+                        FragInt = 3;
+                        myfragment = new FragmentSearch();
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                        fragmentTransaction.commit();}
+
                 }
             }
+        }catch (Exception e) {
+            System.out.println("An exception!");
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+    }
 
-        return null;
+    public void onClickAlert(View view) {
+        try{
+            if (FragInt != 4) {
+                menuchat.setTextColor(Color.BLACK);
+                menuprogram.setTextColor(Color.BLACK);
+                menusearch.setTextColor(Color.BLACK);
+                menualert.setTextColor(Color.WHITE);
+                Thread.sleep(200);
+                FragInt = 4;
+                myfragment = new FragmentAlerts();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_switch, myfragment);
+                fragmentTransaction.commit();
+            }
+        }catch (Exception e) {
+            System.out.println("An exception!");
+        }
     }
 }

@@ -9,6 +9,7 @@
         android:layout_width="150px"
         android:layout_height="150px"
         android:gravity="right"
+        android:src="@drawable/profile_image"
         android:layout_gravity="right" />
 
     <TextView
@@ -57,6 +58,16 @@
         android:textSize="18dp"
         android:textStyle="bold"
         android:text="גובה" />
+    <TextView
+        android:id="@+id/usertvlistbmi"
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFF"
+        android:textDirection="rtl"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="BMI" />
 
     <TextView
         android:id="@+id/usertvlisttime"

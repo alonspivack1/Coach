@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layoutDirection="rtl">
+    <item
+        android:enabled="true"
+        android:orderInCategory="1"
+        android:title="התנתקות"
+        android:onClick="SignOut"
+        android:visible="true" />
+    <item
+        android:enabled="true"
+        android:orderInCategory="2"
+        android:title="עדכון פרופיל"
+        android:onClick="Profile"
+        android:visible="true" />
+    <item
+        android:enabled="true"
+        android:orderInCategory="3"
+        android:title="הגדרות"
+        android:onClick="Settings"
+        android:visible="true" />
+    <item
+        android:enabled="true"
+        android:orderInCategory="4"
+        android:title="שליחת מייל למפתח"
+        android:onClick="Mail"
+        android:visible="true" />
+
+    <item
+        android:enabled="true"
+        android:orderInCategory="5"
+        android:title="קרדיטים"
+        android:onClick="Credits"
+        android:visible="true" />
+
+
+
+
+
+</menu>

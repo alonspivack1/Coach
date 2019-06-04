@@ -467,11 +467,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void addAutoStartup() {
-
         try {
             Intent intent = new Intent();
             String manufacturer = android.os.Build.MANUFACTURER;
-            Toast.makeText(this,"כדי לקבל התראות באפליקציה, צריך לאשר הפעלה אוטומטית",Toast.LENGTH_LONG).show();
             if ("xiaomi".equalsIgnoreCase(manufacturer)) {
                 intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
             } else if ("oppo".equalsIgnoreCase(manufacturer)) {
@@ -485,6 +483,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             }
             List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
             if  (list.size() > 0) {
+                Toast.makeText(this,"כדי לקבל התראות באפליקציה, צריך לאשר הפעלה אוטומטית",Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         } catch (Exception e) {

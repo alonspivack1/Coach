@@ -69,15 +69,11 @@ public class FragmentAlerts extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         final String type = activity.getType();
         SharedPreferences alerts = getActivity().getSharedPreferences("Alerts", MODE_PRIVATE);
-        Log.e("ALERTChatData","chat="+alerts.getString("chat","null"));
-        Log.e("ALERTProgramData","program="+alerts.getString("program","null"));
         chat=alerts.getString("chat","null");
         program=alerts.getString("program","null");
         tbalert=(ToggleButton)v.findViewById(R.id.tbalert);
-        Button fragalertsSC = (Button)v.findViewById(R.id.fragalertsSC);
         if (type.equals("Coach"))
         {
-            fragalertsSC.setVisibility(View.GONE);
             tbalert.setTextOff("בקשות קשר חדשות");
             tbalert.setText("בקשות קשר חדשות");
         }
@@ -85,29 +81,25 @@ public class FragmentAlerts extends Fragment {
             alertslist = v.findViewById(R.id.alertslist);
 
 
-            adapterprogram = new SimpleAdapter(getActivity(), listprogram, R.layout.twolines,
-                new String[] { "sender","receiver","sendertime","receivertime"},
-                new int[] {R.id.sendmessage, R.id.receivemessage,R.id.sendertime,R.id.receivetime});
+            adapterprogram = new SimpleAdapter(getActivity(), listprogram, R.layout.twolinesalert,
+        new String[] { "alertmessage","alerttime"},
+                new int[] {R.id.alertmessage,R.id.alerttime});
 
-            adapterchat = new SimpleAdapter(getActivity(), listchat, R.layout.twolines,
-                new String[] { "sender","receiver","sendertime","receivertime"},
-                new int[] {R.id.sendmessage, R.id.receivemessage,R.id.sendertime,R.id.receivetime});
+            adapterchat = new SimpleAdapter(getActivity(), listchat, R.layout.twolinesalert,
+                new String[] { "alertmessage","alerttime"},
+                new int[] {R.id.alertmessage,R.id.alerttime});
              alertslist.setAdapter(adapterprogram);
 
 
             if (!chat.equals("null")){
              int chatint = countChar(chat,',');
-                Log.e("ChatCount",chatint+"");
-
             for (int i=0;i<chatint;i++){
                 item = new HashMap<String, String>();
                 String name = chat.substring(0, chat.indexOf("-"));
-                item.put("sender", chat.substring(0, chat.indexOf("-")));
+                item.put("alertmessage", chat.substring(0, chat.indexOf("-")));
                 chat = chat.substring(chat.indexOf("-")+1);
-                item.put("sendertime", chat.substring(0, chat.indexOf(",")));
+                item.put("alerttime", chat.substring(0, chat.indexOf(",")));
                 chat = chat.substring(chat.indexOf(",")+1);
-                item.put("receiver", "");
-                item.put("receivertime","");
                     listchat.add(item);
 
              }}
@@ -115,18 +107,15 @@ public class FragmentAlerts extends Fragment {
         if (!program.equals("null")){
 
             int programint = countChar(program,',');
-             Log.e("ProgramCount",programint+"");
              if (type.equals("User")){
         for (int j=0;j<programint;j++){
             item = new HashMap<String, String>();
             String name = program.substring(0, program.indexOf("-"));
-                item.put("receiver", "תוכנית האימון עודכנה מהמאמן " + program.substring(0, program.indexOf("-")));
+                item.put("alertmessage", "תוכנית האימון עודכנה מהמאמן " + program.substring(0, program.indexOf("-")));
                 program = program.substring(program.indexOf("-") + 1);
-                item.put("receivertime", program.substring(0, program.indexOf(",")));
+                item.put("alerttime", program.substring(0, program.indexOf(",")));
                 program = program.substring(program.indexOf(",") + 1);
 
-                item.put("sender", "");
-                item.put("sendertime", "");
             listprogram.add(item);
         }
              }
@@ -136,13 +125,11 @@ public class FragmentAlerts extends Fragment {
 
                      item = new HashMap<String, String>();
                      String name = program.substring(0, program.indexOf("-"));
-                     item.put("receiver", "נשלחה בקשת קשר חדשה מהמשתמש "+program.substring(0, program.indexOf("-")));
+                     item.put("alertmessage", "נשלחה בקשת קשר חדשה מהמשתמש "+program.substring(0, program.indexOf("-")));
                      program = program.substring(program.indexOf("-")+1);
-                     item.put("receivertime", program.substring(0, program.indexOf(",")));
+                     item.put("alerttime", program.substring(0, program.indexOf(",")));
                      program = program.substring(program.indexOf(",")+1);
 
-                     item.put("sender", "");
-                     item.put("sendertime", "");
 
                          listprogram.add(item);
                  }

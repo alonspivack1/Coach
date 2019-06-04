@@ -7,9 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
-        <item name="android:actionMenuTextColor">@color/colorTextSender</item>
         <item name="android:layout_gravity">right</item>
         <item name="actionBarSize">45dip</item>
+        <item name="android:itemBackground">@drawable/reddark</item>
+
+
+
+
+
 
     </style>
 
@@ -24,4 +29,5 @@
     <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
         <item name="android:textColor">#FF0000</item>
     </style>
+
 </resources>

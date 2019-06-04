@@ -28,4 +28,5 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:text="קרדיטים" />
+
 </RelativeLayout>

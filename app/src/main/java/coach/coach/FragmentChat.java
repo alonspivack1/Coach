@@ -108,12 +108,7 @@ public class FragmentChat extends Fragment{
         MainActivity activity = (MainActivity) getActivity();
         username = activity.getUsername();
         type = activity.getType();
-        Button fragchatSC = (Button)view.findViewById(R.id.fragchatSC);
 
-        if (type.equals("Coach"))
-        {
-            fragchatSC.setVisibility(View.GONE);
-        }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -222,9 +217,9 @@ public class FragmentChat extends Fragment{
         adb = new  AlertDialog.Builder(getActivity());
         adb.setTitle("ביטול קשר");
         if (type.equals("User")){
-            adb.setMessage("האם אתה לבטל קשר עם המאמן: "+coaches[positionadb].getName());}
+            adb.setMessage("האם אתה רוצה לבטל קשר עם המאמן: "+coaches[positionadb].getName());}
             else
-        {adb.setMessage("האם אתה לבטל קשר עם המתאמן: "+users[positionadb].getName());}
+        {adb.setMessage("האם אתה רוצה לבטל קשר עם המתאמן: "+users[positionadb].getName());}
 
         adb.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
@@ -330,7 +325,7 @@ public class FragmentChat extends Fragment{
 
         while (index >= 0) {
 
-            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)));
+            coaches[i] = new Coach(sub.substring(0, index),dataSnap.child("ProfileCoach").child(sub.substring(0, index)),dataSnap.child("Rating").child(sub.substring(0, index)));
             coachesList.add(coaches[i]);
             i++;
             sub = sub.substring(index + 1);

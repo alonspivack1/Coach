@@ -1,5 +1,6 @@
 package coach.coach;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -35,5 +36,11 @@ String manual = "מדריך למשתמש מסוג מאמן:\n" +
         setContentView(R.layout.activity_manual);
         TextView tvManual = findViewById(R.id.tvmanual);
         tvManual.setText(manual);
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intentlogin = new Intent(this,LogInActivity.class);
+        startActivity(intentlogin);
     }
 }

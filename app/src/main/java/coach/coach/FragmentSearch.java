@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -28,9 +29,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 
 /**
@@ -67,6 +74,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
      * The Coaches list 2.
      */
     ArrayList<Coach> coachesList2;
+
     /**
      * The Coaches.
      */
@@ -210,7 +218,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
      * The C bcoachcheack.
      */
     boolean CBcoachcheack=true;
-
+    int[] coachesListViewClick;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -230,9 +238,17 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                     catch (Exception e)
                     {
                         coaches = new Coach[Integer.parseInt(dataSnapshot.child("CoachNames").getChildrenCount()+"")];
+                        coachesListViewClick = new int[coaches.length];
+
 
                     }
                     CoachProfiles = dataSnapshot.child("CoachNames").getValue().toString();
+
+
+
+
+
+
                 }
 
 
@@ -273,7 +289,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                         connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-                    positionadb=position;
+                    positionadb=coachesListViewClick[position];
                     Dialog();
                 }
                 else {
@@ -310,7 +326,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
                 FirstOnClick=false;
-                coachhelp = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))));
+                coachhelp = new Coach(HelpString.substring(1,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(1,HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(1,HelpString.indexOf("="))));
                 if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                 {
                     if (coachhelp.getName().toLowerCase().equals(stringCoachSearch))
@@ -435,7 +451,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
                 if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                 {
-                    coachhelp = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
+                    coachhelp = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(0,HelpString.indexOf("="))));
                     if (coachhelp.getName().toLowerCase().indexOf(stringCoachSearch)!=-1)
                     {
                         if (coachhelp.getName().toLowerCase().equals(stringCoachSearch))
@@ -535,7 +551,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                                 }
                             }
                             if (CBcoachcheack) {
-                                coaches[ii] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
+                                coaches[ii] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(0,HelpString.indexOf("="))));
                                 ii++;
                             }
                             else {
@@ -554,10 +570,17 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             coachesList2 = new ArrayList<>();
             if (takecoach)
             {
-                coachesList2.add(coaches[0]);
+                int index = getIndexOfLargest(coaches);
+                coachesList2.add(coaches[index]);
+                coaches[index].setTested(true);
+                coachesListViewClick[0]=index;
+
                 for (int j=1; j<ii; j++)
                 {
-                    coachesList2.add(coaches[j]);
+                    index = getIndexOfLargest(coaches);
+                    coachesList2.add(coaches[index]);
+                    coaches[index].setTested(true);
+                    coachesListViewClick[j]=index;
 
 
                 }
@@ -567,7 +590,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 for (int j=1; j<ii; j++)
                 {
 
-                    coachesList2.add(coaches[j]);
+                    int index = getIndexOfLargest(coaches);
+                    coachesList2.add(coaches[index]);
+                    coaches[index].setTested(true);
+                    coachesListViewClick[j]=index;
+
 
                 }
             }
@@ -589,7 +616,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
                 FirstOnClick = false;
-                coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))));
+                coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(1, HelpString.indexOf("="))));
                 i++;
 
             }
@@ -606,8 +633,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                     HelpString = HelpString.substring(HelpString.indexOf(", ")+2);
                     if (UserCoachCheack.indexOf((","+HelpString.substring(0,HelpString.indexOf("=")))+",")==-1)
                     {
-                        coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))));
-
+                        coaches[i] = new Coach(HelpString.substring(0,HelpString.indexOf("=")),dataSnap.child("ProfileCoach").child(HelpString.substring(0,HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(0,HelpString.indexOf("="))));
                         i++;
 
 
@@ -619,13 +645,19 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
             }
         if (HelpString.indexOf(", ")==-1){
             coachesList = new ArrayList<>();
-            for (int j=0; j<i; j++)
-            {
-                coachesList.add(coaches[j]);
-            }
+
 
             adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
             listView.setAdapter(adapter);
+            for (int j=0; j<i; j++)
+            {
+                int index = getIndexOfLargest(coaches);
+                coachesList.add(coaches[index]);
+                coaches[index].setTested(true);
+                coachesListViewClick[j]=index;
+
+            }
+
             return;
         }
     }
@@ -654,8 +686,21 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
                 reference3 = FirebaseDatabase.getInstance().getReference("ChatRoom");
 
-
                 Calendar cal = Calendar.getInstance();
+                DateFormat dfHH = new SimpleDateFormat("HH");
+                DateFormat dfmm = new SimpleDateFormat("mm");
+                String HH = dfHH.format(new Date());
+                String mm = dfmm.format(new Date());
+                DateFormat gdfHH = new SimpleDateFormat("HH");
+                DateFormat gdfmm = new SimpleDateFormat("mm");
+                gdfHH.setTimeZone(TimeZone.getTimeZone("GMT"));
+                gdfmm.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String gHH = gdfHH.format(new Date());
+                String gmm = gdfmm.format(new Date());
+                int hourdif =Integer.parseInt(HH)-Integer.parseInt(gHH);
+                int mindif =Integer.parseInt(mm)-Integer.parseInt(gmm);
+                cal.add(Calendar.MINUTE,-1* mindif);
+                cal.add(Calendar.HOUR_OF_DAY, -1*hourdif);
                 int minute = cal.get(Calendar.MINUTE);
                 int hourofday = cal.get(Calendar.HOUR_OF_DAY);
                 int month = cal.get(Calendar.MONTH);
@@ -672,12 +717,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("sender",username);
-                hashMap.put("receiver",coaches[positionadb].getName());
                 hashMap.put("message","נשלחה בקשת קשר");
-                hashMap.put("time",time);
+                hashMap.put("time"," "+time+" ");
                 hashMap.put("date",date);
                 final String CoachName=coaches[positionadb].getName();
-                reference3.child(username+"&"+(CoachName)).child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                reference3.child(username+"&"+(CoachName)).child("Chat").child("1").setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()) {
@@ -686,7 +730,9 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                                 @Override
                                 public void run() {
                                     referenceNotification.child(CoachName).child("ProgramAlarm").setValue(username);
-                                    reference3.child(username+"&"+CoachName).child("num").child("num").setValue(2);
+                                    reference3.child(username+"&"+CoachName).child("Chat").child("num").child("num").setValue(2);
+                                    reference3.child(username+"&"+CoachName).child("LastVisit").child(username).setValue(1);
+                                    reference3.child(username+"&"+CoachName).child("LastVisit").child(CoachName).setValue(1);
                                     reference4 = FirebaseDatabase.getInstance().getReference("ProgramRoom");
                                     HashMap<String, String> hashMap = new HashMap<>();
                                     String htmlnewprogram="<html><body><p><b><i><u><span style=\"text-decoration:line-through;\">המאמן עדין לא עדכן את התוכנית אימון </span></u></i></b><b><i><u><span style=\"text-decoration:line-through;\"><u>שלך</u></span></u></i></b></p>\n</body></html>";
@@ -776,11 +822,25 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 cbsearchgym.setChecked(false);
                 cbsearchdistance.setChecked(false);
                 cbsearchburnfat.setChecked(false);
-
                 adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
                 listView.setAdapter(adapter);
                 break;
         }
     }
+    public int getIndexOfLargest( Coach[] array ){
+    int maxAt=0;
+    while(array[maxAt].getTested())
+    {
+        maxAt++;
+    }
+    for (int i = 0; i < array.length; i++) {
+        if (array[i]!=null){
+        if ( array[i].getRating() > array[maxAt].getRating()){
+            if (!array[i].getTested()){
+            maxAt = i;
+            }
+        }}}
 
+    return maxAt;
+    }
 }

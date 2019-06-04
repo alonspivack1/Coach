@@ -1,5 +1,6 @@
 package coach.coach;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,8 +9,11 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -151,6 +155,9 @@ public class UserProfileMaker extends AppCompatActivity {
         switchusergender = findViewById(R.id.switchusergender);
 
 
+        etuserweight.setHint("משקל (קילו)");
+        etuserheight.setHint("גובה (סנטימטרים)");
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -181,8 +188,38 @@ public class UserProfileMaker extends AppCompatActivity {
                     etuserheight.setText(user.getHeight());
                     etusertime.setText(user.getTime());
                     etuseritem.setText(user.getItem());
-                    float bmi = Float.valueOf(user.getWeight())/((Float.valueOf(user.getHeight())/100)*(Float.valueOf(user.getHeight()))/100);
-                    tvuserbmi.setText("BMI:"+String.valueOf(bmi));
+                    try{
+                        float bmi = Float.valueOf(user.getWeight())/((Float.valueOf(user.getHeight())/100)*(Float.valueOf(user.getHeight()))/100);
+                        if (bmi<1000) {
+                            String health="";
+                            if (bmi <= 18.5) {
+                                health="(תת משקל)";
+                            }
+                            if (bmi > 18.5 && bmi <= 25) {
+                                health="(משקל תקין)";
+                            }
+                            if (bmi > 25 && bmi <= 29.9) {
+                                health="(משקל עודף)";
+                            }
+                            if (bmi>29.9&&bmi<=34.9) {
+                                health="(השמנה בנונית)";
+                            }
+                            if (bmi>34.9&&bmi<=39.9) {
+                                health="(השמנה חמורה)";
+                            }
+                            if (bmi>39.9) {
+                                health="(השמנה חמורה מאוד)";
+                            }
+                            tvuserbmi.setText("BMI:" + String.valueOf(bmi)+health);
+                        }
+                        else {
+                            tvuserbmi.setText("");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        tvuserbmi.setText("");
+                    }
                     etuserdescription.setText(user.getDescription());
                     if (user.getGender().equals("נקבה"))
                     {
@@ -216,7 +253,111 @@ public class UserProfileMaker extends AppCompatActivity {
                 }
 
             }
-        }, 1000);
+        }, 50);
+        etuserheight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try{
+                    String Weight = etuserweight.getText().toString();
+                    String Height = etuserheight.getText().toString();
+
+                    float bmi = Float.valueOf(Weight)/((Float.valueOf(Height)/100)*(Float.valueOf(Height))/100);
+                    if (bmi<1000) {
+                        String health="";
+                        if (bmi <= 18.5) {
+                            health="(תת משקל)";
+                        }
+                        if (bmi > 18.5 && bmi <= 25) {
+                            health="(משקל תקין)";
+                        }
+                        if (bmi > 25 && bmi <= 29.9) {
+                            health="(משקל עודף)";
+                        }
+                        if (bmi>29.9&&bmi<=34.9) {
+                            health="(השמנה בנונית)";
+                        }
+                        if (bmi>34.9&&bmi<=39.9) {
+                            health="(השמנה חמורה)";
+                        }
+                        if (bmi>39.9) {
+                            health="(השמנה חמורה מאוד)";
+                        }
+                        tvuserbmi.setText("BMI:" + String.valueOf(bmi)+health);
+                    }
+                    else {
+                        tvuserbmi.setText("");
+                    }
+                }
+                catch (Exception e)
+                {
+                    tvuserbmi.setText("");
+                }
+
+
+            }
+        });
+        etuserweight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try{
+                    String Weight = etuserweight.getText().toString();
+                    String Height = etuserheight.getText().toString();
+
+                    float bmi = Float.valueOf(Weight)/((Float.valueOf(Height)/100)*(Float.valueOf(Height))/100);
+                    if (bmi<1000) {
+                        String health="";
+                        if (bmi <= 18.5) {
+                            health="(תת משקל)";
+                        }
+                        if (bmi > 18.5 && bmi <= 25) {
+                            health="(משקל תקין)";
+                        }
+                        if (bmi > 25 && bmi <= 29.9) {
+                            health="(משקל עודף)";
+                        }
+                        if (bmi>29.9&&bmi<=34.9) {
+                            health="(השמנה בנונית)";
+                        }
+                        if (bmi>34.9&&bmi<=39.9) {
+                            health="(השמנה חמורה)";
+                        }
+                        if (bmi>39.9) {
+                            health="(השמנה חמורה מאוד)";
+                        }
+                        tvuserbmi.setText("BMI:" + String.valueOf(bmi)+health);
+                    }
+                    else {
+                        tvuserbmi.setText("");
+                    }
+                }
+                catch (Exception e)
+                {
+                    tvuserbmi.setText("");
+                }
+
+
+            }
+        });
     }
 
 
@@ -295,14 +436,14 @@ public class UserProfileMaker extends AppCompatActivity {
         }
         if(!Pattern.matches("[0-9.]+.", etuserweight.getText().toString()))
         {
-            etuserage.setError("Use just numbers");
-            etuserage.requestFocus();
+            etuserweight.setError("Use just numbers");
+            etuserweight.requestFocus();
             return;
         }
         if(!Pattern.matches("[0-9]+", etuserheight.getText().toString()))
         {
-            etuserage.setError("Use just numbers");
-            etuserage.requestFocus();
+            etuserheight.setError("Use just numbers");
+            etuserheight.requestFocus();
             return;
         }
         if(!Pattern.matches("[A-Zא-תa-z0-9!@#$%*(),. ]+", etusertime.getText().toString()))

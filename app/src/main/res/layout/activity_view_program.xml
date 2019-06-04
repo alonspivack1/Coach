@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:progressTint="@color/RatingBarColor"
         android:progressBackgroundTint="@color/RatingBarColoroff"
-        android:isIndicator="false"
+        android:isIndicator="true"
         />
 
     <ScrollView
