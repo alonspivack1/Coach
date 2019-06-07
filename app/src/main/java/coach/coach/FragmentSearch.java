@@ -18,10 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -29,11 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -249,6 +244,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
 
 
 
+
                 }
 
 
@@ -307,7 +303,8 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
                     if (type.equals("User")) {
-                        RefreshCoaches();
+                        if (CoachProfiles.length()>1){
+                        RefreshCoaches();}
                     }
                 }
             }, 100);
@@ -610,10 +607,12 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     }
 
     private void RefreshCoaches() {
-
         if (FirstOnClick){
             HelpString=CoachProfiles;
             UserCoachCheack = dataSnap.child("UserNames").child(username).getValue().toString();
+            Log.e("Coach",UserCoachCheack);
+
+
             if (UserCoachCheack.indexOf((","+HelpString.substring(1,HelpString.indexOf("=")))+",")==-1) {
                 FirstOnClick = false;
                 coaches[i] = new Coach(HelpString.substring(1, HelpString.indexOf("=")), dataSnap.child("ProfileCoach").child(HelpString.substring(1, HelpString.indexOf("="))),dataSnap.child("Rating").child(HelpString.substring(1, HelpString.indexOf("="))));
@@ -772,9 +771,11 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
     }}
     @Override
     public void onClick(View v) {
+        if (CoachProfiles.length()>1){
         switch (v.getId())
         {
             case R.id.SearchInListView:
+
                     burnfat=false;
                     distance=false;
                     gym=false;
@@ -826,7 +827,7 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                 listView.setAdapter(adapter);
                 break;
         }
-    }
+    }}
     public int getIndexOfLargest( Coach[] array ){
     int maxAt=0;
     while(array[maxAt].getTested())
