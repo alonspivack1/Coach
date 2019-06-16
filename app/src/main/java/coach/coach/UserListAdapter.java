@@ -21,11 +21,9 @@ import java.util.ArrayList;
  */
 public class UserListAdapter extends ArrayAdapter<User> {
 
-    private static final String TAG = "UserListAdapter";
 
     private Context mContext;
     private int mResource;
-    private int lastPosition = -1;
 
 
     private static class ViewHolder {
@@ -102,7 +100,6 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
 
         User user = new User(name,details);
-        final View result;
 
         ViewHolder holder;
 
@@ -124,17 +121,14 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
 
 
-            result = convertView;
 
             convertView.setTag(holder);
         }
         else{
             holder = (ViewHolder) convertView.getTag();
-            result = convertView;
         }
 
 
-        lastPosition = position;
 
 
         holder.usertvlistname.setText("שם: "+ user.getName());

@@ -181,8 +181,9 @@ public class UserProfileMaker extends AppCompatActivity {
                 user = new User(username,dataSnap.child("ProfileUser").child(username));
                 if (!user.getAge().equals("0"))
                 {
+                    if (user.getImage() != null){
                     ivuserimage.setImageBitmap(user.getImage());
-                    ImageString = BitmapToString(user.getImage());
+                    ImageString = BitmapToString(user.getImage());}
                     etuserage.setText(user.getAge());
                     etuserweight.setText(user.getWeight());
                     etuserheight.setText(user.getHeight());

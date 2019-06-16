@@ -158,8 +158,9 @@ public class CoachProfileMaker extends AppCompatActivity {
                 coach = new Coach(username,dataSnap.child("ProfileCoach").child(username),dataSnap.child("Rating").child(username));;
                 if (!coach.getAge().equals("0"))
                 {
+                    if (coach.getImage() != null){
                     ivcoachimage.setImageBitmap(coach.getImage());
-                    ImageString = BitmapToString(coach.getImage());
+                    ImageString = BitmapToString(coach.getImage());}
                     etcoachage.setText(coach.getAge());
                     etcoachwhere.setText(coach.getWhere());
                     etcoachtime.setText(coach.getTime());

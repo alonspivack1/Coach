@@ -24,11 +24,9 @@ import java.util.ArrayList;
  */
 public class CoachListAdapter extends ArrayAdapter<Coach> {
 
-    private static final String TAG = "CoachListAdapter";
 
     private Context mContext;
     private int mResource;
-    private int lastPosition = -1;
 
 
 
@@ -107,7 +105,6 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
         Coach coach = new Coach(name,details,details2);
 
 
-        final View result;
 
         final ViewHolder holder;
 
@@ -128,17 +125,14 @@ public class CoachListAdapter extends ArrayAdapter<Coach> {
             holder.ivlistimage = (ImageView) convertView.findViewById(R.id.ivlistimage);
 
 
-            result = convertView;
 
             convertView.setTag(holder);
         }
         else{
             holder = (ViewHolder) convertView.getTag();
-            result = convertView;
         }
 
 
-        lastPosition = position;
 
 
         holder.tvlistname.setText("שם: "+coach.getName());

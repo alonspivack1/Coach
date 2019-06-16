@@ -447,7 +447,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.textViewSignup:
-                finish();
                 startActivity(new Intent(this, SignUpActivity.class));
                 finish();
                 break;
@@ -458,6 +457,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             case R.id.textViewManual:
                 intentManual = new Intent(this, Manual.class);
                 startActivity(intentManual);
+                finish();
                 break;
 
             case R.id.textViewForgotPassword:
