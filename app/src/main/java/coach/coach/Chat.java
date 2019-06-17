@@ -603,10 +603,10 @@ public class Chat extends AppCompatActivity {
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_chat, menu);
-        /*if (Phone.charAt(0)=='=')
+        if (Phone.charAt(0)=='=')
         {
             menu.add(Phone.substring(1)+"").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }*/
+        }
         return true;
     }
     public String InChat()
