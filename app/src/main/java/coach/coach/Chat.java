@@ -301,7 +301,7 @@ public class Chat extends AppCompatActivity {
             String mesasgetime =dataSnap.child(String.valueOf(MessageNum)).child("time").getValue().toString();
             timebefore = Integer.parseInt(mesasgetime.substring(1,mesasgetime.indexOf(":")));
             SimpleDateFormat sourceFormattime = new SimpleDateFormat(" HH:mm ");
-            sourceFormattime.setTimeZone(TimeZone.getTimeZone("GMT-1"));
+            sourceFormattime.setTimeZone(TimeZone.getTimeZone("GMT"));
             Date parsedtime = null;
             try {
                 parsedtime = sourceFormattime.parse(mesasgetime);
@@ -398,7 +398,7 @@ public class Chat extends AppCompatActivity {
     public void RefreshMessages()
     {
         SimpleDateFormat sourceFormattime = new SimpleDateFormat(" HH:mm ");
-        sourceFormattime.setTimeZone(TimeZone.getTimeZone("GMT-1"));
+        sourceFormattime.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
         SimpleDateFormat destFormattime = new SimpleDateFormat(" HH:mm ");
