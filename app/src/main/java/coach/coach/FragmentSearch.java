@@ -775,7 +775,6 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
         switch (v.getId())
         {
             case R.id.SearchInListView:
-
                     burnfat=false;
                     distance=false;
                     gym=false;
@@ -808,12 +807,20 @@ public class FragmentSearch extends Fragment implements View.OnClickListener {
                     {
                         street=true;
                     }
-                    FirstOnClick=true;
-                    stringCoachSearch = etSearchInListView.getText().toString().toLowerCase();
-                    listView.setAdapter(null);
-                    RefreshCoach();
-                    ii=1;
-                    takecoach=false;
+                    if (!burnfat&&!distance&&!gym&&!home&&!speed&&!street&&etSearchInListView.getText().toString().length()==0)
+                    {
+                        adapter = new CoachListAdapter(getActivity(), R.layout.customlayoutcoachprofile, coachesList);
+                        listView.setAdapter(adapter);
+                    }
+                    else {
+                        FirstOnClick=true;
+                        stringCoachSearch = etSearchInListView.getText().toString().toLowerCase();
+                        listView.setAdapter(null);
+                        RefreshCoach();
+                        ii=1;
+                        takecoach=false;
+                    }
+
                     break;
             case R.id.ResetSearchInListView:
                 etSearchInListView.setText("");
